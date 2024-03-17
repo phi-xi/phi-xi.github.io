@@ -1,1 +1,57 @@
-Hello World!
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
+        <meta HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+        <title>&#x03A6;&#x039E;..PhiXi</title>
+        <link rel="manifest" href="/manifest.json">
+        <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Ubuntu:regular,bold&subset=Latin">
+        <link rel="stylesheet" href="/style/layout.css">
+        <link rel="stylesheet" href="/style/style.css">
+        <script type="text/javascript" src="/script/UserInterface.js"></script>
+    </head>
+    <body>
+        <div class="grid-wrap">
+            <div class="menu-icon">&#x22EE;</div>
+            <div class="topbar">&#x03A6;&#x039E;..PhiXi</div>
+            <div class="sidebar sidebar-hidden">
+                <div class="sidebar-item">
+                    <div class="sidebar-item-header">
+                        <div class="sidebar-item-icon home-icon">&#x2302;</div>
+                        <div class="sidebar-item-text">&#x03A6;&#x039E;..Home</div>
+                    </div>
+                </div>
+                <div class="sidebar-item">
+                    <div class="sidebar-item-header">
+                        <div class="sidebar-item-icon">&#x03A6;</div>
+                        <div class="sidebar-item-text">Phi</div>
+                    </div>
+                </div>
+                <div class="sidebar-item">
+                    <div class="sidebar-item-header">
+                        <div class="sidebar-item-icon">&#x039E;</div>
+                        <div class="sidebar-item-text">Xi</div>
+                    </div>
+                    <div class="sidebar-subitem sidebar-subitem-collapsed">Xi 1</div>
+                    <div class="sidebar-subitem sidebar-subitem-collapsed">Xi 2</div>
+                </div>
+            </div>
+            <div class="main main-full">
+                <iframe class="iframe" src=""></iframe>
+            </div>
+        </div>
+    </body>
+    <script>
+
+        const UI = new UserInterface();
+
+        //UI.registerServiceWorker();
+        UI.loadContent( "start.html?" + Math.random().toString().slice(2) );
+        UI.onSidebarSelect = (r)=>{
+            if ( r[0] == 0 ) UI.loadContent( "start.html" );
+            //if ( r[0] == 1 ) navigator.serviceWorker.controller.postMessage( "cache-update" );
+        };
+        //UI.toast( "Hello World!" );
+
+    </script>
+</html>

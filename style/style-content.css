@@ -1,0 +1,49 @@
+
+::-webkit-scrollbar {
+    width: 7px;
+}
+::-webkit-scrollbar-track {
+    background: #444;
+}
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+body {
+    background-color: #000;
+    font-family: Ubuntu, sans-serif;
+    font-size: 12pt;
+    margin: 0;
+    overflow: auto;
+    color: #1E1;
+}
+body {
+    font-size: 1rem;
+    padding: 0.5rem;
+}
+h1 {
+    color: #E51;
+    font-size: 1.5rem;
+    margin: 1rem 0 0.2rem 0;
+}
+h2 {
+    color: #E50;
+    font-size: 1.25rem;
+    margin: 1rem 0 0.2rem 0;
+}
+h3 {
+    color: #D30;
+    font-size: 1.2rem;
+    margin: 1rem 0 0.2rem 0;
+}
+
+
+@media only screen and (min-width: 1000px) {
+    body {
+        font-size: 0.8rem;
+        padding: 1rem;
+    }
+}
