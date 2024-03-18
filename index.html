@@ -46,7 +46,6 @@
 
         const UI = new UserInterface();
 
-        UI.registerServiceWorker();
         UI.loadContent( "start.html?" + Math.random().toString().slice(2) );
         UI.onSidebarSelect = (r)=>{
             if ( r[0] == 0 ) UI.loadContent( "start.html" );
@@ -55,6 +54,7 @@
         };
         //UI.toast( "Hello World!" );
 
+        PWA.serviceWorker.register();
         PWA.requestPermissionNotify();
 
     </script>
