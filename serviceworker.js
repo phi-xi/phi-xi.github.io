@@ -3,6 +3,15 @@
 let SERVICE_WORKER = {
     version: "",
     cacheName: "PhiXi",
+    cacheFilesAppShell: [
+        "/error-404.html"   // ATTENTION error page must be first element in array!
+        /*"/index.html",
+        "/page-1.html",
+        "/script/UserInterface.js",
+        "/style/layout.css",
+        "/style/style.css",
+        "/style/style-content.css"*/
+    ],
     lastNotification: "",
     messageRefreshInterval: 15,    // in seconds
     messageFile: "/msg.txt",
@@ -24,17 +33,29 @@ function respond( client, topic, text ){
 function startPullDaemon( refreshInterval ){
     setInterval( ()=>{
         ( async()=>{
-            const rnd = "?" + Math.random().toString().slice(2),
+            const cache = await caches.open( SERVICE_WORKER.cacheName ),
+                rnd = "?" + Math.random().toString().slice(2),
                 res = await fetch( SERVICE_WORKER.messageFile + rnd );
+            let txt = null;
             if ( res.ok ){
-                const txt = await res.text(),
-                    clients = await self.clients.matchAll();
-                if ( SERVICE_WORKER.lastNotification != txt ){
-                    SERVICE_WORKER.lastNotification = txt;
-                    self.clients.matchAll().then( (clients) => {
-                        clients.forEach( client => respond( client, "message", txt ) );
-                    } );
-                }
+                txt = await res.text();
+                const clients = await self.clients.matchAll();
+                cache.put( SERVICE_WORKER.messageFile, res.clone() );
+                // if ( SERVICE_WORKER.lastNotification != txt ){
+                //     SERVICE_WORKER.lastNotification = txt;
+                //     self.clients.matchAll().then( (clients) => {
+                //         clients.forEach( client => respond( client, "message", txt ) );
+                //     } );
+                // }
+            } else {
+                txt = await cache.match( SERVICE_WORKER.messageFile );
+                console.log( "startPullDaemon() ", txt );
+            }
+            if ( SERVICE_WORKER.lastNotification != txt ){
+                SERVICE_WORKER.lastNotification = txt;
+                self.clients.matchAll().then( (clients) => {
+                    clients.forEach( client => respond( client, "message", txt ) );
+                } );
             }
         } )();
     }, 1000 * refreshInterval );
@@ -45,15 +66,7 @@ self.addEventListener( "install", (e) => {
     e.waitUntil(
         ( async () => {
             const cache = await caches.open( SERVICE_WORKER.cacheName );
-            await cache.addAll( [
-                "/error-404.html"
-                /*"/index.html",
-                "/page-1.html",
-                "/script/UserInterface.js",
-                "/style/layout.css",
-                "/style/style.css",
-                "/style/style-content.css"*/
-            ] );
+            await cache.addAll( SERVICE_WORKER.cacheFilesAppShell );
         } )()
     );
 } );
@@ -90,7 +103,7 @@ self.addEventListener( "fetch", (e) => {
                     return r;
                 } else {
                     //console.log( "[Service Worker] Serving from cache failed, try serving error page" );
-                    const fallback = await caches.match( "/error-404.html" );
+                    const fallback = await caches.match( SERVICE_WORKER.cacheFilesAppShell[0] );
                     return fallback;
                 }
             }
