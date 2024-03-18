@@ -23,7 +23,7 @@ function respond( client, topic, text ){
 function startPullDaemon( refreshInterval ){
     setInterval( ()=>{
         ( async()=>{
-            const rnd = const rnd = "?" + Math.random().toString().slice(2),
+            const rnd = "?" + Math.random().toString().slice(2),
                 res = await fetch( SERVICE_WORKER.messageFile + rnd );
             if ( res.ok ){
                 const txt = await res.text(),
