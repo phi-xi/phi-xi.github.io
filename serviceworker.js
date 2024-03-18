@@ -14,14 +14,13 @@ let SERVICE_WORKER = {
     SERVICE_WORKER.version = data.serviceWorker;
 } )();
 
-
 function respond( client, topic, text ){
     client.postMessage( {
         topic: topic,
         text: text
     } );
 }
-function startPullDaemon(){
+function startPullDaemon( refreshInterval ){
     setInterval( ()=>{
         ( async()=>{
             const res = await fetch( SERVICE_WORKER.messageFile );
@@ -34,9 +33,8 @@ function startPullDaemon(){
                 }
             }
         } )();
-    }, 10000 );
+    }, 1000 * refreshInterval );
 }
-
 
 self.addEventListener( "install", (e) => {
     console.log( "[Service Worker] Installed" );
@@ -56,14 +54,12 @@ self.addEventListener( "install", (e) => {
     );
 } );
 
-
 self.addEventListener( "activate", (e) => {
     console.log( "[Service Worker] Activated" );
     self.clients.matchAll().then( (clients) => {
         clients.forEach( client => respond( client, "lifecycle", "First run" ) );
     } );
 } );
-
 
 self.addEventListener( "fetch", (e) => {
     e.respondWith(
@@ -99,7 +95,6 @@ self.addEventListener( "fetch", (e) => {
     );
 } );
 
-
 self.addEventListener( "message", (e) => {
     const msg = e.data,
         src = e.source;
@@ -126,3 +121,5 @@ self.addEventListener( "message", (e) => {
         }
     } )();
 } );
+
+startPullDaemon(60);
