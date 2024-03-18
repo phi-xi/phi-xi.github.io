@@ -30,7 +30,9 @@ function startPullDaemon( refreshInterval ){
                     clients = await self.clients.matchAll();
                 if ( SERVICE_WORKER.lastNotification != txt ){
                     SERVICE_WORKER.lastNotification = txt;
-                    respond( clients[0], "message", txt );
+                    self.clients.matchAll().then( (clients) => {
+                        clients.forEach( client => respond( client, "message", txt ) );
+                    } );
                 }
             }
         } )();
