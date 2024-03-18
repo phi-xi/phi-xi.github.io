@@ -123,4 +123,4 @@ self.addEventListener( "message", (e) => {
     } )();
 } );
 
-startPullDaemon(60);
+startPullDaemon(20);
