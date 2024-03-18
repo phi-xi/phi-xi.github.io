@@ -24,12 +24,12 @@ const PWA = ( ()=>{
                     } catch(e){}
                 }
             },
-            register: async()=>{
+            register: ()=>{
                 if ( "serviceWorker" in navigator ){
                     navigator.serviceWorker.register( PWA.serviceWorker.file, {
                         scope: "/"
                     } );
-                    navigator.serviceWorker.addEventListener( "message", (event)=>{
+                    navigator.serviceWorker.addEventListener( "message", async(event)=>{
                         const msg = event.data;
                         if ( msg.topic == "version" ){
                             const ver = msg.text,
