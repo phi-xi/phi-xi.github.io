@@ -4,7 +4,7 @@ let SERVICE_WORKER = {
     version: "",
     cacheName: "PhiXi",
     lastNotification: "",
-    messageRefreshInterval: 60,    // in seconds
+    messageRefreshInterval: 15,    // in seconds
     messageFile: "/msg.txt",
     versionFile: "/version.json"
 };
