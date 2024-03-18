@@ -4,6 +4,7 @@ let SERVICE_WORKER = {
     version: "",
     cacheName: "PhiXi",
     lastNotification: "",
+    messageRefreshInterval: 60,    // in seconds
     messageFile: "/msg.txt",
     versionFile: "/version.json"
 };
@@ -125,4 +126,4 @@ self.addEventListener( "message", (e) => {
     } )();
 } );
 
-startPullDaemon(20);
+startPullDaemon( SERVICE_WORKER.messageRefreshInterval );
