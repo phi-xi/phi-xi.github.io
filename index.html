@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="/style/layout.css">
         <link rel="stylesheet" href="/style/style.css">
         <script type="text/javascript" src="/script/UserInterface.js"></script>
+        <script type="text/javascript" src="/script/pwa.js"></script>
     </head>
     <body>
         <div class="grid-wrap">
@@ -24,7 +25,7 @@
                 <div class="sidebar-item">
                     <div class="sidebar-item-header">
                         <div class="sidebar-item-icon">&#x03A6;</div>
-                        <div class="sidebar-item-text">Phi</div>
+                        <div class="sidebar-item-text">Cache update</div>
                     </div>
                 </div>
                 <div class="sidebar-item">
@@ -45,13 +46,16 @@
 
         const UI = new UserInterface();
 
-        //UI.registerServiceWorker();
+        UI.registerServiceWorker();
         UI.loadContent( "start.html?" + Math.random().toString().slice(2) );
         UI.onSidebarSelect = (r)=>{
             if ( r[0] == 0 ) UI.loadContent( "start.html" );
-            //if ( r[0] == 1 ) navigator.serviceWorker.controller.postMessage( "cache-update" );
+            if ( r[0] == 1 ) navigator.serviceWorker.controller.postMessage( "cache-update" );
+            if ( r[0] > 1 ) UI.loadContent( "test.txt" );
         };
         //UI.toast( "Hello World!" );
+
+        PWA.requestPermissionNotify();
 
     </script>
 </html>

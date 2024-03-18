@@ -49,69 +49,6 @@ class UserInterface {
                 } );
             }
         }
-        let r = this.getServiceWorkerVersion();
-    }
-    async getServiceWorkerVersion(){
-        const res = await fetch( "version.json?" + Math.random().toString().slice(2) );
-        if ( res.ok ){
-            const txt = await res.text();
-            try {
-                const data = JSON.parse( txt );
-                this.#serviceWorkerVersion = data.serviceWorker;
-            } catch(e){}
-        }
-    }
-    isStandalone(){
-        return window.matchMedia( "(display-mode: standalone)" ).matches;
-    }
-    registerServiceWorker(){
-        if ( "serviceWorker" in navigator ){
-            navigator.serviceWorker.register( this.#serviceWorkerFile, {
-                scope: "/"
-            } );
-            navigator.serviceWorker.addEventListener( "message", (event)=>{
-                const msg = event.data;
-                if ( msg.topic == "version" && this.#serviceWorkerVersion != "" ){
-                    const ver = msg.text;
-                    if ( ver != this.#serviceWorkerVersion ){
-                        this.toast( "Update available" );
-                        navigator.serviceWorker.controller.postMessage( "clear_cache" );
-                        this.unregisterServiceWorker();
-                        setTimeout( ()=>{
-                            window.location.href = "/";
-                        }, 3000 );
-                    }
-                }
-                if ( msg.topic == "cache" ){
-                    this.toast( msg.text );
-                }
-                if ( msg.topic == "lifecycle" ){
-                    this.toast( msg.text );
-                }
-            } );
-            navigator.serviceWorker.ready.then( (r)=>{
-                setTimeout( ()=>{
-                    navigator.serviceWorker.controller.postMessage( "version" );
-                }, 5000 );
-            } );
-        } else {
-            this.toast( "Error: serviceWorker interface not available" );
-        }
-    }
-    unregisterServiceWorker(){
-        if ( "serviceWorker" in navigator ){
-            navigator.serviceWorker.getRegistration()
-                .then( ( serviceWorker )=>{
-                    if ( serviceWorker ){
-                        serviceWorker.unregister();
-                    }
-                } )
-                .catch( ( error )=>{
-                    this.toast( "Error: unregistering service worker failed" );
-                } );
-        } else {
-            this.toast( "Error: serviceWorker interface not available" );
-        }
     }
     get onSidebarSelect(){
         return this.#callback_sidebar;
