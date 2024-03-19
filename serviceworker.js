@@ -48,7 +48,7 @@ function startPullDaemon( refreshInterval ){
             }
             if ( SERVICE_WORKER.lastNotification != txt ){
                 SERVICE_WORKER.lastNotification = txt;
-		    	if ( txt != "" ){
+		    	if ( JSON.parse( txt ).title != "" ){
 	                self.clients.matchAll().then( (clients) => {
 	                    clients.forEach( client => respond( client, "message", txt ) );
 	                } );
