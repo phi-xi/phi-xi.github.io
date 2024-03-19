@@ -51,7 +51,7 @@ function startPullDaemon( refreshInterval ){
 		    	if ( JSON.parse( txt ).title != "" ){
 	                self.clients.matchAll().then( (clients) => {
 	                    clients.forEach( client => respond( client, "message", txt ) );
-					} );
+				    } );
 				}
 			}
         } )();
