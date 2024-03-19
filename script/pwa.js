@@ -101,7 +101,7 @@ const PWA = ( function(){
                     navigator.serviceWorker.ready.then( (r)=>{
                         setTimeout( ()=>{
                             navigator.serviceWorker.controller.postMessage( "version" );
-                        }, 5000 );
+                        }, 10000 );
                     } );
                 } else {
                     PWA.log( "Error: serviceWorker interface not available" );
