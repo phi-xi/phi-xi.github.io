@@ -68,6 +68,7 @@ self.addEventListener( "install", (e) => {
 
 self.addEventListener( "activate", (e) => {
     console.log( "[Service Worker] Activated" );
+    clients.claim();
     self.clients.matchAll().then( (clients) => {
         clients.forEach( client => respond( client, "lifecycle", "First run" ) );
     } );
