@@ -46,6 +46,7 @@ function startPullDaemon( refreshInterval ){
                 txt = await cache.match( SERVICE_WORKER.messageFile );
                 console.log( "[Service Worker] startPullDaemon() try loading from cache", txt );
             }
+			console.log( SERVICE_WORKER.lastNotification, txt );
             if ( SERVICE_WORKER.lastNotification != txt ){
                 SERVICE_WORKER.lastNotification = txt;
 		    	if ( JSON.parse( txt ).title != "" ){
