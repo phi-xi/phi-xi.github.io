@@ -10,7 +10,7 @@ let SERVICE_WORKER = {
     version: "",
     cacheName: "PhiXi",
     cacheFilesAppShell: [
-        "/error-404.html"   // ATTENTION error page must be first element in array!
+        "/error/404.html"   // ATTENTION error page must be first element in array!
     ],
     lastNotification: "",
     messageRefreshInterval: 15,    // in seconds
