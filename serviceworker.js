@@ -44,13 +44,15 @@ function startPullDaemon( refreshInterval ){
                 cache.put( SERVICE_WORKER.messageFile, resClone );
             } else {
                 txt = await cache.match( SERVICE_WORKER.messageFile );
-                console.log( "startPullDaemon() ", txt );
+                console.log( "[Service Worker] startPullDaemon() try loading from cache", txt );
             }
             if ( SERVICE_WORKER.lastNotification != txt ){
                 SERVICE_WORKER.lastNotification = txt;
-                self.clients.matchAll().then( (clients) => {
-                    clients.forEach( client => respond( client, "message", txt ) );
-                } );
+		    	if ( txt != "" ){
+	                self.clients.matchAll().then( (clients) => {
+	                    clients.forEach( client => respond( client, "message", txt ) );
+	                } );
+				}
             }
         } )();
     }, 1000 * refreshInterval );
