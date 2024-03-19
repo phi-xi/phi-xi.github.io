@@ -50,7 +50,7 @@
         UI.onSidebarSelect = (r)=>{
             if ( r[0] == 0 ) UI.loadContent( "start.html" );
             if ( r[0] == 1 ) navigator.serviceWorker.controller.postMessage( "cache-update" );
-            if ( r[0] > 1 ) UI.loadContent( "start.html" );
+            if ( r[0] > 1 ) UI.loadContent( "version.json" );
         };
         //UI.toast( "Hello World!" );
 
