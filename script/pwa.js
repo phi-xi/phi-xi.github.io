@@ -1,4 +1,4 @@
-/*##########################################################################
+/*#########################################################################
 
         Progressive web application interface
 
@@ -15,7 +15,7 @@
     The cache is deleted when the service worker receives the message
     'cache-clear'; note that your application must implement this.
 
-##########################################################################*/
+#########################################################################*/
 
 
 const PWA = ( function(){
