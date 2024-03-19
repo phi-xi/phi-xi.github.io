@@ -8,9 +8,9 @@
 
 let SERVICE_WORKER = {
     version: "",
-    cacheName: "EHLA-Companion",
+    cacheName: "PhiXi",
     cacheFilesAppShell: [
-        "/errors/404.html"   // ATTENTION error page must be first element in array!
+        "/error-404.html"   // ATTENTION error page must be first element in array!
     ],
     lastNotification: "",
     messageRefreshInterval: 15,    // in seconds
