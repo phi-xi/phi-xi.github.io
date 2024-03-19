@@ -11,8 +11,6 @@ class UserInterface {
     #iframe = document.getElementsByClassName("iframe")[0];
     #charCross = "&#x2A2F;";
     #charDots = "&#x22EE;";
-    #serviceWorkerFile = "/serviceworker-v1-0.js";
-    #serviceWorkerVersion = "";
     #callback_sidebar = function(r){};
 
     constructor(){
