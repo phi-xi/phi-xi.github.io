@@ -1,20 +1,20 @@
+/*
+
+        s e r v i c e w o r k e r . j s
+
+*/
+
 
 
 let SERVICE_WORKER = {
     version: "",
-    cacheName: "PhiXi",
+    cacheName: "EHLA-Companion",
     cacheFilesAppShell: [
-        "/error-404.html"   // ATTENTION error page must be first element in array!
-        /*"/index.html",
-        "/page-1.html",
-        "/script/UserInterface.js",
-        "/style/layout.css",
-        "/style/style.css",
-        "/style/style-content.css"*/
+        "/errors/404.html"   // ATTENTION error page must be first element in array!
     ],
     lastNotification: "",
     messageRefreshInterval: 15,    // in seconds
-    messageFile: "/msg.txt",
+    messageFile: "/msg.json",
     versionFile: "/version.json"
 };
 ( async ()=>{
@@ -35,18 +35,13 @@ function startPullDaemon( refreshInterval ){
         ( async()=>{
             const cache = await caches.open( SERVICE_WORKER.cacheName ),
                 rnd = "?" + Math.random().toString().slice(2),
-                res = await fetch( SERVICE_WORKER.messageFile + rnd );
+                res = await fetch( SERVICE_WORKER.messageFile + rnd ),
+                resClone = res.clone();
             let txt = null;
             if ( res.ok ){
                 txt = await res.text();
                 const clients = await self.clients.matchAll();
-                cache.put( SERVICE_WORKER.messageFile, res.clone() );
-                // if ( SERVICE_WORKER.lastNotification != txt ){
-                //     SERVICE_WORKER.lastNotification = txt;
-                //     self.clients.matchAll().then( (clients) => {
-                //         clients.forEach( client => respond( client, "message", txt ) );
-                //     } );
-                // }
+                cache.put( SERVICE_WORKER.messageFile, resClone );
             } else {
                 txt = await cache.match( SERVICE_WORKER.messageFile );
                 console.log( "startPullDaemon() ", txt );
@@ -83,21 +78,18 @@ self.addEventListener( "fetch", (e) => {
         ( async ()=>{
             const cache = await caches.open( SERVICE_WORKER.cacheName );
             try {
-                const rnd = "?" + Math.random().toString().slice(2);
-                let url = e.request.url;
-                if ( url.indexOf( "http://fonts.googleapis.com" ) != 0
-                        && url.indexOf( "https://fonts.googleapis.com" ) != 0
-                        && url.indexOf( "https://fonts.gstatic.com/s/ubuntu" ) != 0 ) url += rnd;
-                const response = await fetch( url );
+                const rnd = "?" + Math.random().toString().slice(2),
+                    url = e.request.url,
+                    response = await fetch( url );
                 if ( response.ok ){
                     cache.put( e.request, response.clone() );
-                    //console.log( "[Service Worker] Serving from remote, updating cache", e.request );
+                    console.log( "[Service Worker] Serving from remote, updating cache", e.request.url );
                     return response;
                 } else {
                     throw new Error( "Failed to fetch resource" );
                 }
             } catch(error){
-                //console.log( "[Service Worker] Serving from cache", e.request );
+                console.log( "[Service Worker] Serving from cache", e.request.url );
                 const r = await caches.match( e.request );
                 if ( r ){
                     return r;
@@ -107,7 +99,6 @@ self.addEventListener( "fetch", (e) => {
                     return fallback;
                 }
             }
-
         } )(),
     );
 } );
