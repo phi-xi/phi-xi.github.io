@@ -13,7 +13,7 @@ let SERVICE_WORKER = {
         "/error/404.html"   // ATTENTION error page must be first element in array!
     ],
     lastNotification: "",
-    messageRefreshInterval: 15,    // in seconds
+    messageRefreshInterval: 30,    // in seconds
     messageFile: "/msg.json",
     versionFile: "/version.json"
 };
@@ -68,12 +68,9 @@ self.addEventListener( "install", (e) => {
 
 self.addEventListener( "activate", (e) => {
     console.log( "[Service Worker] Activated" );
-	e.waitUntil( () => {
-		//clients.claim();
-	    self.clients.matchAll().then( (clients) => {
-			clients.forEach( client => respond( client, "lifecycle", "First run" ) );
-	    } );
-	} );
+    self.clients.matchAll().then( (clients) => {
+	clients.forEach( client => respond( client, "lifecycle", "First run" ) );
+    } );
 } );
 
 self.addEventListener( "fetch", (e) => {
@@ -81,8 +78,8 @@ self.addEventListener( "fetch", (e) => {
         ( async ()=>{
             const cache = await caches.open( SERVICE_WORKER.cacheName );
             try {
-                const rnd = "?" + Math.random().toString().slice(2),
-                    url = e.request.url;
+                const rnd = "?" + Math.random().toString().slice(2);
+                let url = e.request.url;
                 if ( url.indexOf( "http://fonts.googleapis.com" ) != 0
                     && url.indexOf( "https://fonts.googleapis.com" ) != 0
                     && url.indexOf( "https://fonts.gstatic.com/s/ubuntu" ) != 0 ) url += rnd;
