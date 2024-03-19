@@ -13,7 +13,7 @@ let SERVICE_WORKER = {
         "/error/404.html"   // ATTENTION error page must be first element in array!
     ],
     lastNotification: "",
-    messageRefreshInterval: 30,    // in seconds
+    messageRefreshInterval: 15,    // in seconds
     messageFile: "/msg.json",
     versionFile: "/version.json"
 };
@@ -85,7 +85,7 @@ self.addEventListener( "fetch", (e) => {
                     && url.indexOf( "https://fonts.gstatic.com/s/ubuntu" ) != 0 ) url += rnd;
                 const response = await fetch( url );
                 if ( response.ok ){
-                    let p = await cache.put( e.request.url, response.clone() );
+                    let p = await cache.put( e.request, response.clone() );
                     console.log( "[Service Worker] Serving from remote, updating cache", e.request.url );
                     return response;
                 } else {
