@@ -68,10 +68,12 @@ self.addEventListener( "install", (e) => {
 
 self.addEventListener( "activate", (e) => {
     console.log( "[Service Worker] Activated" );
-    //clients.claim();
-    self.clients.matchAll().then( (clients) => {
-        clients.forEach( client => respond( client, "lifecycle", "First run" ) );
-    } );
+	event.waitUntil( self.registration?.navigationPreload.enable() ).then( () => {
+		//clients.claim();
+	    self.clients.matchAll().then( (clients) => {
+	        clients.forEach( client => respond( client, "lifecycle", "First run" ) );
+	    } );
+	} );
 } );
 
 self.addEventListener( "fetch", (e) => {
@@ -86,7 +88,7 @@ self.addEventListener( "fetch", (e) => {
                     && url.indexOf( "https://fonts.gstatic.com/s/ubuntu" ) != 0 ) url += rnd;
                 const response = await fetch( url );
                 if ( response.ok ){
-                    cache.put( e.request.url, response.clone() );
+                    let p = await cache.put( e.request.url, response.clone() );
                     console.log( "[Service Worker] Serving from remote, updating cache", e.request.url );
                     return response;
                 } else {
