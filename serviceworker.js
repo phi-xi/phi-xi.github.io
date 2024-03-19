@@ -68,10 +68,10 @@ self.addEventListener( "install", (e) => {
 
 self.addEventListener( "activate", (e) => {
     console.log( "[Service Worker] Activated" );
-	e.waitUntil( self.registration?.navigationPreload.enable() ).then( () => {
+	e.waitUntil( () => {
 		//clients.claim();
 	    self.clients.matchAll().then( (clients) => {
-	        clients.forEach( client => respond( client, "lifecycle", "First run" ) );
+			clients.forEach( client => respond( client, "lifecycle", "First run" ) );
 	    } );
 	} );
 } );
