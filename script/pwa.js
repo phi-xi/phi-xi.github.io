@@ -21,7 +21,7 @@
 const PWA = ( function(){
 
     const notificationIconURL = "/img/icons-pwa/icon-144.png",
-        servceWorkerFile = "/serviceworker.js",
+        serviceWorkerFile = "/serviceworker.js",
         versionFile = "/version.json";
 
     let serviceWorkerVersion = "";
@@ -55,7 +55,7 @@ const PWA = ( function(){
             } );
         },
         serviceWorker: {
-            file: servceWorkerFile,
+            file: serviceWorkerFile,
             getLatestVersion: ()=>{
                 return serviceWorkerVersion;
             },
