@@ -1,4 +1,8 @@
+
 /*#########################################################################
+
+            p w a . j s
+
 
         Progressive web application interface
 
@@ -16,6 +20,7 @@
     'cache-clear'; note that your application must implement this.
 
 #########################################################################*/
+
 
 
 const PWA = ( function(){
