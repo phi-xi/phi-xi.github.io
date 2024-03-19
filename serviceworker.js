@@ -81,9 +81,9 @@ self.addEventListener( "fetch", (e) => {
             try {
                 const rnd = "?" + Math.random().toString().slice(2),
                     url = e.request.url;
-                 /*if ( url.indexOf( "http://fonts.googleapis.com" ) != 0
+                 if ( url.indexOf( "http://fonts.googleapis.com" ) != 0
                     && url.indexOf( "https://fonts.googleapis.com" ) != 0
-                    && url.indexOf( "https://fonts.gstatic.com/s/ubuntu" ) != 0 ) url += rnd;*/
+                    && url.indexOf( "https://fonts.gstatic.com/s/ubuntu" ) != 0 ) url += rnd;
                 const response = await fetch( url );
                 if ( response.ok ){
                     cache.put( e.request, response.clone() );
