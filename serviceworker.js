@@ -68,7 +68,7 @@ self.addEventListener( "install", (e) => {
 
 self.addEventListener( "activate", (e) => {
     console.log( "[Service Worker] Activated" );
-	event.waitUntil( self.registration?.navigationPreload.enable() ).then( () => {
+	e.waitUntil( self.registration?.navigationPreload.enable() ).then( () => {
 		//clients.claim();
 	    self.clients.matchAll().then( (clients) => {
 	        clients.forEach( client => respond( client, "lifecycle", "First run" ) );
