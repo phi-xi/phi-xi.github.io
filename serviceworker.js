@@ -19,6 +19,20 @@ let SERVICE_WORKER = {
     cacheName: "PhiXi",
     cacheFilesAppShell: [
         "/error/404.html"   // ATTENTION error page must be first element in array!
+        "/index.html",
+        "/start.html",
+        "/style/layout.css",
+        "/style/style.css",
+        "/style/style-content.css",
+        "/script/UserInterface.js",
+        "/script/pwa.js",
+        "/img/icon-phixi.svg",
+        "/img/icon-pwa/icon-64.png",
+        "/img/icon-pwa/icon-128.png",
+        "/img/icon-pwa/icon-144.png",
+        "/img/icon-pwa/icon-192.png",
+        "/img/icon-pwa/icon-256.png",
+        "/img/icon-pwa/icon-512.png"
     ],
     lastNotification: "",
     messageRefreshInterval: 15,    // in seconds
