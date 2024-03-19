@@ -23,7 +23,8 @@ let SERVICE_WORKER = {
     lastNotification: "",
     messageRefreshInterval: 15,    // in seconds
     messageFile: "/msg.json",
-    versionFile: "/version.json"
+    versionFile: "/version.json",
+    isVerbose: false
 };
 ( async ()=>{
     const res = await fetch( SERVICE_WORKER.versionFile );
@@ -32,6 +33,9 @@ let SERVICE_WORKER = {
     SERVICE_WORKER.version = data.serviceWorker;
 } )();
 
+function log( msg ){
+    if ( SERVICE_WORKER.isVerbose ) console.log( "[Service Worker] " + msg );
+}
 function respond( client, topic, text ){
     client.postMessage( {
         topic: topic,
@@ -52,7 +56,7 @@ function startPullDaemon( refreshInterval ){
                 cache.put( SERVICE_WORKER.messageFile, resClone );
             } else {
                 txt = await cache.match( SERVICE_WORKER.messageFile );
-                console.log( "[Service Worker] startPullDaemon() try loading from cache", txt );
+                log( "startPullDaemon(): Try loading from cache", txt );
             }
             if ( SERVICE_WORKER.lastNotification != txt ){
                 SERVICE_WORKER.lastNotification = txt;
@@ -67,7 +71,7 @@ function startPullDaemon( refreshInterval ){
 }
 
 self.addEventListener( "install", (e) => {
-    console.log( "[Service Worker] Installed" );
+    log( "Installed" );
     e.waitUntil(
         ( async () => {
             const cache = await caches.open( SERVICE_WORKER.cacheName );
@@ -77,7 +81,7 @@ self.addEventListener( "install", (e) => {
 } );
 
 self.addEventListener( "activate", (e) => {
-    console.log( "[Service Worker] Activated" );
+    log( "Activated" );
     self.clients.matchAll().then( (clients) => {
 	clients.forEach( client => respond( client, "lifecycle", "First run" ) );
     } );
@@ -96,18 +100,18 @@ self.addEventListener( "fetch", (e) => {
                 const response = await fetch( url );
                 if ( response.ok ){
                     let p = await cache.put( e.request, response.clone() );
-                    console.log( "[Service Worker] Serving from remote, updating cache", e.request.url );
+                    log( "Serving from remote, updating cache", e.request.url );
                     return response;
                 } else {
                     throw new Error( "Failed to fetch resource" );
                 }
             } catch(error){
-                console.log( "[Service Worker] Serving from cache", e.request.url );
+                log( "Serving from cache", e.request.url );
                 const r = await caches.match( e.request );
                 if ( r ){
                     return r;
                 } else {
-                    //console.log( "[Service Worker] Serving from cache failed, try serving error page" );
+                    log( "Serving from cache failed, try serving error page" );
                     const fallback = await caches.match( SERVICE_WORKER.cacheFilesAppShell[0] );
                     return fallback;
                 }

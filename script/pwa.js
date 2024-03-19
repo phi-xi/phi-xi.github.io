@@ -75,7 +75,7 @@ const PWA = ( function(){
                         if ( msg.topic == "version" && serviceWorkerVersion != "" ){
                             const ver = msg.text;
                             if ( ver != serviceWorkerVersion ){
-                                PWA.log( "Update available" );
+                                PWA.log( "Service worker update available, unregistering existing and registering new version..." );
                                 //navigator.serviceWorker.controller.postMessage( "cache-clear" );
                                 PWA.serviceWorker.unregister();
                                 setTimeout( ()=>{
