@@ -1,0 +1,13 @@
+{
+    "command": "",
+    "info": {
+        "version": {
+            "serviceWorker": "1.0.1"
+        }
+    },
+    "notification": {
+        "title": "Hello World!",
+        "body": "This is a test.",
+        "url": ""
+    }
+}
