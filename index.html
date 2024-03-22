@@ -52,7 +52,7 @@
             if ( r == "0," ) UI.loadContent( "start.html" );
             if ( r == "1,0" ) navigator.serviceWorker.controller.postMessage( "cache-update" );
             if ( r == "1,1" ) navigator.serviceWorker.controller.postMessage( "cache-clear" );
-            if ( r[0] > 1 ) UI.loadContent( "version.json" );
+            if ( r[0] > 1 ) UI.loadContent( "pull.json" );
         };
         //UI.toast( "Hello World!" );
 
