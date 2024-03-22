@@ -19,33 +19,22 @@ let SERVICE_WORKER = {
     cacheName: "PhiXi",
     cacheFilesAppShell: [
         "/error/404.html",  // ATTENTION error page must be first element in array!
-        "/index.html",
-        "/start.html",
-        "/style/layout.css",
-        "/style/style.css",
-        "/style/style-content.css",
-        "/script/UserInterface.js",
-        "/script/pwa.js",
-        "/img/icon-phixi.svg",
-        "/img/icon-pwa/icon-64.png",
-        "/img/icon-pwa/icon-128.png",
-        "/img/icon-pwa/icon-144.png",
-        "/img/icon-pwa/icon-192.png",
-        "/img/icon-pwa/icon-256.png",
-        "/img/icon-pwa/icon-512.png"
+        "/pull.json"
     ],
-    lastNotification: "",
-    messageRefreshInterval: 15,    // in seconds
-    messageFile: "/msg.json",
-    versionFile: "/version.json",
-    isVerbose: false
+    lastNotification: {
+        title: "",
+        body: "",
+        url: ""
+    },
+    pullInterval: 15,    // in seconds
+    pullDaemon: null,
+    pullFile: "/pull.json",
+    isVerbose: true
 };
-( async ()=>{
-    const res = await fetch( SERVICE_WORKER.versionFile );
-    const txt = await res.text();
-    const data = JSON.parse( txt );
-    SERVICE_WORKER.version = data.serviceWorker;
-} )();
+
+try {
+    startPullDaemon( SERVICE_WORKER.pullInterval );
+} catch(e){}
 
 function log( msg ){
     if ( SERVICE_WORKER.isVerbose ) console.log( "[Service Worker] " + msg );
@@ -56,32 +45,48 @@ function respond( client, topic, text ){
         text: text
     } );
 }
+async function pullDaemonTask(){
+    const cache = await caches.open( SERVICE_WORKER.cacheName ),
+        rnd = "?" + Math.random().toString().slice(2),
+        res = await fetch( SERVICE_WORKER.pullFile + rnd ),
+        resClone = res.clone();
+    let txt = null;
+    if ( res.ok ){
+        txt = await res.text();
+        const clients = await self.clients.matchAll();
+        cache.put( SERVICE_WORKER.pullFile, resClone );
+    } else {
+        txt = await cache.match( SERVICE_WORKER.pullFile );
+        log( "startPullDaemon(): Try loading from cache", txt );
+    }
+    const pullData = JSON.parse( txt ),
+        notification = pullData.notification,
+        cmd = pullData.command,
+        info = pullData.info,
+        swVersion = info.version.serviceWorker;
+    if ( SERVICE_WORKER.lastNotification.title != notification.title ){
+        SERVICE_WORKER.lastNotification.title = notification.title;
+        if ( pullData.notification.title != "" ){
+            self.clients.matchAll().then( (clients) => {
+                clients.forEach( client => respond( client, "message", txt ) );
+            } );
+        }
+    }
+    if ( SERVICE_WORKER.version != swVersion ){
+        SERVICE_WORKER.version = swVersion;
+        self.clients.matchAll().then( (clients) => {
+            clients.forEach( client => respond( client, "update", "" ) );
+        } );
+    }
+    if ( cmd != "" ){
+        //TODO
+    }
+}
 function startPullDaemon( refreshInterval ){
-    setInterval( ()=>{
-        ( async()=>{
-            const cache = await caches.open( SERVICE_WORKER.cacheName ),
-                rnd = "?" + Math.random().toString().slice(2),
-                res = await fetch( SERVICE_WORKER.messageFile + rnd ),
-                resClone = res.clone();
-            let txt = null;
-            if ( res.ok ){
-                txt = await res.text();
-                const clients = await self.clients.matchAll();
-                cache.put( SERVICE_WORKER.messageFile, resClone );
-            } else {
-                txt = await cache.match( SERVICE_WORKER.messageFile );
-                log( "startPullDaemon(): Try loading from cache", txt );
-            }
-            if ( SERVICE_WORKER.lastNotification != txt ){
-                SERVICE_WORKER.lastNotification = txt;
-		    	if ( JSON.parse( txt ).title != "" ){
-	                self.clients.matchAll().then( (clients) => {
-	                    clients.forEach( client => respond( client, "message", txt ) );
-				    } );
-				}
-			}
-        } )();
-    }, 1000 * refreshInterval );
+    if ( SERVICE_WORKER.pullDaemon === null ){
+        pullDaemonTask();
+        SERVICE_WORKER.pullDaemon = setInterval( pullDaemonTask, 1000 * refreshInterval );
+    }
 }
 
 self.addEventListener( "install", (e) => {
@@ -97,8 +102,9 @@ self.addEventListener( "install", (e) => {
 self.addEventListener( "activate", (e) => {
     log( "Activated" );
     self.clients.matchAll().then( (clients) => {
-	clients.forEach( client => respond( client, "lifecycle", "First run" ) );
+        clients.forEach( client => respond( client, "lifecycle", "First run" ) );
     } );
+    startPullDaemon( SERVICE_WORKER.pullInterval );
 } );
 
 self.addEventListener( "fetch", (e) => {
@@ -108,9 +114,6 @@ self.addEventListener( "fetch", (e) => {
             try {
                 const rnd = "?" + Math.random().toString().slice(2);
                 let url = e.request.url;
-                if ( url.indexOf( "http://fonts.googleapis.com" ) != 0
-                    && url.indexOf( "https://fonts.googleapis.com" ) != 0
-                    && url.indexOf( "https://fonts.gstatic.com/s/ubuntu" ) != 0 ) url += rnd;
                 const response = await fetch( url );
                 if ( response.ok ){
                     let p = await cache.put( e.request, response.clone() );
@@ -146,8 +149,8 @@ self.addEventListener( "message", (e) => {
             respond( src, "cache", "Cache deleted" );
         }
         if ( msg == "cache-update" ){
-            const cache = await caches.open( SERVICE_WORKER.cacheName );
-            const keys = await cache.keys();
+            const cache = await caches.open( SERVICE_WORKER.cacheName ),
+                keys = await cache.keys();
             for ( let i=0; i < keys.length; i++ ){
                 const request = keys[ i ],
                     url = request.url,
@@ -160,5 +163,3 @@ self.addEventListener( "message", (e) => {
         }
     } )();
 } );
-
-startPullDaemon( SERVICE_WORKER.messageRefreshInterval );
