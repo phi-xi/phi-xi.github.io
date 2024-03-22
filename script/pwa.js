@@ -22,37 +22,19 @@
 #########################################################################*/
 
 
-
 const PWA = ( function(){
 
-    const notificationIconURL = "/img/icons-pwa/icon-144.png",
-        serviceWorkerFile = "/serviceworker.js",
-        versionFile = "/version.json";
+    const notificationIconURL = "/img/icon-pwa/icon-144.png",
+        serviceWorkerFile = "/serviceworker.js";
 
     let serviceWorkerVersion = "";
-
-    async function getLatestVersion(){
-        const res = await fetch( versionFile + "?" + Math.random().toString().slice(2) );
-        if ( res.ok ){
-            const txt = await res.text();
-            try {
-                const data = JSON.parse( txt );
-                return data.serviceWorker;
-            } catch(e){}
-        }
-        return false;
-    }
-
-    ( async ()=>{
-        serviceWorkerVersion = await getLatestVersion();
-    } )();
 
     return {
         isStandalone: ()=>{
             return window.matchMedia( "(display-mode: standalone)" ).matches;
         },
         log: (msg)=>{
-            console.log( "[PWA] " + msg );
+            new Toast( "[PWA] " + msg ).letConfirm().show();
         },
         requestPermissionNotify: ()=>{
             Notification.requestPermission().then( (result)=>{
@@ -61,52 +43,37 @@ const PWA = ( function(){
         },
         serviceWorker: {
             file: serviceWorkerFile,
-            getLatestVersion: ()=>{
-                return serviceWorkerVersion;
-            },
-            register: ()=>{
+            register: ( scope="/" )=>{
                 if ( "serviceWorker" in navigator ){
                     navigator.serviceWorker.register( PWA.serviceWorker.file, {
-                        scope: "/"
+                        scope: scope
                     } );
                     navigator.serviceWorker.addEventListener( "message", (event)=>{
                         const msg = event.data,
-                            serviceWorkerVersion = PWA.serviceWorker.getLatestVersion();
-                        if ( msg.topic == "version" && serviceWorkerVersion != "" ){
-                            const ver = msg.text;
-                            if ( ver != serviceWorkerVersion ){
-                                PWA.log( "Service worker update available, unregistering existing and registering new version..." );
-                                //navigator.serviceWorker.controller.postMessage( "cache-clear" );
-                                PWA.serviceWorker.unregister();
-                                setTimeout( ()=>{
-                                    window.location.href = "/";
-                                }, 3000 );
-                            }
-                        }
-                        if ( msg.topic == "cache" ){
+                            msgTopic = [ "cache", "lifecycle", "version" ];
+                        if ( msgTopic.indexOf( msg.topic ) >= 0 ){
                             PWA.log( msg.text );
                         }
-                        if ( msg.topic == "lifecycle" ){
-                            PWA.log( msg.text );
+                        if ( msg.topic == "update" ){
+                            PWA.log( "Service worker update available, unregistering existing and registering new version..." );
+                            PWA.serviceWorker.unregister();
+                            setTimeout( ()=>{
+                                window.location.href = "/";
+                            }, 3000 );
                         }
                         if ( msg.topic == "message" ){
-                            const data = JSON.parse( msg.text );
+                            const data = JSON.parse( msg.text ).notification;
                             let cb = (e)=>{},
                                 config = {
-                                body: data.body,
-                                icon: notificationIconURL
-                            };
+                                    body: data.body,
+                                    icon: notificationIconURL
+                                };
                             if ( data.url != "" ) cb = (e)=>{
                                 e.preventDefault();
                                 window.open( data.url );
                             };
                             new Notification( data.title, config ).onclick = cb;
                         }
-                    } );
-                    navigator.serviceWorker.ready.then( (r)=>{
-                        setTimeout( ()=>{
-                            navigator.serviceWorker.controller.postMessage( "version" );
-                        }, 10000 );
                     } );
                 } else {
                     PWA.log( "Error: serviceWorker interface not available" );
@@ -126,10 +93,13 @@ const PWA = ( function(){
                 } else {
                     PWA.log( "Error: serviceWorker interface not available" );
                 }
+            },
+            post: ( msg )=>{
+                navigator.serviceWorker.controller.postMessage( msg );
             }
         }
     };
 
 } )();
 
-PWA.serviceWorker.register();
+PWA.serviceWorker.register( "/test/mobile/" );
