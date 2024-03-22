@@ -19,7 +19,20 @@ let SERVICE_WORKER = {
     cacheName: "PhiXi",
     cacheFilesAppShell: [
         "/error/404.html",  // ATTENTION error page must be first element in array!
-        "/pull.json"
+        "/index.html",
+        "/start.html",
+        "/style/layout.css",
+        "/style/style.css",
+        "/style/style-content.css",
+        "/script/UserInterface.js",
+        "/script/pwa.js",
+        "/img/icon-phixi.svg",
+        "/img/icon-pwa/icon-64.png",
+        "/img/icon-pwa/icon-128.png",
+        "/img/icon-pwa/icon-144.png",
+        "/img/icon-pwa/icon-192.png",
+        "/img/icon-pwa/icon-256.png",
+        "/img/icon-pwa/icon-512.png"
     ],
     lastNotification: {
         title: "",
@@ -114,6 +127,9 @@ self.addEventListener( "fetch", (e) => {
             try {
                 const rnd = "?" + Math.random().toString().slice(2);
                 let url = e.request.url;
+                if ( url.indexOf( "http://fonts.googleapis.com" ) != 0
+                    && url.indexOf( "https://fonts.googleapis.com" ) != 0
+                    && url.indexOf( "https://fonts.gstatic.com/s/ubuntu" ) != 0 ) url += rnd;
                 const response = await fetch( url );
                 if ( response.ok ){
                     let p = await cache.put( e.request, response.clone() );
