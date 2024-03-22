@@ -1,0 +1,7 @@
+
+## Redirect /a/b/c/d/e/f/g  to  /api/a/index.php?b=c&d=e&f=g
+#
+#RewriteEngine On
+#RewriteRule ^api/([a-z0-9]+)/([a-z0-9]+)/([a-z0-9]+)/?$ api/$1/index.php?$2=$3 [QSA,L]
+#RewriteRule ^api/([a-z0-9]+)/([a-z0-9]+)/([a-z0-9]+)/([a-z0-9]+)/([a-z0-9]+)/?$ api/$1/index.php?$2=$3&$4=$5 [QSA,L]
+#RewriteRule ^api/([a-z0-9]+)/([a-z0-9]+)/([a-z0-9]+)/([a-z0-9]+)/([a-z0-9]+)/([a-z0-9]+)/([a-z0-9]+)/?$ api/$1/index.php?$2=$3&$4=$5&$6=$7 [QSA,L]
