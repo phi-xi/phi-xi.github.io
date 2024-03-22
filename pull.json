@@ -2,12 +2,12 @@
     "command": "",
     "info": {
         "version": {
-            "serviceWorker": "1.0.1"
+            "serviceWorker": "1.0.0"
         }
     },
     "notification": {
-        "title": "Hello World!",
-        "body": "This is a test.",
+        "title": "",
+        "body": "",
         "url": ""
     }
 }
