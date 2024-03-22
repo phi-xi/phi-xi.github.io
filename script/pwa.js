@@ -102,4 +102,4 @@ const PWA = ( function(){
 
 } )();
 
-PWA.serviceWorker.register( "/test/mobile/" );
+PWA.serviceWorker.register( "/" );
