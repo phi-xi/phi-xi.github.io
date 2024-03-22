@@ -34,7 +34,7 @@ const PWA = ( function(){
             return window.matchMedia( "(display-mode: standalone)" ).matches;
         },
         log: (msg)=>{
-            new Toast( "[PWA] " + msg ).letConfirm().show();
+            console.log( "[PWA] " + msg );
         },
         requestPermissionNotify: ()=>{
             Notification.requestPermission().then( (result)=>{
