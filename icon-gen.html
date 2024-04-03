@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
+        <title>&#x03A6;&#x039E;..PhiXi</title>
+        <link rel="manifest" href="/manifest.json">
+        <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Ubuntu:regular,bold&subset=Latin">
+        <link rel="stylesheet" href="/style/layout.css?20">
+        <link rel="stylesheet" href="/style/style-content.css?21">
+        <script type="text/javascript" src="/script/UserInterface.js"></script>
+        <style></style>
+    </head>
+    <body>
+        <h1>Icon Generator</h1><br><br>
+        <input id="file-select" type="file"><br><br><br>
+        <img id="p-icon" src="" width="200"><br><br><br>
+        <div id="result-box"></div>
+    </body>
+    <script>
+        const icon = document.getElementById( "p-icon" ),
+            fileSelect = document.getElementById( "file-select" ),
+            resultBox = document.getElementById( "result-box" ),
+            size = [ 32, 64, 128, 144, 168, 192, 256, 512 ];
+
+        function genIcons(){
+            for ( let i=0; i < size.length; i++ ){
+                let link = document.createElement( "a" ),
+                    c = document.createElement( "canvas" ),
+                    ctx = c.getContext( "2d" )
+                    s = size[ i ];
+                c.width = s;
+                c.height = s;
+                ctx.drawImage( icon, 0, 0, s, s );
+                link.setAttribute( "href", c.toDataURL() );
+                link.setAttribute( "download", "icon-" + s.toString() );
+                link.innerHTML = "Download" + s.toString();
+                resultBox.appendChild( link );
+                resultBox.appendChild( document.createElement("br") );
+            }
+        }
+
+        fileSelect.addEventListener( "change", ()=>{
+            let fr = new FileReader(),
+                f = fileSelect.files[0];
+            fr.onload = ()=>{
+                let url = fr.result;
+                icon.src = url;
+                setTimeout( genIcons, 1000 );
+            }
+            fr.readAsDataURL( f );
+        } );
+
+    </script>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

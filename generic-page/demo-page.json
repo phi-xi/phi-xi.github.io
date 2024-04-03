@@ -1,0 +1,60 @@
+[
+    {
+        "tagName": "head",
+        "children": [
+            {
+                "tagName": "title",
+                "innerHTML": "TEST"
+            },
+            {
+                "tagName": "link",
+                "attributes": {
+                    "rel": "stylesheet",
+                    "href": "https://phi-xi.github.io/style/style.css"
+                }
+            },
+            {
+                "tagName": "link",
+                "attributes": {
+                    "rel": "stylesheet",
+                    "href": "https://phi-xi.github.io/style/style-content.css"
+                }
+            },
+            {
+                "tagName": "link",
+                "attributes": {
+                    "rel": "stylesheet",
+                    "href": "https://fonts.googleapis.com/css?family=Ubuntu:regular,bold&subset=Latin"
+                }
+            }
+        ]
+    },
+    {
+        "tagName": "body",
+        "style": {
+            "textAlign": "center"
+        },
+        "children": [
+            {
+                "tagName": "div",
+                "classList": [ "div" ],
+                "innerHTML": "This is a div.",
+                "attributes": {},
+                "style": {
+                    "width": "100%",
+                    "fontSize": "20pt",
+                    "fontWeight": "bold",
+                    "fontFamily": "Ubuntu"
+                },
+                "children": [
+                    {
+                        "tagName": "button",
+                        "display": "block",
+                        "classList": [ "button" ],
+                        "innerHTML": "OK"
+                    }
+                ]
+            }
+        ]
+    }
+]
