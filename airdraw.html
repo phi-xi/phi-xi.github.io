@@ -6,6 +6,7 @@
                 padding: 0;
                 margin: 0;
                 background-color: #000;
+                text-align: center;
             }
             #ad-canvas,
             #ad-camera{
@@ -13,30 +14,54 @@
             }
             #ad-screen-wrap{
                 width: 100%;
-                height: 100%;
+                height: 90%;
                 text-align: center;
             }
             #ad-screen{
+                position: absolute;
+                top: 0;
+                left: 0;
                 height: 100%;
                 transform: scale( -1, 1 );
+                border: solid 1px red;
+                z-index: 2;
             }
-            #ad-camera{
-                /* */
+            #ad-cursor{
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                transform: scale( -1, 1 );
+                opacity: 0.5;
+                z-index: 3;
+            }
+            #ad-ctrl-wrap{
+                height: 10%;
+                border: solid 1px blue;
+                display: none;
             }
         </style>
     </head>
     <body>
+        <div id="ad-ctrl-wrap">
+            <button onclick="CAMERA_VIDEO_STREAM.srcObject=null">Stop</button>
+        </div>
         <div id="ad-screen-wrap">
             <img id="ad-screen" src="">
+            <img id="ad-cursor" src="">
         </div>
         <video id="ad-camera" autoplay loop muted>
             <source src="" >
         </video>
-        <canvas id="ad-canvas"></canvas>
     </body>
     <script>
 
-        const RATE = 50;    // in milliseconds
+        const
+            RATE = 50;          // in milliseconds
+            STROKE_WIDTH = 10,  // in pixels
+            STROKE_COLOR = "#0F0",
+            CURSOR_COLOR = "#F0F",
+            IS_TARGET_COLOR = isRed;
 
         function r(n){
             return document.getElementById(n)
@@ -57,57 +82,74 @@
                 && ( r+g+b > 200 )
                 && ( r+g+b < 750 ) );
         }
-        function captureImage(){
-            CANVAS.width = WIDTH;
-            CANVAS.height = HEIGHT;
-            CTX.drawImage( CAMERA_VIDEO_STREAM, 0, 0, WIDTH, HEIGHT );
-            setCursor();
-            // const data = CANVAS_OUT.toDataURL( "image/jpeg" );
-            const data = CANVAS.toDataURL( "image/jpeg" );
-            SCREEN.src = data;
+        function getPosition( n ){
+            return {
+                x: n % CANVAS_IN.width,
+                y: n / CANVAS_IN.width
+            };
         }
-        function setCursor(){
-            const step = 10,
-                data = CTX.getImageData( 0, 0, CANVAS.width, CANVAS.height ).data;
-            for ( let i=0; i < data.length-4; i+=4 ){
+        function drawRect( ctx, pos, w, h, color ){
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.rect( pos.x, pos.y, w, h );
+            ctx.fill();
+        }
+
+        function captureImage(){
+            CTX_IN.drawImage( CAMERA_VIDEO_STREAM, 0, 0, WIDTH, HEIGHT );
+        }
+        function refreshPencilPosition(){
+            const step = 1 *4,
+                data = CTX_IN.getImageData( 0, 0, CANVAS_IN.width, CANVAS_IN.height ).data;
+            for ( let i=0; i < data.length-step; i+=step ){
                 let r = data[ i ],
                     g = data[ i+1 ],
                     b = data[ i+2 ];
                 if ( isRed( r, g, b ) ){
-                    let pos = getPosition( i/4 );
-                    drawPixel( pos );
-                    return;
+                    CURSOR_POS = getPosition( i/step );
                 }
             }
         }
-        function getPosition( n ){
-            return {
-                x: n % CANVAS.width,
-                y: n / CANVAS.width
-            };
+        function refreshScreen(){
+            SCREEN.src = CANVAS_OUT.toDataURL( "image/jpeg" );
         }
-        function drawPixel( pos ){
-            /*CTX_OUT.fillStyle = "#0F0";
-            CTX_OUT.beginPath();
-            CTX_OUT.rect( pos.x, pos.y, 10, 10 );
-            CTX_OUT.fill();*/
-            CTX.fillStyle = "#0F0";
-            CTX.beginPath();
-            CTX.rect( pos.x, pos.y, 10, 10 );
-            CTX.fill();
+        function refreshCursor(){
+            clearCursor();
+            drawRect( CTX_CURSOR, CURSOR_POS, STROKE_WIDTH, STROKE_WIDTH, CURSOR_COLOR );
+            CURSOR.src = CANVAS_CURSOR.toDataURL();
+        }
+        function stroke(){
+            if ( !IS_ACTIVE ) return;
+            drawRect( CTX_OUT, CURSOR_POS, STROKE_WIDTH, STROKE_WIDTH, STROKE_COLOR );
+        }
+        function clearCursor(){
+            drawRect( CTX_CURSOR, {x:0, y:0}, WIDTH, HEIGHT, "#000" );
+        }
+        function clearScreen(){
+            drawRect( CTX_OUT, {x:0, y:0}, WIDTH, HEIGHT, "#000" );
         }
 
-        const SCREEN = r( "ad-screen" ),
-            SCREEN_STROKE = r( "ad-screen-stroke" ),
-            CANVAS = r( "ad-canvas" ),
-            CTX = CANVAS.getContext( "2d" ),
+        const
+            CAMERA_VIDEO_STREAM = r( "ad-camera" ),
+            CURSOR = r( "ad-cursor" ),
+            SCREEN = r( "ad-screen" ),
+            SCREEN_WRAP = r( "ad-screen-wrap" ),
+            CANVAS_IN = document.createElement( "canvas" ),
+            CTX_IN = CANVAS_IN.getContext( "2d" ),
             CANVAS_OUT = document.createElement( "canvas" ),
             CTX_OUT = CANVAS_OUT.getContext( "2d" ),
-            CAMERA_VIDEO_STREAM = r( "ad-camera" );
+            CANVAS_CURSOR = document.createElement( "canvas" ),
+            CTX_CURSOR = CANVAS_CURSOR.getContext( "2d" );
 
-        let WIDTH = window.innerWidth,
-            HEIGHT = 0,
-            STREAMING = false;
+        let
+            WIDTH = window.innerWidth,
+            HEIGHT = window.innerHeight,
+            STREAMING = false,
+            IS_ACTIVE = false,
+            CURSOR_POS = {
+                x: WIDTH/2,
+                y: HEIGHT/2
+            };
 
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia( { video: true } ) ){
             navigator.mediaDevices
@@ -130,16 +172,28 @@
         CAMERA_VIDEO_STREAM.addEventListener( "canplay", ( ev ) => {
             if ( !STREAMING ){
                 HEIGHT = CAMERA_VIDEO_STREAM.videoHeight / ( CAMERA_VIDEO_STREAM.videoWidth / WIDTH );
-                CANVAS.setAttribute( "width", WIDTH );
-                CANVAS.setAttribute( "height", HEIGHT );
+                CANVAS_IN.setAttribute( "width", WIDTH );
+                CANVAS_IN.setAttribute( "height", HEIGHT );
                 CANVAS_OUT.setAttribute( "width", WIDTH );
                 CANVAS_OUT.setAttribute( "height", HEIGHT );
+                CANVAS_CURSOR.setAttribute( "width", WIDTH );
+                CANVAS_CURSOR.setAttribute( "height", HEIGHT );
+                CANVAS_IN.width = WIDTH;
+                CANVAS_IN.height = HEIGHT;
                 CAMERA_VIDEO_STREAM.setAttribute( "width", WIDTH );
                 CAMERA_VIDEO_STREAM.setAttribute( "height", HEIGHT );
-                STREAMING = true;
+                STREAMCAMERA_VIDEO_STREAMING = true;
                 setInterval( captureImage, RATE );
+                setInterval( refreshPencilPosition, RATE*2 );
+                setInterval( refreshScreen, RATE*2 );
+                setInterval( refreshCursor, RATE*2 );
+                setInterval( stroke, RATE*2 );
             }
         }, false );
+
+        window.addEventListener( "keydown", ()  => { IS_ACTIVE = true } );
+        window.addEventListener( "keyup",   ()  => { IS_ACTIVE = false } );
+        window.addEventListener( "keydown", (e) => { if ( e.key == "Enter" ) setTimeout( clearScreen, 300 ) } );
 
     </script>
 </html>
