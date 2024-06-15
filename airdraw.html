@@ -57,10 +57,16 @@
     <script>
 
         const
-            RATE = 50;          // in milliseconds
             STROKE_WIDTH = 10,  // in pixels
             STROKE_COLOR = "#0F0",
             CURSOR_COLOR = "#F0F",
+            REFRESH_RATE = {    // all in milliseconds
+                capture: 25,
+                pencil: 30,
+                screen: 50,
+                cursor: 50,
+                stroke: 100
+            },
             IS_TARGET_COLOR = isRed;
 
         function r(n){
@@ -128,18 +134,39 @@
         function clearScreen(){
             drawRect( CTX_OUT, {x:0, y:0}, WIDTH, HEIGHT, "#000" );
         }
+        function startDaemons(){
+            setInterval( captureImage, REFRESH_RATE.capture );
+            setInterval( refreshPencilPosition, REFRESH_RATE.pencil );
+            setInterval( refreshScreen, REFRESH_RATE.screen );
+            setInterval( refreshCursor, REFRESH_RATE.cursor );
+            setInterval( stroke, REFRESH_RATE.stroke );
+        }
+        function scaleVideoAndCanvases(){
+            HEIGHT = CAMERA_VIDEO_STREAM.videoHeight / ( CAMERA_VIDEO_STREAM.videoWidth / WIDTH );
+            const canvas = [ CANVAS_IN, CANVAS_OUT, CANVAS_CURSOR ];
+            for ( let i in canvas ){
+                let can = canvas[ i ];
+                can.width = WIDTH;
+                can.height = HEIGHT;
+            }
+            CAMERA_VIDEO_STREAM.setAttribute( "width", WIDTH );
+            CAMERA_VIDEO_STREAM.setAttribute( "height", HEIGHT );
+        }
 
         const
             CAMERA_VIDEO_STREAM = r( "ad-camera" ),
             CURSOR = r( "ad-cursor" ),
             SCREEN = r( "ad-screen" ),
             SCREEN_WRAP = r( "ad-screen-wrap" ),
+            CTX_OPTIONS = {
+                willReadFrequently: true
+            },
             CANVAS_IN = document.createElement( "canvas" ),
-            CTX_IN = CANVAS_IN.getContext( "2d" ),
+            CTX_IN = CANVAS_IN.getContext( "2d", CTX_OPTIONS ),
             CANVAS_OUT = document.createElement( "canvas" ),
-            CTX_OUT = CANVAS_OUT.getContext( "2d" ),
+            CTX_OUT = CANVAS_OUT.getContext( "2d", CTX_OPTIONS ),
             CANVAS_CURSOR = document.createElement( "canvas" ),
-            CTX_CURSOR = CANVAS_CURSOR.getContext( "2d" );
+            CTX_CURSOR = CANVAS_CURSOR.getContext( "2d", CTX_OPTIONS );
 
         let
             WIDTH = window.innerWidth,
@@ -171,23 +198,9 @@
 
         CAMERA_VIDEO_STREAM.addEventListener( "canplay", ( ev ) => {
             if ( !STREAMING ){
-                HEIGHT = CAMERA_VIDEO_STREAM.videoHeight / ( CAMERA_VIDEO_STREAM.videoWidth / WIDTH );
-                CANVAS_IN.setAttribute( "width", WIDTH );
-                CANVAS_IN.setAttribute( "height", HEIGHT );
-                CANVAS_OUT.setAttribute( "width", WIDTH );
-                CANVAS_OUT.setAttribute( "height", HEIGHT );
-                CANVAS_CURSOR.setAttribute( "width", WIDTH );
-                CANVAS_CURSOR.setAttribute( "height", HEIGHT );
-                CANVAS_IN.width = WIDTH;
-                CANVAS_IN.height = HEIGHT;
-                CAMERA_VIDEO_STREAM.setAttribute( "width", WIDTH );
-                CAMERA_VIDEO_STREAM.setAttribute( "height", HEIGHT );
-                STREAMCAMERA_VIDEO_STREAMING = true;
-                setInterval( captureImage, RATE );
-                setInterval( refreshPencilPosition, RATE*2 );
-                setInterval( refreshScreen, RATE*2 );
-                setInterval( refreshCursor, RATE*2 );
-                setInterval( stroke, RATE*2 );
+                STREAMING = true;
+                scaleVideoAndCanvases();
+                startDaemons();
             }
         }, false );
 
