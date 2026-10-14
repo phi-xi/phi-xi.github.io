@@ -1,0 +1,94 @@
+:root {
+    --orange-lite: 		#FF6611;
+    --orange: 			#CC3E11;
+    --orange-dark: 		#7A250A;
+    --green-lite: 		#1FEE08;
+    --green: 			#039908;
+    --green-dark: 		#027005;
+    --cyan: 			#00EEEE;
+    --cyan-dark: 		#00AAAA;
+    --white: 			#efefef;
+    --black: 			#000000;
+    --gray-lite: 		#555;
+    --gray: 			#222;
+    --gray-dark: 		#171717;
+}
+
+body {
+    font-family: 		Ubuntu;
+    font-size: 			14pt;
+    background-color: 	#000;
+    color: 				#aaa;
+}
+
+.px-mdv-wrap {
+    margin: 			1rem;
+}
+
+.px-mdv-headline-1 {
+    color: 				#bbb;
+}
+
+.px-mdv-headline-2 {
+    color: 				#bbb;
+}
+
+.px-mdv-headline-3 {
+    color: 				#ddd;
+}
+
+.px-mdv-headline-4 {
+}
+
+.px-mdv-list {
+}
+
+.px-mdv-list-item {
+}
+
+.px-mdv-line {
+}
+
+.px-mdv-link {
+}
+
+.px-mdv-code {
+    font-family: 		monospace;
+    font-size: 			1rem;
+    margin: 			0;
+    padding: 			0.25em;
+    background-color: 	#222;
+    color: 				#ddd
+}
+
+.px-mdv-inline {
+    display: 			inline-block;
+    margin: 			0;
+}
+
+.px-mdv-paragraf {
+    margin-left: 		1em;
+}
+
+.px-mdv-quote {
+    font-style: 		italic;
+    color: 				#ddd;
+}
+
+.htgate-table {
+    border-color: 		var(--gray-dark);
+    border-collapse: 	collapse;
+}
+
+.htgate-tr {
+}
+
+.htgate-td,.htgate-th {
+    border: 			1px solid var(--gray-lite);
+    padding: 			0.2em;
+}
+
+.htgate-th {
+    background-color: 	var(--gray);
+    color: 				var(--orange-lite);
+}
