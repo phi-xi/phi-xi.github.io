@@ -71,8 +71,8 @@ const U = ( function(){
 
         r: ( n ) => {
             return document.getElementById( n )
-            || document.getElementsByClassName( n )
-            || document.getElementsByTagName( n );
+                || document.getElementsByClassName( n )
+                || document.getElementsByTagName( n );
         },
         mk: ( e="div", cn="" ) => {
             let _e = document.createElement( e );
@@ -116,130 +116,129 @@ const U = ( function(){
             form: ( elementOrIdx ) => {
                 return {
                     getData: () => {},
-            submit: () => {}
+                    submit: () => {}
                 };
             },
             tab: ( n=-1 ) => {
                 const
-                tabs = U.r( "tab" ),
-            tab = ( typeof(n) == "number" ) ? tabs[ n ] : n;
-            return {
-                collapse: () => {
-                    tab.children[0].classList.add( "tab-title-collapsed" );
-                    tab.children[1].classList.add( "tab-cnt-collapsed" );
-                },
-                expand: () => {
-                    tab.children[0].classList.remove( "tab-title-collapsed" );
-                    tab.children[1].classList.remove( "tab-cnt-collapsed" );
-                },
-                makeCollapsible: () => {
-                    const
-                    tabs    = U.r( "tab" ),
-            titles  = U.r( "tab-title" ),
-            cnts    = U.r( "tab-cnt" );
-            function collapseTabsExcept( tabElement ){
-                for ( let i=0; i < tabs.length; i++ ){
-                    U.ui.tab( i ).collapse();
-                }
-                U.ui.tab( tabElement ).expand();
-            }
-            function setWidthOfTab( c ){
-                let cc = c.children[1];
-                cc.style.width = ( cc.clientWidth - cc.offsetLeft ).toString() + "px";
-            }
-            function tabScrollStart( e ){
-                state.tabScroll = true;
-            }
-            function tabScrollStop( e ){
-                state.tabScroll = false;
-            }
-            function _tabScrollMove( e ){
-                let t  = e.target;
-                if ( !t.className.includes( "tab" ) && !t.className.includes( "tab-title" ) ) return;
-                let tab = title = cnt = x = null;
-                if ( U.ui.client.isMobile ){
-                    if ( e.touches == void(0) ) return;
-                    tab     = t.parentElement;
-                    title   = tab.children[0];
-                    cnt     = tab.children[1];
-                    x       = e.touches[0].pageX;
-                } else {
-                    tab     = this.tab;
-                    title   = this.title;
-                    cnt     = this.cnt;
-                    x       = e.pageX;
-                }
-                if ( !hasOverflow( cnt ) ) return;
-                if ( state.tabScroll ){
-                    const marginClient = Number( title.style.marginLeft
-                    .replace( /[A-Za-z]*/g, "" ) );
-                    if ( marginClient < 0 ){
-                        setTimeout( ()=>{
-                            title.style.marginLeft = "1px";
-                        }, 500 );
-                        return;
+                    tabs = U.r( "tab" ),
+                    tab = ( typeof(n) == "number" ) ? tabs[ n ] : n;
+                return {
+                    collapse: () => {
+                        tab.children[0].classList.add( "tab-title-collapsed" );
+                        tab.children[1].classList.add( "tab-cnt-collapsed" );
+                    },
+                    expand: () => {
+                        tab.children[0].classList.remove( "tab-title-collapsed" );
+                        tab.children[1].classList.remove( "tab-cnt-collapsed" );
+                    },
+                    makeCollapsible: () => {
+                        const
+                            tabs    = U.r( "tab" ),
+                            titles  = U.r( "tab-title" ),
+                            cnts    = U.r( "tab-cnt" );
+                        function collapseTabsExcept( tabElement ){
+                            for ( let i=0; i < tabs.length; i++ ){
+                                U.ui.tab( i ).collapse();
+                            }
+                            U.ui.tab( tabElement ).expand();
+                        }
+                        function setWidthOfTab( c ){
+                            let cc = c.children[1];
+                            cc.style.width = ( cc.clientWidth - cc.offsetLeft ).toString() + "px";
+                        }
+                        function tabScrollStart( e ){
+                            state.tabScroll = true;
+                        }
+                        function tabScrollStop( e ){
+                            state.tabScroll = false;
+                        }
+                        function _tabScrollMove( e ){
+                            let t  = e.target;
+                            if ( !t.className.includes( "tab" ) && !t.className.includes( "tab-title" ) ) return;
+                            let tab = title = cnt = x = null;
+                            if ( U.ui.client.isMobile ){
+                                if ( e.touches == void(0) ) return;
+                                tab     = t.parentElement;
+                                title   = tab.children[0];
+                                cnt     = tab.children[1];
+                                x       = e.touches[0].pageX;
+                            } else {
+                                tab     = this.tab;
+                                title   = this.title;
+                                cnt     = this.cnt;
+                                x       = e.pageX;
+                            }
+                            if ( !hasOverflow( cnt ) ) return;
+                            if ( state.tabScroll ){
+                                const marginClient = Number( title.style.marginLeft
+                                .replace( /[A-Za-z]*/g, "" ) );
+                                if ( marginClient < 0 ){
+                                    setTimeout( ()=>{
+                                        title.style.marginLeft = "1px";
+                                    }, 500 );
+                                    return;
+                                }
+                                let relX    = x / tab.clientWidth,
+                                d       = relX * ( cnt.scrollHeight - cnt.offsetHeight ),
+                        margin  = relX * window.innerWidth;
+                        if ( margin > tab.clientWidth - title.clientWidth / 2 ){
+                            margin = tab.clientWidth - title.clientWidth;
+                            d = cnt.scrollHeight;
+                        }
+                        cnt.scrollTo( 0, d );
+                        title.style.marginLeft = margin.toString() + "px";
+                            }
+                        }
+                        function hasOverflow( element ){
+                            return ( element.scrollHeight > element.clientHeight );
+                        }
+                        function makeTabsCollapsible(){
+                            document.body.style.overflowX = "hidden";
+                            document.body.addEventListener( "touchstart", tabScrollStart, false );
+                            document.body.addEventListener( "touchmove", _tabScrollMove, false );
+                            document.body.addEventListener( "touchend", tabScrollStop, false );
+                            window.addEventListener( "mouseup", tabScrollStop );
+                            for ( let i=0; i < cnts.length; i++ ){
+                                let tab     = tabs[ i ],
+                                title   = titles[ i ],
+                                cnt     = cnts[ i ],
+                                parent  = title.parentElement;
+                                title.classList.add( "tab-title-collapsed" );
+                                cnt.classList.add( "tab-cnt-collapsed" );
+                                cnt.style.overflowY = "hidden";
+                                cnt.style.height    = "40vh";
+                                cnt.addEventListener( "scroll", function(e){
+                                    if ( state.tabScroll ) return;
+                                    let y       = cnt.scrollTop,
+                                    relY    = y / cnt.scrollHeight,
+                                    d       = relY * tab.clientWidth + title.clientWidth;
+                                    title.style.marginLeft = d.toString() + "px";
+                                } );
+                                title.addEventListener( "click", function(){
+                                    const isCollapsed = title.classList.contains( "tab-title-collapsed" );
+                                    collapseTabsExcept( parent );
+                                    if ( isCollapsed ) setWidthOfTab( parent );
+                                } );
+                                    title.addEventListener( "mousedown", tabScrollStart );
+                                    const tabScrollMove = _tabScrollMove.bind( {
+                                        tab:    tab,
+                                        title:  title,
+                                        cnt:    cnt,
+                                        self:   title
+                                    } );
+                                    tab.addEventListener( "mousemove", tabScrollMove );
+                            }
+                        }
+                        makeTabsCollapsible();
                     }
-                    let relX    = x / tab.clientWidth,
-                    d       = relX * ( cnt.scrollHeight - cnt.offsetHeight ),
-            margin  = relX * window.innerWidth;
-            if ( margin > tab.clientWidth - title.clientWidth / 2 ){
-                margin = tab.clientWidth - title.clientWidth;
-                d = cnt.scrollHeight;
-            }
-            cnt.scrollTo( 0, d );
-            title.style.marginLeft = margin.toString() + "px";
-                }
-            }
-            function hasOverflow( element ){
-                return ( element.scrollHeight > element.clientHeight );
-            }
-            function makeTabsCollapsible(){
-                document.body.style.overflowX = "hidden";
-                document.body.addEventListener( "touchstart", tabScrollStart, false );
-                document.body.addEventListener( "touchmove", _tabScrollMove, false );
-                document.body.addEventListener( "touchend", tabScrollStop, false );
-                window.addEventListener( "mouseup", tabScrollStop );
-                for ( let i=0; i < cnts.length; i++ ){
-                    let tab     = tabs[ i ],
-                    title   = titles[ i ],
-                    cnt     = cnts[ i ],
-                    parent  = title.parentElement;
-                    title.classList.add( "tab-title-collapsed" );
-                    cnt.classList.add( "tab-cnt-collapsed" );
-                    cnt.style.overflowY = "hidden";
-                    cnt.style.height    = "40vh";
-                    cnt.addEventListener( "scroll", function(e){
-                        if ( state.tabScroll ) return;
-                        let y       = cnt.scrollTop,
-                        relY    = y / cnt.scrollHeight,
-                        d       = relY * tab.clientWidth + title.clientWidth;
-                        title.style.marginLeft = d.toString() + "px";
-                    } );
-                    title.addEventListener( "click", function(){
-                        const isCollapsed = title.classList.contains( "tab-title-collapsed" );
-                        collapseTabsExcept( parent );
-                        if ( isCollapsed ) setWidthOfTab( parent );
-                    } );
-                        title.addEventListener( "mousedown", tabScrollStart );
-                        const tabScrollMove = _tabScrollMove.bind( {
-                            tab:    tab,
-                            title:  title,
-                            cnt:    cnt,
-                            self:   title
-                        } );
-                        tab.addEventListener( "mousemove", tabScrollMove );
-                }
-            }
-            makeTabsCollapsible();
-                }
-            };
+                };
             },
             dialog: {
                 toast: ( msg ) => {
                     if ( !state.toastDiv ){
                         state.toastDiv = U.mk( "div", "toast" );
                         state.shader = U.mk( "div", "shader" );
-                        state.shader.style.height = document.body.scrollHeight.toString() + "px";
                         state.toastDiv.innerHTML = msg + "<br><br><button class='btn' style='font-size: 12pt; color: var(--green); border-color: var(--green);'>OK</button>";
                         state.toastDiv.onclick = ()=>{
                             document.body.removeChild( state.toastDiv );
@@ -255,7 +254,6 @@ const U = ( function(){
                 confirm: ( msg, onOk, onCancel ) => {
                     let div = U.mk( "div", "toast" );
                     state.shader = U.mk( "div", "shader" );
-                    state.shader.style.height = document.body.scrollHeight.toString() + "px";
                     div.innerHTML = msg + "<br><br><button class='btn' style='font-size: 12pt; color: var(--green); border-color: var(--green);'>OK</button><s-pad></s-pad><button class='btn' style='font-size: 12pt;'>Cancel</button>";
                     div.children[2].onclick = ()=>{
                         onOk();
@@ -310,11 +308,11 @@ const U = ( function(){
             },
             invert: ( hexColor ) => {
                 const
-                col = colorHexToDec( hexColor ),
-            r = COLOR_CHANNEL_MAX - col.r,
-            g = COLOR_CHANNEL_MAX - col.g,
-            b = COLOR_CHANNEL_MAX - col.b;
-            return colorDecToHex( r, g, b );
+                    col = colorHexToDec( hexColor ),
+                    r = COLOR_CHANNEL_MAX - col.r,
+                    g = COLOR_CHANNEL_MAX - col.g,
+                    b = COLOR_CHANNEL_MAX - col.b;
+                return colorDecToHex( r, g, b );
             },
             hex2dec: ( hexColor ) => {
                 colorHexToDec( hexColor );
