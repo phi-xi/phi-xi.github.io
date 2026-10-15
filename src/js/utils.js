@@ -343,7 +343,8 @@ const U = ( function(){
         },
         dev: {
             blankPage: () => {
-                document.write( "<html><head><link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu'><link rel='stylesheet' href='https://phi-xi.github.io/src/css/style-gate.css'><script type='text/javascript' src='https://phi-xi.github.io/src/js/utils.js'></script></head><body class='no-topbar'><h1>Dev</h1></body></html>" );
+                document.write("");
+                document.write( "<html><head><link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu'><link rel='stylesheet' href='https://phi-xi.github.io/src/css/style.css'></head><body><div class='page-wrap has-topbar no-indentation'><div class='topbar'>Dev</div></div></body></html>" );
             }
         }
     };
