@@ -340,6 +340,11 @@ const U = ( function(){
             clear: ( name, path="/" ) => {
                 document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=" + path + ";";
             }
+        },
+        dev: {
+            blankPage: () => {
+                document.write( "<html><head><link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu'><link rel='stylesheet' href='https://phi-xi.github.io/src/css/style-gate.css'><script type='text/javascript' src='https://phi-xi.github.io/src/js/utils.js'></script></head><body class='no-topbar'><h1>Dev</h1></body></html>" );
+            }
         }
     };
 
