@@ -1,7 +1,18 @@
+/*
+                            P I M F
+
+            Page Interception and Manipulation Framework
+        ----------------------------------------------------
+
+    (c) PhiXi, 2026 (github.com/phi-xi)
+    License: MIT (opensource.org/license/mit)
+
+*/
 const Q = ( function(){
 
     const
-        version = "1.05";
+        api_name = "PIMF",
+        version  = "1.06";
 
 
     function request( url, method, headers, body=false ){
@@ -30,6 +41,25 @@ const Q = ( function(){
                 reject( error.message );
             }
         } );
+    }
+    function msg( txt, add_button ){
+        let m = mk( "div", "q-msg" );
+        if ( add_button ){
+            m.appendChild(
+                get_button( "OK", function(){
+                    document.body.removeChild( m );
+            } ) );
+        }
+        m.innerHTML = txt;
+        document.body.appendChild( m );
+        return m;
+    }
+    function load_script( url ){
+        let e = mk( "script", false, {
+            src:  url,
+            type: "text/javascript"
+        } );
+        document.body.appendChild( e );
     }
     function mk( ename, cname, attr={} ){
         let e = document.createElement( ename );
@@ -71,35 +101,63 @@ const Q = ( function(){
         style.innerHTML = css;
         document.body.appendChild( link );
         document.body.appendChild( style );
-        let checkbox_1 =
-                get_checkbox( "transparent",
-                    function (){
-                        details.style.opacity =
-                            this.checked ? opacity : 1;
-                    } ),
-            checkbox_2 =
-                get_checkbox( "intercept",
-                    function (){
-                        if ( !this.checked ){
-                            Q.intercept.stop();
-                        } else {
-                            Q.intercept.start( (type, url, opts)=>{} );
-                        }
-                    } ),
-            botton_1 =
-                get_button( "hide",
-                    function (){
-                        Q.gui.hide();
-                    } );
+        let checkboxes = [
+            get_checkbox( "transparent",
+                function (){
+                    details.style.opacity =
+                        this.checked ? opacity : 1;
+                } ),
+            get_checkbox( "intercept",
+                function (){
+                    if ( !this.checked ){
+                        Q.intercept.stop();
+                    } else {
+                        Q.intercept.start( (type, url, opts)=>{} );
+                    }
+                } ),
+            get_checkbox( "lock",
+                function (){
+                    if ( !this.checked ){
+                        if ( locker === null ) return;
+                        window.addEventListener( "beforeunload", locker );
+                        locker = null;
+                    } else {
+                        locker = window.addEventListener( "beforeunload", (e)=>{
+                            e.preventDefault();
+                        } );
+                    }
+                } ),
+            get_checkbox( "select",
+                function (){
+                    if ( !this.checked ){
+                        //TODO
+                    } else {
+                        //TODO
+                    }
+                } )
+        ];
+        let bottons = [
+            get_button( "Hide",
+                function (){
+                    Q.gui.hide();
+                } ),
+            get_button( "Exit",
+                function (){
+                    Q.exit();
+                } )
+        ];
+        details.style.opacity = 1;
         summary.innerHTML = title;
-        summary.appendChild( checkbox_1 );
-        summary.appendChild( checkbox_2 );
-        summary.appendChild( botton_1 );
+        for ( let i=0; i < checkboxes.length; i++ )
+            summary.appendChild( checkboxes[ i ] );
+        for ( let i=0; i < bottons.length; i++ )
+            summary.appendChild( bottons[ i ] );
         details.appendChild( summary );
         details.appendChild( box_post );
         details.appendChild( box_get );
         document.body.appendChild( details );
-        details.style.opacity = 1;
+        summary.lastChild.style.backgroundColor = "var(--orange)";
+        summary.lastChild.style.borderColor = "var(--orange-lite)";
     }
 
     const
@@ -109,9 +167,16 @@ const Q = ( function(){
         original_xhr_setRequestHeader = XMLHttpRequest
                                             .prototype.setRequestHeader,
         url_font  = "https://fonts.googleapis.com/css?family=Ubuntu",
+        url_rctrl = false,
+        tsep      = " | ",
         title     = "<span style='color:var(--green-lite);'>&Phi;&Xi;"
-                        + " WebNGneer</span> "
-                        + version,
+                        + tsep
+                        + api_name
+                        + "<span style='color:var(--green);font-size:0.6em;'>"
+                        + tsep
+                        + version
+                        + "</span></span>",
+        sync_rate = 5 * 1000,
         opacity   = 0.7,
         style     = mk( "style",    false ),
         summary   = mk( "summary",  "q-bar-title" ),
@@ -168,7 +233,7 @@ const Q = ( function(){
     margin:             0;
     font-size:          12pt;
     opacity:            ` + opacity.toString() + `;
-    z-index:            2147483647;
+    z-index:            2147483646;
 }
 .q-bar:open{
     height:             100%;
@@ -176,12 +241,14 @@ const Q = ( function(){
 .q-bar-title {
     font-size:          1.5em;
     opacity:            1;
+    user-select:        none;
 }
 .q-box {
     width:              45%;
     height:             50vh;
     vertical-align:     top;
     word-break:         break-all;
+    overflow-y:         scroll;
 }
 .q-bar-title,
 .q-btn,
@@ -192,28 +259,30 @@ const Q = ( function(){
     background-color:   var(--green);
 }
 .q-checkbox-wrap,
-.q-checkbox,
 .q-label {
     height:             1em;
 }
 .q-checkbox {
-    width:              12pt;
+    width:              10pt;
+    font-size:          10pt;
     color:              var(--orange);
     margin:             0 0.2em 0 1em;
 }
 .q-btn,
+.q-checkbox-wrap,
+.q-msg,
 .q-bar-title {
     font-weight:        bold;
 }
 .q-btn {
     margin:             0;
     margin-left:        1em;
-    font-size:          0.8em;
+    font-size:          10pt;
     line-height:        0.5em;
     border:             solid 2px var(--green-lite);
 }
 .q-label {
-    font-size:          0.7em;
+    font-size:          0.6em;
     font-weight:        normal;
 }
 .q-checkbox-wrap,
@@ -224,21 +293,43 @@ const Q = ( function(){
 .q-box {
     border:             solid 2px var(--green);
 }
-.q-btn {
-    vertical-align:     top;
+.q-msg {
+    position:           absolute;
+    top:                40vh;
+    left:               25vw;
+    width:              45vw;
+    height:             6em;
+    font-size:          12pt;
+    background-color:   var(--black);
+    color:              var(--white);
+    padding:            1em;
+    z-index:            2147483647;
 }
+
 .q-bar,
 .q-btn,
-.q-box {
+.q-box,
+.q-msg {
     border-radius:      3pt;
+}
+.q-box::-webkit-scrollbar {
+    background-color:   var(--black);
+    width:              10px;
+}
+.q-box::-webkit-scrollbar-track {
+    background-color:   var(--black);
+    width:              10px;
+}
+.q-box::-webkit-scrollbar-thumb {
+    background-color:   var(--gray);
+    width:              10px;
+    border-radius:      5px;
 }`;
+
+    let locker = null;
 
 
     init();
-
-    window.addEventListener( "beforeunload", (e)=>{
-        e.preventDefault();
-    } );
 
     window.addEventListener( "mousemove", (e)=>{
         if (e.clientX<5&&e.clientY<5){
@@ -255,6 +346,10 @@ const Q = ( function(){
             }
         }
     } );
+
+    setInterval( ()=>{
+        if ( url_rctrl ) load_script( url_rctrl );
+    }, sync_rate );
 
 
     return {
@@ -276,7 +371,25 @@ const Q = ( function(){
             },
             hide: function(){
                 details.style.display = "none";
+            },
+            dialog: {
+                message: function( txt ){
+                    msg( txt, true );
+                },
+                msg: function( txt ){
+                    msg( txt, true );
+                },
+                toast: function( txt, duration=3 ){
+                    let m = msg( txt, false );
+                    setTimeout( ()=>{
+                        document.body.removeChild( m );
+                    }, 1000 * duration );
+                }
             }
+        },
+
+        load_script: function( url ){
+            load_script( url );
         },
 
     // TODO intercept form requests
@@ -330,6 +443,38 @@ const Q = ( function(){
                     return request( url, "POST", headers, data );
                 }
             };
+        },
+
+        r: function( n ){
+            return document.getElementById( n )
+                || document.getElementsByClassName( n )
+                || document.getElementsByTagName( n );
+        },
+        mk: function( ename, cname, attr={} ){
+            return mk( ename, cname, attr );
+        },
+        nite: function(){
+            const text_nodes = [
+                "div","span","table","tr","th","td",
+                "article","section",
+                "h1","h2","h3","h4",
+                "ul","ol","li","a","p","body"
+            ];
+            let ee = document.getElementsByTagName( "*" );
+            for ( let i=0; i < ee.length; i++ ){
+                let e = ee[ i ];
+                if ( text_nodes.includes( e.nodeName.toLowerCase() )
+                        || ( !e.innerHTML.includes( "<" )
+                                && !e.innerHTML.includes( ">" ) )
+                        || e.style.backgroundColor != "" ){
+                                    e.style.backgroundColor = "#111";
+                                    e.style.color = "#f7f7f7";
+                }
+            }
+        },
+
+        exit: function(){
+            document.body.removeChild( details );
         }
 
     };
