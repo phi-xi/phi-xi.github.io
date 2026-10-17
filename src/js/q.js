@@ -1,111 +1,130 @@
-    const Q = ( function(){
+const Q = ( function(){
 
-        const
-            version = "1.0";
+    const
+        version = "1.01";
 
 
-        function request( url, method, headers, body=false ){
-            return new Promise( async ( resolve, reject ) => {
-                try {
-                    let result = false,
-                    req = {
-                        method:     method,
-                        headers:    headers
-                    };
-                    if ( body ){
-                        req.body = body;
-                    }
-                    const response = await fetch( url, req );
-                    if ( !response.ok ){
-                        throw new Error( `Response status: ${response.status}` );
-                    }
-                    const response_clone = response.clone();
-                    try {
-                        result = await response.json();
-                    } catch( e ){
-                        result = await response_clone.text();
-                    }
-                    resolve( result );
-                } catch ( error ){
-                    reject( error.message );
+    function request( url, method, headers, body=false ){
+        return new Promise( async ( resolve, reject ) => {
+            try {
+                let result = false,
+                req = {
+                    method:     method,
+                    headers:    headers
+                };
+                if ( body ){
+                    req.body = body;
                 }
-            } );
-        }
-        function mk( ename, cname, attr={} ){
-            let e = document.createElement( ename );
-            e.className = cname;
-            for ( let aname in attr ){
-                e.setAttribute( aname,
-                                attr[ aname ] );
+                const response = await fetch( url, req );
+                if ( !response.ok ){
+                    throw new Error( `Response status: ${response.status}` );
+                }
+                const response_clone = response.clone();
+                try {
+                    result = await response.json();
+                } catch( e ){
+                    result = await response_clone.text();
+                }
+                resolve( result );
+            } catch ( error ){
+                reject( error.message );
             }
-            return e;
+        } );
+    }
+    function mk( ename, cname, attr={} ){
+        let e = document.createElement( ename );
+        if ( cname ){
+            e.className = cname;
         }
-        function get_checkbox( name, callback ){
-            let wrap     = mk( "div", "q-checkbox-wrap" ),
-                label    = mk( "label",
-                               "q-label",
-                               {
-                                   for: name
-                                } ),
-                checkbox = mk( "input",
-                               "q-checkbox",
-                               {
-                                   name: name,
-                                   type: "checkbox"
-                               } );
-            label.innerHTML = name;
-            wrap.appendChild( checkbox );
-            wrap.appendChild( label );
-            checkbox.addEventListener( "change", callback );
-            return wrap;
+        for ( let aname in attr ){
+            e.setAttribute( aname,
+                            attr[ aname ] );
         }
+        return e;
+    }
+    function get_checkbox( name, callback ){
+        let wrap     = mk( "div", "q-checkbox-wrap q-inline" ),
+            label    = mk( "label",
+                            "q-label q-inline",
+                            {
+                                for: name
+                            } ),
+            checkbox = mk( "input",
+                            "q-checkbox q-inline",
+                            {
+                                name: name,
+                                type: "checkbox"
+                            } );
+        label.innerHTML = name;
+        wrap.appendChild( checkbox );
+        wrap.appendChild( label );
+        checkbox.addEventListener( "change", callback );
+        return wrap;
+    }
+    function init(){
+        style.innerHTML = css;
+        document.body.appendChild( link );
+        document.body.appendChild( style );
+        let checkbox_1 =
+                get_checkbox( "transparent",
+                    function (){
+                        details.style.opacity =
+                            this.checked ? opacity : 1;
+                    } ),
+            checkbox_2 =
+                get_checkbox( "intercept",
+                    function (){
+                        if ( !this.checked ){
+                            Q.intercept.stop();
+                        } else {
+                            Q.intercept.start( (type, url, opts)=>{} );
+                        }
+                    } );
+        summary.innerHTML = title;
+        summary.appendChild( checkbox_1 );
+        summary.appendChild( checkbox_2 );
+        details.appendChild( summary );
+        details.appendChild( box_post );
+        details.appendChild( box_get );
+        document.body.appendChild( details );
+        details.style.opacity = 1;
+    }
 
-        function init(){
-            style.innerHTML = css;
-            document.body.appendChild( style );
-            bar_title.innerHTML = title;
-            let checkbox_1 = get_checkbox( "transparent",
-                                function (){
-                                    bar.style.opacity = this.checked ? 0.8 : 1;
-                                } );
-            let checkbox_2 = get_checkbox( "intercept",
-                                function (){
-                                    //TODO
-                                } );
-            bar_title.appendChild( checkbox_1 );
-            bar_title.appendChild( checkbox_2 );
-            bar.appendChild( bar_title );
-            bar.appendChild( box_post );
-            bar.appendChild( box_get );
-            document.body.appendChild( bar );
-            bar.style.opacity = 0.8;
-            checkbox_1.children[0].checked = true;
-        }
-
-        const
-            original_fetch_constructor  = fetch.constructor.prototype,
-            original_xhr_open           = XMLHttpRequest.prototype.open,
-            style     = mk( "style" ),
-            bar       = mk( "div", "q-bar" ),
-            bar_title = mk( "div", "q-bar-title" ),
-            box_get   = mk( "div", "q-box" ),
-            box_post  = mk( "div", "q-box" ),
-            url_font  = "https://fonts.googleapis.com/css?family=Ubuntu",
-            title     = "&Phi;&Xi;__WebNGneer__" + version,
-            css       = `:root {
+    const
+        original_fetch_constructor  = fetch.constructor.prototype,
+        original_xhr_open           = XMLHttpRequest.prototype.open,
+        url_font  = "https://fonts.googleapis.com/css?family=Ubuntu",
+        title     = "<span style='color:var(--green-lite)'>&Phi;&Xi; WebNGneer</span> "
+                        + version,
+        opacity   = 0.7,
+        style     = mk( "style",    false ),
+        summary   = mk( "summary",  "q-bar-title" ),
+        details   = mk( "details",  "q-bar" ),
+        bar_title = mk( "div",      "q-bar-title" ),
+        box_get   = mk( "div",      "q-box q-inline" ),
+        box_post  = mk( "div",      "q-box q-inline" ),
+        link      = mk( "link",     "",
+                                    {
+                                        rel: "stylesheet",
+                                        href: url_font } ),
+        css       = `
+:root {
     --orange-lite: 	#ff6611;
     --orange: 		#cc3e11;
     --orange-dark: 	#7a250a;
     --green-lite: 	#1fee08;
-    --green: 			#039908;
+    --green: 		#039908;
     --green-dark: 	#027005;
-    --cyan: 			#00eeee;
-    --cyan-dark: 		#00aaaa;
-    --white: 			#efefef;
-    --black: 			#000000;
-    --gray-lite: 		#555;
-    --gray: 			#222;
-    --gray-dark: 		#171717;
+    --cyan: 		#00eeee;
+    --cyan-dark: 	#00aaaa;
+    --white: 		#efefef;
+    --black: 		#000000;
+    --gray-lite: 	#555;
+    --gray: 		#222;
+    --gray-dark: 	#171717;
+}
+.q-green {
+    color:          var(-green);
 }
 .q-bar,
 .q-box,
@@ -113,7 +132,7 @@
 .q-input,
 .q-checkbox,
 .q-textarea {
-    font-family:        monospace;
+    font-family:        Ubuntu;
     color:              var(--white);
     margin:             1em;
     padding:            0.5em;
@@ -130,12 +149,14 @@
     top:                0;
     left:               0;
     width:              100%;
-    height:             50%;
     margin:             0;
     font-size:          12pt;
-    opacity:            0.8;
+    opacity:            ` + opacity.toString() + `;
     z-index:            2147483647;
     border:             solid 2px var(--green);
+}
+.q-bar:open{
+    height:             100%;
 }
 .q-bar-title {
     font-size:          1.5em;
@@ -143,78 +164,95 @@
 }
 .q-box {
     width:              45%;
-    height:             50%;
+    height:             50vh;
     border:             solid 2px var(--green-dark);
-    display:            inline-block;
+    vertical-align:     top;
+    word-break:         break-all;
 }
+.q-details {}
+.q-summary {}
 .q-btn {
     background-color:   var(--green);
-    font-weight:        bold;
     cursor:             pointer;
     border:             solid 2px var(--green-lite);
 }
 .q-checkbox {
     width:              12pt;
     color:              var(--orange);
-    margin-right:       0.3em;
+    margin:             0 0.2em 0 1em;
+    line-height:        0.5em;
 }
 .q-checkbox-wrap {
     display:            inline-block;
 }
+.q-btn,
+.q-bar-title {
+    font-weight:        bold;
+}
 .q-label {
     font-size:          0.7em;
+    font-weight:        normal;
+}
+.q-inline {
+    display:            inline-block;
 }`;
 
 
-        init();
+    init();
 
 
-        return {
+    return {
 
-            gui: {
-                show: function(){},
-                hide: function(){}
-            },
+        gui: {
+            show: function(){},
+            hide: function(){}
+        },
 
-        // TODO intercept form requests
-            intercept: {
-                start: function( callback, block_request=false ){
-                    fetch.constructor.prototype = function( url, options ){
-                        callback( "FETCH", url, options );
-                        let b = options.method == "GET" ? box_get : box_post;
-                        b.innerHTML += "<br>" + options.method + " " + url;
-                        if ( !block_request ){
-                            original_fetch_constructor.apply( this, arguments );
-                        }
-                    };
-                    XMLHttpRequest.prototype.open = function( method, url ) {
-                        callback( "XHR", url, method );
-                        let b = method == "GET" ? box_get : box_post;
-                        b.innerHTML += "<br>" + method + " " + url;
-                        originalOpen.apply( this, arguments );
-                    };
-                },
-                stop: function(){
-                    fetch.constructor.prototype     = original_fetch_constructor;
-                    XMLHttpRequest.prototype.open   = original_xhr_open;
-                }
-            },
-
-            request: function( url, method, headers, body=false ){
-                return request( url, method, headers, body );
-            },
-
-            send: function( url, headers={} ){
-                return {
-                    get: function(){
-                        return request( url, "GET", headers, false );
-                    },
-                    post: function( data ){
-                        return request( url, "POST", headers, data );
+    // TODO intercept form requests
+        intercept: {
+            start: function( callback, block_request=false ){
+                fetch.constructor.prototype = function( url, options ){
+                    callback( "FETCH", url, options );
+                    let b = options.method == "GET" ? box_get : box_post;
+                    b.innerHTML += "<br><div style='color:var(--cyan);font-weight:bold;'>"
+                                        + options.method.toUpperCase()
+                                        + "</div> "
+                                        + url;
+                    if ( !block_request ){
+                        original_fetch_constructor.apply( this, arguments );
                     }
                 };
+                XMLHttpRequest.prototype.open = function( method, url ) {
+                    callback( "XHR", url, method );
+                    let b = method == "GET" ? box_get : box_post;
+                    b.innerHTML += "<br><div style='color:var(--cyan);font-weight:bold;'>"
+                                        + method.toUpperCase()
+                                        + "</div> "
+                                        + url;
+                    original_xhr_open.apply( this, arguments );
+                };
+            },
+            stop: function(){
+                fetch.constructor.prototype     = original_fetch_constructor;
+                XMLHttpRequest.prototype.open   = original_xhr_open;
             }
+        },
 
-        };
+        request: function( url, method, headers, body=false ){
+            return request( url, method, headers, body );
+        },
 
-    } )();
+        send: function( url, headers={} ){
+            return {
+                get: function(){
+                    return request( url, "GET", headers, false );
+                },
+                post: function( data ){
+                    return request( url, "POST", headers, data );
+                }
+            };
+        }
+
+    };
+
+} )();
