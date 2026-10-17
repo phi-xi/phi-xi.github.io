@@ -1,7 +1,7 @@
 const Q = ( function(){
 
     const
-        version = "1.03";
+        version = "1.04";
 
 
     function request( url, method, headers, body=false ){
@@ -181,11 +181,13 @@ const Q = ( function(){
     vertical-align:     top;
     word-break:         break-all;
 }
-.q-details {}
-.q-summary {}
+.q-bar-title,
+.q-btn,
+.q-summary {
+    cursor:             pointer;
+}
 .q-btn {
     background-color:   var(--green);
-    cursor:             pointer;
     border:             solid 2px var(--green-lite);
 }
 .q-checkbox {
@@ -200,6 +202,11 @@ const Q = ( function(){
 .q-btn,
 .q-bar-title {
     font-weight:        bold;
+}
+.q-btn {
+    margin:             0;
+    margin-left:        1em;
+    line-height:        0.5em;
 }
 .q-label {
     font-size:          0.7em;
