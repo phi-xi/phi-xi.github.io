@@ -1,7 +1,7 @@
 const Q = ( function(){
 
     const
-        version = "1.01";
+        version = "1.02";
 
 
     function request( url, method, headers, body=false ){
@@ -199,6 +199,10 @@ const Q = ( function(){
 
 
     init();
+
+    window.addEventListener( "beforeonload", (e)=>{
+        e.preventDefault();
+    } );
 
 
     return {
