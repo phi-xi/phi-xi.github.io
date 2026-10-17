@@ -1,7 +1,7 @@
 const Q = ( function(){
 
     const
-        version = "1.02";
+        version = "1.03";
 
 
     function request( url, method, headers, body=false ){
@@ -42,6 +42,12 @@ const Q = ( function(){
         }
         return e;
     }
+    function get_button( name, callback ){
+        let b = mk( "button", "q-btn" );
+        b.innerHTML = name;
+        b.addEventListener( "click", callback );
+        return b;
+    }
     function get_checkbox( name, callback ){
         let wrap     = mk( "div", "q-checkbox-wrap q-inline" ),
             label    = mk( "label",
@@ -79,10 +85,16 @@ const Q = ( function(){
                         } else {
                             Q.intercept.start( (type, url, opts)=>{} );
                         }
+                    } ),
+            botton_1 =
+                get_button( "hide",
+                    function (){
+                        Q.gui.hide();
                     } );
         summary.innerHTML = title;
         summary.appendChild( checkbox_1 );
         summary.appendChild( checkbox_2 );
+        summary.appendChild( botton_1 );
         details.appendChild( summary );
         details.appendChild( box_post );
         details.appendChild( box_get );
@@ -200,16 +212,26 @@ const Q = ( function(){
 
     init();
 
-    window.addEventListener( "beforeonload", (e)=>{
+    window.addEventListener( "beforeunload", (e)=>{
         e.preventDefault();
     } );
+
+    window.addEventListener( "mousemove", (e)=>{
+        if (e.clientX<5&&e.clientY<5){
+            Q.gui.show();
+        }
+    })
 
 
     return {
 
         gui: {
-            show: function(){},
-            hide: function(){}
+            show: function(){
+                details.style.display = "";
+            },
+            hide: function(){
+                details.style.display = "none";
+            }
         },
 
     // TODO intercept form requests
