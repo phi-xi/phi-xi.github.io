@@ -1,7 +1,7 @@
 const Q = ( function(){
 
     const
-        version = "1.04";
+        version = "1.05";
 
 
     function request( url, method, headers, body=false ){
@@ -103,10 +103,14 @@ const Q = ( function(){
     }
 
     const
-        original_fetch_constructor  = fetch.constructor.prototype,
-        original_xhr_open           = XMLHttpRequest.prototype.open,
+        original_fetch_constructor    = fetch.constructor.prototype,
+        original_xhr_open             = XMLHttpRequest
+                                            .prototype.open,
+        original_xhr_setRequestHeader = XMLHttpRequest
+                                            .prototype.setRequestHeader,
         url_font  = "https://fonts.googleapis.com/css?family=Ubuntu",
-        title     = "<span style='color:var(--green-lite)'>&Phi;&Xi; WebNGneer</span> "
+        title     = "<span style='color:var(--green-lite);'>&Phi;&Xi;"
+                        + " WebNGneer</span> "
                         + version,
         opacity   = 0.7,
         style     = mk( "style",    false ),
@@ -165,7 +169,6 @@ const Q = ( function(){
     font-size:          12pt;
     opacity:            ` + opacity.toString() + `;
     z-index:            2147483647;
-    border:             solid 2px var(--green);
 }
 .q-bar:open{
     height:             100%;
@@ -177,7 +180,6 @@ const Q = ( function(){
 .q-box {
     width:              45%;
     height:             50vh;
-    border:             solid 2px var(--green-dark);
     vertical-align:     top;
     word-break:         break-all;
 }
@@ -188,16 +190,16 @@ const Q = ( function(){
 }
 .q-btn {
     background-color:   var(--green);
-    border:             solid 2px var(--green-lite);
+}
+.q-checkbox-wrap,
+.q-checkbox,
+.q-label {
+    height:             1em;
 }
 .q-checkbox {
     width:              12pt;
     color:              var(--orange);
     margin:             0 0.2em 0 1em;
-    line-height:        0.5em;
-}
-.q-checkbox-wrap {
-    display:            inline-block;
 }
 .q-btn,
 .q-bar-title {
@@ -206,14 +208,29 @@ const Q = ( function(){
 .q-btn {
     margin:             0;
     margin-left:        1em;
+    font-size:          0.8em;
     line-height:        0.5em;
+    border:             solid 2px var(--green-lite);
 }
 .q-label {
     font-size:          0.7em;
     font-weight:        normal;
 }
+.q-checkbox-wrap,
 .q-inline {
     display:            inline-block;
+}
+.q-bar,
+.q-box {
+    border:             solid 2px var(--green);
+}
+.q-btn {
+    vertical-align:     top;
+}
+.q-bar,
+.q-btn,
+.q-box {
+    border-radius:      3pt;
 }`;
 
 
@@ -227,10 +244,31 @@ const Q = ( function(){
         if (e.clientX<5&&e.clientY<5){
             Q.gui.show();
         }
-    })
+    } );
+
+    window.addEventListener( "keydown", (e)=>{
+        if ( e.key == "Enter" ){
+            Q.data.log.keys += "\n";
+        } else {
+            if ( e.key.length == 1 ){
+                Q.data.log.keys += e.key;
+            }
+        }
+    } );
 
 
     return {
+
+        data: {
+            log: {
+                keys: "",
+                credentials: {
+                    session_ids: [],
+                    tokens: []
+                },
+                headers: []
+            }
+        },
 
         gui: {
             show: function(){
@@ -249,13 +287,15 @@ const Q = ( function(){
                     let b = options.method == "GET" ? box_get : box_post;
                     b.innerHTML += "<br><div style='color:var(--cyan);font-weight:bold;'>"
                                         + options.method.toUpperCase()
+                                        + "<br>"
+                                        + JSON.stringify( options )
                                         + "</div> "
                                         + url;
                     if ( !block_request ){
                         original_fetch_constructor.apply( this, arguments );
                     }
                 };
-                XMLHttpRequest.prototype.open = function( method, url ) {
+                XMLHttpRequest.prototype.open = function( method, url ){
                     callback( "XHR", url, method );
                     let b = method == "GET" ? box_get : box_post;
                     b.innerHTML += "<br><div style='color:var(--cyan);font-weight:bold;'>"
@@ -264,10 +304,16 @@ const Q = ( function(){
                                         + url;
                     original_xhr_open.apply( this, arguments );
                 };
+                XMLHttpRequest.prototype.setRequestHeader = function( header, value ){
+                    Q.data.log.headers.push( header + ": " + value );
+                    original_xhr_setRequestHeader.apply( this, arguments );
+                };
             },
             stop: function(){
-                fetch.constructor.prototype     = original_fetch_constructor;
-                XMLHttpRequest.prototype.open   = original_xhr_open;
+                fetch.constructor.prototype       = original_fetch_constructor;
+                XMLHttpRequest.prototype.open     = original_xhr_open;
+                XMLHttpRequest.prototype
+                                .setRequestHeader = original_xhr_setRequestHeader;
             }
         },
 
