@@ -13,7 +13,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.10";
+        version  = "1.11";
 
 
     function request( url, method, headers, body=false ){
@@ -150,7 +150,7 @@ const Q = ( function(){
             } );
         }
     }
-    function _cb_checkbox_select(){
+    function _cb_checkbox_select(){         //TODO
         if ( !this.checked ){
             //TODO
         } else {
@@ -401,6 +401,9 @@ const Q = ( function(){
 
 
     init();
+    setTimeout ( ()=>{
+        Q.gui.dialog.toast( "Injection complete", 2 );
+    }, 10 );
 
     window.addEventListener( "mousemove", (e)=>{
         if ( e.clientX + e.clientY < 10 ){
