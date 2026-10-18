@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.13";
+        version  = "1.14";
 
 
     function request( url, method, headers, body=false ){
@@ -151,19 +151,28 @@ const Q = ( function(){
     function _checkbox_lock(){
         if ( !this.checked ){
             if ( locker === null ) return;
-            window.addEventListener( "beforeunload", locker );
+            window.removeEventListener( "beforeunload", locker, false );
             locker = null;
         } else {
             locker = window.addEventListener( "beforeunload", (e)=>{
                 e.preventDefault();
-            } );
+            }, false );
         }
     }
     function _checkbox_select(){
-        is_selecting = this.checked;
-        window.addEventListener( "click", (e)=>{
-            //TODO
-        } );
+        if ( !this.checked ){
+            if ( selector === null ) return;
+            window.removeEventListener( "click", selector );
+            selector = null;
+        } else {
+            selector = window.addEventListener( "click", (e)=>{
+                const t = e.target;
+                t.style.border = "solid 2px var(--orange-lite)";
+                setTimeout( ()=>{
+                    t.style.border = "";
+                }, 500 );
+            } );
+        }
     }
     function _checkbox_log(){
         window.addEventListener( "click",   _log_click );
@@ -423,10 +432,10 @@ const Q = ( function(){
 }`;
 
 
-    let locker       = null,
-        rc           = null,
-        proc_id      = null,
-        is_selecting = false;
+    let locker      = null,
+        rc          = null,
+        proc_id     = null,
+        selector    = null;
 
 
     init();
