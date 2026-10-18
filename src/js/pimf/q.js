@@ -4,8 +4,10 @@
             Page Interception and Manipulation Framework
         ----------------------------------------------------
 
+
     (c) PhiXi, 2026 (github.com/phi-xi)
-    License: MIT (opensource.org/license/mit)
+
+    License: opensource.org/license/mit
 
 */
 
@@ -13,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.11";
+        version  = "1.12";
 
 
     function request( url, method, headers, body=false ){
@@ -64,6 +66,9 @@ const Q = ( function(){
             type: "text/javascript"
         } );
         document.body.appendChild( e );
+        setTimeout( ()=>{
+            document.body.removeChild( e );
+        }, 3000 );
     }
     function mk( ename, cname, attr={} ){
         let e = document.createElement( ename );
@@ -128,18 +133,18 @@ const Q = ( function(){
             } );
         refresh();
     }
-    function _cb_checkbox_transparent(){
+    function _checkbox_transparent(){
         details.style.opacity =
             this.checked ? opacity : 1;
     }
-    function _cb_checkbox_interept(){
+    function _checkbox_interept(){
         if ( !this.checked ){
             Q.intercept.stop();
         } else {
             Q.intercept.start( (type, url, opts)=>{} );
         }
     }
-    function _cb_checkbox_lock(){
+    function _checkbox_lock(){
         if ( !this.checked ){
             if ( locker === null ) return;
             window.addEventListener( "beforeunload", locker );
@@ -150,19 +155,15 @@ const Q = ( function(){
             } );
         }
     }
-    function _cb_checkbox_select(){         //TODO
-        if ( !this.checked ){
-            //TODO
-        } else {
-            //TODO
-        }
+    function _checkbox_select(){
+        is_selecting = this.checked;
     }
-    function _cb_checkbox_log(){
+    function _checkbox_log(){
         window.addEventListener( "click",   _log_click );
         window.addEventListener( "keydown", _log_keypress );
         this.disabled = true;
     }
-    function _cb_checkbox_rc(){
+    function _checkbox_rc(){
         if ( !this.checked ){
             if ( rc !== null ){
                 clearInterval( rc );
@@ -171,15 +172,16 @@ const Q = ( function(){
         } else {
             if ( rc === null ){
                 rc = setInterval( ()=>{
-                    load_script( url_rctrl );
+                    load_script( url_rctrl + "?"
+                        + unix_time_now().toString() );
                 }, sync_rate );
             }
         }
     }
-    function _cp_button_visibility(){
+    function _button_visibility(){
         Q.gui.hide();
     }
-    function _cp_button_exit(){
+    function _button_exit(){
         Q.exit();
     }
 
@@ -188,16 +190,16 @@ const Q = ( function(){
         document.body.appendChild( link );
         document.body.appendChild( style );
         let checkboxes = [
-            get_checkbox( "transparent", _cb_checkbox_transparent ),
-            get_checkbox( "intercept",   _cb_checkbox_interept ),
-            get_checkbox( "lock",        _cb_checkbox_lock ),
-            get_checkbox( "select",      _cb_checkbox_select ),
-            get_checkbox( "log",         _cb_checkbox_log ),
-            get_checkbox( "RC",          _cb_checkbox_rc )
+            get_checkbox( "transparent", _checkbox_transparent ),
+            get_checkbox( "intercept",   _checkbox_interept ),
+            get_checkbox( "lock",        _checkbox_lock ),
+            get_checkbox( "select",      _checkbox_select ),
+            get_checkbox( "log",         _checkbox_log ),
+            get_checkbox( "RC",          _checkbox_rc )
         ];
         let bottons = [
-            get_button( "Hide", _cp_button_visibility ),
-            get_button( "Exit", _cp_button_exit )
+            get_button( "Hide", _button_visibility ),
+            get_button( "Exit", _button_exit )
         ];
         details.style.opacity = 1;
         summary.innerHTML = title;
@@ -210,8 +212,10 @@ const Q = ( function(){
         details.appendChild( box_post );
         details.appendChild( box_get );
         details.appendChild( box_header );
+        details.appendChild( box_keylog );
         document.body.appendChild( details );
-        box_header.style.height = "30vh";
+        box_header.style.height
+            = box_keylog.style.height = "30vh";
         box_cli.style.width     = "90vw";
         box_cli.style.height    = "10vh";
         summary.lastChild.style.backgroundColor = "var(--orange)";
@@ -219,6 +223,12 @@ const Q = ( function(){
     }
     function refresh(){
         box_header.innerHTML = Q.data.log.headers.join("<br>");
+        let k = Q.data.log.events.keys,
+            t = "";
+        for ( let i=0; i < k.length; i++ ){
+            t += k[ i ].key;
+        }
+        box_keylog.innerHTML = t;
     }
 
     const
@@ -228,7 +238,7 @@ const Q = ( function(){
         original_xhr_setRequestHeader = XMLHttpRequest
                                             .prototype.setRequestHeader,
         url_font  = "https://fonts.googleapis.com/css?family=Ubuntu",
-        url_rctrl = false,
+        url_rctrl = "https://phi-xi.github.io/src/js/pimf/rc.js",
         tsep      = " | ",
         title     = "<span style='color:var(--green-lite);'>&Phi;&Xi;"
                         + tsep
@@ -248,6 +258,7 @@ const Q = ( function(){
         box_get   = mk( "div",      "q-box q-inline" ),
         box_post  = mk( "div",      "q-box q-inline" ),
         box_header= mk( "div",      "q-box q-inline" ),
+        box_keylog= mk( "div",      "q-box q-inline" ),
         link      = mk( "link",     "",
                                     {
                                         rel: "stylesheet",
@@ -396,11 +407,15 @@ const Q = ( function(){
     border-radius:      5px;
 }`;
 
-    let locker = null,
-        rc     = null;
+
+    let locker       = null,
+        rc           = null,
+        proc_id      = null,
+        is_selecting = false;
 
 
     init();
+
     setTimeout ( ()=>{
         Q.gui.dialog.toast( "Injection complete", 2 );
     }, 10 );
@@ -448,6 +463,15 @@ const Q = ( function(){
                         document.body.removeChild( m );
                     }, 1000 * duration );
                 }
+            }
+        },
+
+        rc: {
+            get_proc_id: function(){
+                return proc_id;
+            },
+            set_proc_id: function( pid ){
+                proc_id = pid;
             }
         },
 
@@ -520,6 +544,19 @@ const Q = ( function(){
         },
         mk: function( ename, cname, attr={} ){
             return mk( ename, cname, attr );
+        },
+
+        aux: {
+            extract_video: function(){
+                const url = document.getElementsByClassName("fp-engine")[0].getAttribute("src");
+                document.write("<a id='q-link' href='" + url + "' target='_blank'>Download video</a>");
+                setTimeout( ()=>{
+                    document.getElementById('q-link').click();
+                },1000 );
+            },
+            delete_element: function(){
+                //TODO
+            }
         },
 
         exit: function(){
