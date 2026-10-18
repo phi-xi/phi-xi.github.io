@@ -12,7 +12,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.06";
+        version  = "1.07";
 
 
     function request( url, method, headers, body=false ){
@@ -44,13 +44,14 @@ const Q = ( function(){
     }
     function msg( txt, add_button ){
         let m = mk( "div", "q-msg" );
+        m.innerHTML = txt + "<br><br>";
         if ( add_button ){
-            m.appendChild(
-                get_button( "OK", function(){
-                    document.body.removeChild( m );
-            } ) );
+            let b = get_button( "OK", function(){
+                document.body.removeChild( m );
+            } );
+            b.style.marginLeft = "45%";
+            m.appendChild( b );
         }
-        m.innerHTML = txt;
         document.body.appendChild( m );
         return m;
     }
@@ -279,7 +280,6 @@ const Q = ( function(){
     margin-left:        1em;
     font-size:          10pt;
     line-height:        0.5em;
-    border:             solid 2px var(--green-lite);
 }
 .q-label {
     font-size:          0.6em;
@@ -293,15 +293,20 @@ const Q = ( function(){
 .q-box {
     border:             solid 2px var(--green);
 }
+.q-btn,
+.q-msg {
+    border:             solid 2px var(--green-lite);
+}
 .q-msg {
     position:           absolute;
     top:                40vh;
     left:               25vw;
     width:              45vw;
     height:             6em;
+    font-family:        Ubuntu;
     font-size:          12pt;
     background-color:   var(--black);
-    color:              var(--white);
+    color:              var(--orange-lite);
     padding:            1em;
     z-index:            2147483647;
 }
