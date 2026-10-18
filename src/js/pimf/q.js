@@ -13,7 +13,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.09";
+        version  = "1.10";
 
 
     function request( url, method, headers, body=false ){
@@ -104,89 +104,100 @@ const Q = ( function(){
     function unix_time_now(){
         return Math.round( new Date().getTime() / 1000 );
     }
+    function add_to_set_array( element, array ){
+        if ( array.includes( element ) ) return false;
+        array.push( element );
+        return true;
+    }
+
+    function _log_click( e ){
+        Q.data.log.events.clicks.push( {
+            time:   unix_time_now() - init_time,
+            target: e.target.nodeName
+        } );
+        refresh();
+    }
+    function _log_keypress( e ){
+        let t = unix_time_now() - init_time,
+            k = e.key;
+            if ( e.key == "Enter" ) k = "ENTER";
+            Q.data.log.events.keys.push( {
+                time:   unix_time_now(),
+                key:    k,
+                target: e.target.nodeName
+            } );
+        refresh();
+    }
+    function _cb_checkbox_transparent(){
+        details.style.opacity =
+            this.checked ? opacity : 1;
+    }
+    function _cb_checkbox_interept(){
+        if ( !this.checked ){
+            Q.intercept.stop();
+        } else {
+            Q.intercept.start( (type, url, opts)=>{} );
+        }
+    }
+    function _cb_checkbox_lock(){
+        if ( !this.checked ){
+            if ( locker === null ) return;
+            window.addEventListener( "beforeunload", locker );
+            locker = null;
+        } else {
+            locker = window.addEventListener( "beforeunload", (e)=>{
+                e.preventDefault();
+            } );
+        }
+    }
+    function _cb_checkbox_select(){
+        if ( !this.checked ){
+            //TODO
+        } else {
+            //TODO
+        }
+    }
+    function _cb_checkbox_log(){
+        window.addEventListener( "click",   _log_click );
+        window.addEventListener( "keydown", _log_keypress );
+        this.disabled = true;
+    }
+    function _cb_checkbox_rc(){
+        if ( !this.checked ){
+            if ( rc !== null ){
+                clearInterval( rc );
+                rc = null;
+            }
+        } else {
+            if ( rc === null ){
+                rc = setInterval( ()=>{
+                    load_script( url_rctrl );
+                }, sync_rate );
+            }
+        }
+    }
+    function _cp_button_visibility(){
+        Q.gui.hide();
+    }
+    function _cp_button_exit(){
+        Q.exit();
+    }
+
     function init(){
         style.innerHTML = css;
         document.body.appendChild( link );
         document.body.appendChild( style );
         let checkboxes = [
-            get_checkbox( "transparent",
-                function (){
-                    details.style.opacity =
-                        this.checked ? opacity : 1;
-                } ),
-            get_checkbox( "intercept",
-                function (){
-                    if ( !this.checked ){
-                        Q.intercept.stop();
-                    } else {
-                        Q.intercept.start( (type, url, opts)=>{} );
-                    }
-                } ),
-            get_checkbox( "lock",
-                function (){
-                    if ( !this.checked ){
-                        if ( locker === null ) return;
-                        window.addEventListener( "beforeunload", locker );
-                        locker = null;
-                    } else {
-                        locker = window.addEventListener( "beforeunload", (e)=>{
-                            e.preventDefault();
-                        } );
-                    }
-                } ),
-            get_checkbox( "select",
-                function (){
-                    if ( !this.checked ){
-                        //TODO
-                    } else {
-                        //TODO
-                    }
-                } ),
-            get_checkbox( "log",
-                function (){
-                    window.addEventListener( "click", (e)=>{
-                        Q.data.log.events.clicks.push( {
-                            time:   unix_time_now(),
-                            target: e.target.nodeName
-                        } );
-                    } );
-                    window.addEventListener( "keydown", (e)=>{
-                        let t = unix_time_now(),
-                            k = e.key;
-                        if ( e.key == "Enter" ) k = "ENTER";
-                        Q.data.log.events.keys.push( {
-                            time:   unix_time_now(),
-                            key:    k,
-                            target: e.target.nodeName
-                        } );
-                    } );
-                    this.disabled = true;
-                } ),
-            get_checkbox( "RC",
-                function (){
-                    if ( !this.checked ){
-                        if ( rc !== null ){
-                            clearInterval( rc );
-                            rc = null;
-                        }
-                    } else {
-                        if ( rc === null ){
-                            rc = setInterval( ()=>{
-                                load_script( url_rctrl );
-                            }, sync_rate );
-                        }
-                    }
-                } )
+            get_checkbox( "transparent", _cb_checkbox_transparent ),
+            get_checkbox( "intercept",   _cb_checkbox_interept ),
+            get_checkbox( "lock",        _cb_checkbox_lock ),
+            get_checkbox( "select",      _cb_checkbox_select ),
+            get_checkbox( "log",         _cb_checkbox_log ),
+            get_checkbox( "RC",          _cb_checkbox_rc )
         ];
         let bottons = [
-            get_button( "Hide",
-                function (){
-                    Q.gui.hide();
-                } ),
-            get_button( "Exit",
-                function (){
-                    Q.exit();
-                } )
+            get_button( "Hide", _cp_button_visibility ),
+            get_button( "Exit", _cp_button_exit )
         ];
         details.style.opacity = 1;
         summary.innerHTML = title;
@@ -195,11 +206,19 @@ const Q = ( function(){
         for ( let i=0; i < bottons.length; i++ )
             summary.appendChild( bottons[ i ] );
         details.appendChild( summary );
+        details.appendChild( box_cli );
         details.appendChild( box_post );
         details.appendChild( box_get );
+        details.appendChild( box_header );
         document.body.appendChild( details );
+        box_header.style.height = "30vh";
+        box_cli.style.width     = "90vw";
+        box_cli.style.height    = "10vh";
         summary.lastChild.style.backgroundColor = "var(--orange)";
         summary.lastChild.style.borderColor = "var(--orange-lite)";
+    }
+    function refresh(){
+        box_header.innerHTML = Q.data.log.headers.join("<br>");
     }
 
     const
@@ -220,12 +239,15 @@ const Q = ( function(){
                         + "</span></span>",
         sync_rate = 5 * 1000,
         opacity   = 0.7,
+        init_time = unix_time_now(),
         style     = mk( "style",    false ),
         summary   = mk( "summary",  "q-bar-title" ),
         details   = mk( "details",  "q-bar" ),
         bar_title = mk( "div",      "q-bar-title" ),
+        box_cli   = mk( "div",      "q-box q-cli q-inline" ),
         box_get   = mk( "div",      "q-box q-inline" ),
         box_post  = mk( "div",      "q-box q-inline" ),
+        box_header= mk( "div",      "q-box q-inline" ),
         link      = mk( "link",     "",
                                     {
                                         rel: "stylesheet",
@@ -287,7 +309,7 @@ const Q = ( function(){
 }
 .q-box {
     width:              45%;
-    height:             50vh;
+    height:             40vh;
     vertical-align:     top;
     word-break:         break-all;
     overflow-y:         scroll;
@@ -359,6 +381,7 @@ const Q = ( function(){
 .q-msg {
     border-radius:      3pt;
 }
+.q-cli {}
 .q-box::-webkit-scrollbar {
     background-color:   var(--black);
     width:              10px;
@@ -444,6 +467,9 @@ const Q = ( function(){
                     if ( !block_request ){
                         original_fetch_constructor.apply( this, arguments );
                     }
+                    add_to_set_array( JSON.stringify( options.headers ),
+                                      Q.data.log.headers );
+                    refresh();
                 };
                 XMLHttpRequest.prototype.open = function( method, url ){
                     callback( "XHR", url, method );
@@ -455,8 +481,10 @@ const Q = ( function(){
                     original_xhr_open.apply( this, arguments );
                 };
                 XMLHttpRequest.prototype.setRequestHeader = function( header, value ){
-                    Q.data.log.headers.push( header + ": " + value );
+                    add_to_set_array( header + ": " + value,
+                                      Q.data.log.headers );
                     original_xhr_setRequestHeader.apply( this, arguments );
+                    refresh();
                 };
             },
             stop: function(){
