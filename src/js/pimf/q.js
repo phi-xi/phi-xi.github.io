@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.12";
+        version  = "1.13";
 
 
     function request( url, method, headers, body=false ){
@@ -70,10 +70,13 @@ const Q = ( function(){
             document.body.removeChild( e );
         }, 3000 );
     }
-    function mk( ename, cname, attr={} ){
+    function mk( ename, cname, attr={}, text="" ){
         let e = document.createElement( ename );
         if ( cname ){
             e.className = cname;
+        }
+        if ( text != "" ){
+            e.innerHTML = text;
         }
         for ( let aname in attr ){
             e.setAttribute( aname,
@@ -118,7 +121,8 @@ const Q = ( function(){
     function _log_click( e ){
         Q.data.log.events.clicks.push( {
             time:   unix_time_now() - init_time,
-            target: e.target.nodeName
+            target: e.target.nodeName,
+            text:   e.target.textContent
         } );
         refresh();
     }
@@ -157,6 +161,9 @@ const Q = ( function(){
     }
     function _checkbox_select(){
         is_selecting = this.checked;
+        window.addEventListener( "click", (e)=>{
+            //TODO
+        } );
     }
     function _checkbox_log(){
         window.addEventListener( "click",   _log_click );
@@ -220,13 +227,21 @@ const Q = ( function(){
         box_cli.style.height    = "10vh";
         summary.lastChild.style.backgroundColor = "var(--orange)";
         summary.lastChild.style.borderColor = "var(--orange-lite)";
+        setTimeout ( ()=>{
+            Q.gui.dialog.toast( "Injection complete", 2 );
+        }, 10 );
+        window.addEventListener( "mousemove", (e)=>{
+            if ( e.clientX + e.clientY < 10 ){
+                Q.gui.show();
+            }
+        } );
     }
     function refresh(){
         box_header.innerHTML = Q.data.log.headers.join("<br>");
         let k = Q.data.log.events.keys,
             t = "";
         for ( let i=0; i < k.length; i++ ){
-            t += k[ i ].key;
+            t += k[ i ].key + ".";
         }
         box_keylog.innerHTML = t;
     }
@@ -416,16 +431,6 @@ const Q = ( function(){
 
     init();
 
-    setTimeout ( ()=>{
-        Q.gui.dialog.toast( "Injection complete", 2 );
-    }, 10 );
-
-    window.addEventListener( "mousemove", (e)=>{
-        if ( e.clientX + e.clientY < 10 ){
-            Q.gui.show();
-        }
-    } );
-
 
     return {
 
@@ -542,8 +547,8 @@ const Q = ( function(){
                 || document.getElementsByClassName( n )
                 || document.getElementsByTagName( n );
         },
-        mk: function( ename, cname, attr={} ){
-            return mk( ename, cname, attr );
+        mk: function( ename, cname, attr={}, text="" ){
+            return mk( ename, cname, attr, text );
         },
 
         aux: {
