@@ -8,11 +8,12 @@
     License: MIT (opensource.org/license/mit)
 
 */
+
 const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.07";
+        version  = "1.08";
 
 
     function request( url, method, headers, body=false ){
@@ -51,6 +52,8 @@ const Q = ( function(){
             } );
             b.style.marginLeft = "45%";
             m.appendChild( b );
+        } else {
+            m.style.textAlign = "center";
         }
         document.body.appendChild( m );
         return m;
@@ -129,6 +132,22 @@ const Q = ( function(){
                     }
                 } ),
             get_checkbox( "select",
+                function (){
+                    if ( !this.checked ){
+                        //TODO
+                    } else {
+                        //TODO
+                    }
+                } ),
+            get_checkbox( "log",
+                function (){
+                    if ( !this.checked ){
+                        //TODO
+                    } else {
+                        //TODO
+                    }
+                } ),
+            get_checkbox( "RC",
                 function (){
                     if ( !this.checked ){
                         //TODO
@@ -293,16 +312,18 @@ const Q = ( function(){
 .q-box {
     border:             solid 2px var(--green);
 }
-.q-btn,
-.q-msg {
+.q-btn {
     border:             solid 2px var(--green-lite);
+}
+.q-msg {
+    border:             solid 6px var(--orange-lite);
 }
 .q-msg {
     position:           absolute;
     top:                40vh;
     left:               25vw;
     width:              45vw;
-    height:             6em;
+    height:             auto;
     font-family:        Ubuntu;
     font-size:          12pt;
     background-color:   var(--black);
@@ -310,7 +331,6 @@ const Q = ( function(){
     padding:            1em;
     z-index:            2147483647;
 }
-
 .q-bar,
 .q-btn,
 .q-box,
@@ -457,25 +477,6 @@ const Q = ( function(){
         },
         mk: function( ename, cname, attr={} ){
             return mk( ename, cname, attr );
-        },
-        nite: function(){
-            const text_nodes = [
-                "div","span","table","tr","th","td",
-                "article","section",
-                "h1","h2","h3","h4",
-                "ul","ol","li","a","p","body"
-            ];
-            let ee = document.getElementsByTagName( "*" );
-            for ( let i=0; i < ee.length; i++ ){
-                let e = ee[ i ];
-                if ( text_nodes.includes( e.nodeName.toLowerCase() )
-                        || ( !e.innerHTML.includes( "<" )
-                                && !e.innerHTML.includes( ">" ) )
-                        || e.style.backgroundColor != "" ){
-                                    e.style.backgroundColor = "#111";
-                                    e.style.color = "#f7f7f7";
-                }
-            }
         },
 
         exit: function(){
