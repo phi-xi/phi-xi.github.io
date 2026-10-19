@@ -51,17 +51,13 @@
 
         U.request( url.css, "GET", {} )
             .then( (r)=>{
-                const css = r;
+                const css = minify_css( r );
                 U.request( url.js, "GET", {} )
                     .then( (rr)=>{
-                        textarea.value
-                            = rr.replace( /(const\scss\s*\=\s*\"\"\;)/g,
-                                    "const css = \"" + css + "\";" )
-                                .replace( /\/\*.+\*\//g, "" )
-                                .replace( /\n/g, "" )
-                                .slice(1);
+                        textarea.value = minify_js(
+                            rr.replace( /(const\scss\s*\=\s*\"\"\;)/g,
+                            "const css = \"" + css + "\";" );
                     } );
             } );
-
     </script>
 </html>
