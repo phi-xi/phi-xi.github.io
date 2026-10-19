@@ -47,8 +47,10 @@
                     .replace( /\s*\}\s*/g, "}" )
                     .replace( /\s*\+\s*/g, "+" )
                     .replace( /\s*\-\s*/g, "-" )
+                    .replace( /\s*\=\s*/g, "=" )
                     .replace( /\s*\:\s*/g, ":" )
-                    .replace( /\s*\;\s*/g, ";" )
+                    .replace( /\s*\,\s*/g, "," )
+                    .replace( /\s*\;\s*/g, ";" );
         }
         function copy(){
             navigator.clipboard.writeText( textarea.value )
