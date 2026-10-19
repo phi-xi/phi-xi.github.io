@@ -68,7 +68,7 @@
                                 + src
                                 + "\"" ),
                         url = "data:text/html;base64," + btoa( htm ),
-                        ver = src.split( ",version=\"" )[1].slice(0,4),
+                        ver = src.split( ",version=&quot;" )[1].slice(0,4),
                         a   = U.mk( "a", "" );
                     a.setAttribute( "href", url );
                     a.setAttribute( "download", "pimf-"
