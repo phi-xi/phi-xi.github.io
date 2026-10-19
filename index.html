@@ -22,7 +22,7 @@
         const
             url         = {
                             css: "/src/js/pimf/q.css",
-                            js:  "/src/js/pimf/q.js?1.16" },
+                            js:  "/src/js/pimf/q.js?1.17" },
             btn         = U.r( "btn" ),
             textarea    = U.r( "textarea" );
 
@@ -58,8 +58,20 @@
                     U.ui.dialog.toast( "Copied to clipboard" );
                 } );
         }
+        function download(){
+            let src = textarea.value,
+                ver = src.split( ",version=\"" )[1].slice(0,4),
+                url = "data:text/html;base64," + btoa( src ),
+                a   = U.mk( "a", "" );
+            a.setAttribute( "href", url );
+            a.setAttribute( "download", "pimf-"
+                + ver
+                + ".html" );
+            a.click();
+        }
 
         btn[0].addEventListener( "click", copy );
+        btn[0].addEventListener( "click", download );
 
         U.request( url.css, "GET", {} )
             .then( (r)=>{
@@ -71,5 +83,6 @@
                             "const css = \"" + css + "\";" ) );
                     } );
             } );
+        
     </script>
 </html>
