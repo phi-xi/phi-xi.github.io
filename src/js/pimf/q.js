@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.15";
+        version  = "1.16";
 
 
     function request( url, method, headers, body=false ){
@@ -150,13 +150,11 @@ const Q = ( function(){
     }
     function _checkbox_lock(){
         if ( !this.checked ){
-            if ( locker === null ) return;
-            window.removeEventListener( "beforeunload", locker, false );
-            locker = null;
+            window.onbeforeunload = null;
         } else {
-            locker = window.addEventListener( "beforeunload", (e)=>{
+            window.onbeforeunload = (e)=>{
                 e.preventDefault();
-            }, false );
+            };
         }
     }
     function _checkbox_select(){
@@ -278,7 +276,6 @@ const Q = ( function(){
         details   = mk( "details",  "q-bar" ),
         bar_title = mk( "div",      "q-bar-title" ),
         box_cli   = mk( "div",      "q-box q-cli q-inline" ),
-
         box_get   = mk( "div",      "q-box q-inline" ),
         box_post  = mk( "div",      "q-box q-inline" ),
         box_header= mk( "div",      "q-box q-inline" ),
