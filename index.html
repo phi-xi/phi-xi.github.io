@@ -22,6 +22,7 @@
 
         const
             url         = {
+                            bkmrk: "/pimf/q-bookmark.html",
                             css: "/src/js/pimf/q.css",
                             js:  "/src/js/pimf/q.js?1.17" },
             btn         = U.r( "btn" ),
@@ -60,15 +61,21 @@
                 } );
         }
         function download(){
-            let src = textarea.value.replace( /\"/g, "&quot;" ),
-                ver = src.split( ",version=\"" )[1].slice(0,4),
-                url = "data:text/html;base64," + btoa( src ),
-                a   = U.mk( "a", "" );
-            a.setAttribute( "href", url );
-            a.setAttribute( "download", "pimf-"
-                + ver
-                + ".html" );
-            a.click();
+            U.request( url.bkmrk, "GET", {} )
+                .then( (r)=>{
+                    let src = textarea.value.replace( /\"/g, "&quot;" ),
+                        htm = r.replace( /HREF\=\"\"/g, "HREF=\"javascript:"
+                                + src
+                                + "\"" ),
+                        url = "data:text/html;base64," + btoa( htm ),
+                        ver = src.split( ",version=\"" )[1].slice(0,4),
+                        a   = U.mk( "a", "" );
+                    a.setAttribute( "href", url );
+                    a.setAttribute( "download", "pimf-"
+                        + ver
+                        + ".html" );
+                    a.click();
+                }
         }
 
         btn[0].addEventListener( "click", copy );
