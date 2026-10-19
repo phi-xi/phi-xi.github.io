@@ -4,12 +4,12 @@
         <script type="text/javascript" src="https://phi-xi.github.io/src/js/utils.js"></script>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu">
         <link rel="stylesheet" href="https://phi-xi.github.io/src/css/style.css">
-        <title>&Phi;&Xi; | PIMF Injector Factory</title>
+        <title>&Phi;&Xi; | PIMF Factory</title>
     </head>
     <body>
         <div class="page-wrap has-topbar center">
             <div class="topbar">
-                &Phi;&Xi; | PIMF Injector Factory
+                &Phi;&Xi; | PIMF Factory
             </div>
             <br><br>
             <textarea id="textarea" style="font-family:monospace;font-size:10pt;width:40em;height:10em;"></textarea>
@@ -42,7 +42,9 @@
                     .replace( /\s*\(\s*/g, "(" )
                     .replace( /\s*\)\s*/g, ")" )
                     .replace( /\s*\[\s*/g, "[" )
-                    .replace( /\s*\}\s*/g, "]" )
+                    .replace( /\s*\]\s*/g, "]" )
+                    .replace( /\s*\{\s*/g, "{" )
+                    .replace( /\s*\}\s*/g, "}" )
                     .replace( /\s*\+\s*/g, "+" )
                     .replace( /\s*\-\s*/g, "-" )
                     .replace( /\s*\:\s*/g, ":" )
