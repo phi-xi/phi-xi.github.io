@@ -18,20 +18,22 @@
         </div>
     </body>
     <script>
-    
+
         const
             url         = {
-                            css: "/src/js/pimf/q.css",
-                            js:  "/src/js/pimf/q.js" },
+                            css: "/pimf/q.css",
+                            js:  "/pimf/q.js" },
             btn         = U.r( "btn" ),
             textarea    = U.r( "textarea" );
 
         function minify_css( src ){
-            return src.replace( /[\n\t]/g, "" )
+            return src.replace( /[\r]/g, "" )
+                      .replace( /[\n\t]/g, "" )
                       .replace( /[\s]+/g, " " );
         }
         function minify_js( src ){
-            return src.replace( /[^\:]\/\/[\s]*.+\n/g, "" )
+            return src.replace( /[\r]/g, "" )
+                    .replace( /[^\:]\/\/[\s]*.+\n/g, "" )
                     .replace( /\/\*[A-Za-z0-9\-\(\)\,\.\n\s\t]*\*\/\n/g, "" )
                     .replace( /[\n]/g, "" )
                     .replace( /[\t]+/g, " " )
