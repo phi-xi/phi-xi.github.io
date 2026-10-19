@@ -79,7 +79,7 @@
         }
 
         btn[0].addEventListener( "click", copy );
-        btn[0].addEventListener( "click", download );
+        btn[1].addEventListener( "click", download );
 
         U.request( url.css, "GET", {} )
             .then( (r)=>{
