@@ -1,23 +1,65 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
-        <title>&Phi;&Xi;</title>
+        <script type="text/javascript" src="https://phi-xi.github.io/src/js/utils.js"></script>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu">
-        <link rel="stylesheet" href="/src/css/style.css">
-        <script type="text/javascript" src="/src/js/utils.js"></script>
+        <link rel="stylesheet" href="https://phi-xi.github.io/src/css/style.css">
+        <title>&Phi;&Xi; | PIMF Injector Factory</title>
     </head>
     <body>
-        <div class="page-wrap no-indentation center">
-            <h1>&Phi;&Xi;</h1>
-            <button class="btn" onclick="c2cb()">Injector</button>
+        <div class="page-wrap has-topbar center">
+            <div class="topbar">
+                &Phi;&Xi; | PIMF Injector Factory
+            </div>
+            <br><br>
+            <textarea id="textarea" style="font-family:monospace;font-size:10pt;width:40em;height:10em;"></textarea>
+            <br>
+            <button class="btn">Copy</button>
         </div>
     </body>
     <script>
-        const js = 'let eagfduv244_fr=document.createElement("script");eagfduv244_fr.setAttribute("src","https://phi-xi.github.io/src/js/pimf/q.js");document.body.appendChild(eagfduv244_fr);';
-        function c2cb(){
-            navigator.clipboard.writeText( js ).then( ()=>{
-                U.ui.dialog.toast( "Copied to clipboard" );
-            } );
+    
+        const
+            url         = {
+                            css: "/src/js/pimf/q.css",
+                            js:  "/src/js/pimf/q.js" },
+            btn         = U.r( "btn" ),
+            textarea    = U.r( "textarea" );
+
+        function minify_css( src ){
+            return src.replace( /[\n\t]/g, "" )
+                      .replace( /[\s]+/g, " " );
         }
+        function minify_js( src ){
+            return src.replace( /[^\:]\/\/[\s]*.+\n/g, "" )
+                    .replace( /\/\*[A-Za-z0-9\-\(\)\,\.\n\s\t]*\*\/\n/g, "" )
+                    .replace( /[\n]/g, "" )
+                    .replace( /[\t]+/g, " " )
+                    .replace( /[\s]+/g, " " )
+                    .replace( /\/\*.*\*\//g, "" );
+        }
+        function copy(){
+            navigator.clipboard.writeText( textarea.value )
+                .then( ()=>{
+                    U.ui.dialog.toast( "Copied to clipboard" );
+                } );
+        }
+
+        btn[0].addEventListener( "click", copy );
+
+        U.request( url.css, "GET", {} )
+            .then( (r)=>{
+                const css = r;
+                U.request( url.js, "GET", {} )
+                    .then( (rr)=>{
+                        textarea.value
+                            = rr.replace( /(const\scss\s*\=\s*\"\"\;)/g,
+                                    "const css = \"" + css + "\";" )
+                                .replace( /\/\*.+\*\//g, "" )
+                                .replace( /\n/g, "" )
+                                .slice(1);
+                    } );
+            } );
+
     </script>
 </html>
