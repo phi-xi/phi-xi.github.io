@@ -56,7 +56,7 @@
                     .then( (rr)=>{
                         textarea.value = minify_js(
                             rr.replace( /(const\scss\s*\=\s*\"\"\;)/g,
-                            "const css = \"" + css + "\";" );
+                            "const css = \"" + css + "\";" ) );
                     } );
             } );
     </script>
