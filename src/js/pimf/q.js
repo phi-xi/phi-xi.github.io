@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.14";
+        version  = "1.15";
 
 
     function request( url, method, headers, body=false ){
@@ -262,7 +262,6 @@ const Q = ( function(){
         original_xhr_setRequestHeader = XMLHttpRequest
                                             .prototype.setRequestHeader,
         url_font  = "https://fonts.googleapis.com/css?family=Ubuntu",
-        url_rctrl = "https://phi-xi.github.io/src/js/pimf/rc.js",
         tsep      = " | ",
         title     = "<span style='color:var(--green-lite);'>&Phi;&Xi;"
                         + tsep
@@ -279,6 +278,7 @@ const Q = ( function(){
         details   = mk( "details",  "q-bar" ),
         bar_title = mk( "div",      "q-bar-title" ),
         box_cli   = mk( "div",      "q-box q-cli q-inline" ),
+
         box_get   = mk( "div",      "q-box q-inline" ),
         box_post  = mk( "div",      "q-box q-inline" ),
         box_header= mk( "div",      "q-box q-inline" ),
@@ -286,153 +286,12 @@ const Q = ( function(){
         link      = mk( "link",     "",
                                     {
                                         rel: "stylesheet",
-                                        href: url_font } ),
-        css       = `
-:root {
-    --orange-lite: 	#ff6611;
-    --orange: 		#cc3e11;
-    --orange-dark: 	#7a250a;
-    --green-lite: 	#1fee08;
-    --green: 		#039908;
-    --green-dark: 	#027005;
-    --cyan: 		#00eeee;
-    --cyan-dark: 	#00aaaa;
-    --white: 		#efefef;
-    --black: 		#000000;
-    --gray-lite: 	#555;
-    --gray: 		#222;
-    --gray-dark: 	#171717;
-}
-.q-green {
-    color:          var(-green);
-}
-.q-bar,
-.q-box,
-.q-btn,
-.q-input,
-.q-checkbox,
-.q-textarea {
-    font-family:        Ubuntu;
-    color:              var(--white);
-    margin:             1em;
-    padding:            0.5em;
-}
-.q-bar,
-.q-bar-title,
-.q-input,
-.q-textarea,
-.q-checkbox {
-    background-color:   var(--black);
-}
-.q-bar {
-    position:           fixed;
-    top:                0;
-    left:               0;
-    width:              100%;
-    margin:             0;
-    font-size:          12pt;
-    opacity:            ` + opacity.toString() + `;
-    z-index:            2147483646;
-}
-.q-bar:open{
-    height:             100%;
-}
-.q-bar-title {
-    font-size:          1.5em;
-    opacity:            1;
-    user-select:        none;
-}
-.q-box {
-    width:              45%;
-    height:             40vh;
-    vertical-align:     top;
-    word-break:         break-all;
-    overflow-y:         scroll;
-}
-.q-bar-title,
-.q-btn,
-.q-summary {
-    cursor:             pointer;
-}
-.q-btn {
-    background-color:   var(--green);
-}
-.q-checkbox-wrap,
-.q-label {
-    height:             1em;
-}
-.q-checkbox {
-    width:              10pt;
-    font-size:          10pt;
-    color:              var(--orange);
-    margin:             0 0.2em 0 1em;
-}
-.q-btn,
-.q-checkbox-wrap,
-.q-msg,
-.q-bar-title {
-    font-weight:        bold;
-}
-.q-btn {
-    margin:             0;
-    margin-left:        1em;
-    font-size:          10pt;
-    line-height:        0.5em;
-}
-.q-label {
-    font-size:          0.6em;
-    font-weight:        normal;
-}
-.q-checkbox-wrap,
-.q-inline {
-    display:            inline-block;
-}
-.q-bar,
-.q-box {
-    border:             solid 2px var(--green);
-}
-.q-btn {
-    border:             solid 2px var(--green-lite);
-}
-.q-msg {
-    border:             solid 6px var(--orange-lite);
-}
-.q-msg {
-    position:           absolute;
-    top:                40vh;
-    left:               25vw;
-    width:              45vw;
-    height:             auto;
-    font-family:        Ubuntu;
-    font-size:          12pt;
-    background-color:   var(--black);
-    color:              var(--orange-lite);
-    padding:            1em;
-    z-index:            2147483647;
-}
-.q-bar,
-.q-btn,
-.q-box,
-.q-msg {
-    border-radius:      3pt;
-}
-.q-cli {}
-.q-box::-webkit-scrollbar {
-    background-color:   var(--black);
-    width:              10px;
-}
-.q-box::-webkit-scrollbar-track {
-    background-color:   var(--black);
-    width:              10px;
-}
-.q-box::-webkit-scrollbar-thumb {
-    background-color:   var(--gray);
-    width:              10px;
-    border-radius:      5px;
-}`;
+                                        href: url_font } );
+        const css = "";
 
 
-    let locker      = null,
+    let url_rctrl = "https://phi-xi.github.io/src/js/pimf/rc.js",
+        locker      = null,
         rc          = null,
         proc_id     = null,
         selector    = null;
