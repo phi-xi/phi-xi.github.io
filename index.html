@@ -60,7 +60,7 @@
                 } );
         }
         function download(){
-            let src = textarea.value,
+            let src = textarea.value.replace( /\"/g, "&quot;" ),
                 ver = src.split( ",version=\"" )[1].slice(0,4),
                 url = "data:text/html;base64," + btoa( src ),
                 a   = U.mk( "a", "" );
