@@ -99,13 +99,13 @@
 }
 .q-bar,
 .q-box {
-    border:             solid 1px var(--gray);
+    border:             solid 2px var(--gray);
 }
 .q-btn {
     border:             solid 2px var(--green-lite);
 }
 .q-msg {
-    border:             solid 3px var(--orange);
+    border:             solid 4px var(--orange-lite);
 }
 .q-msg {
     position:           fixed;
