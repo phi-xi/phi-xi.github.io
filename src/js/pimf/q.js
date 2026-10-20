@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.28";
+        version  = "1.29";
 
 
     function request( url, method, headers, body=false ){
