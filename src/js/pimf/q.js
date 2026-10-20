@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.26";
+        version  = "1.27";
 
 
     function request( url, method, headers, body=false ){
@@ -45,9 +45,15 @@ const Q = ( function(){
             }
         } );
     }
-    function msg( txt, add_button ){
-        let m = mk( "div", "q-msg" );
-        m.innerHTML = txt + "<br><br>";
+    function _msg( txt, add_button ){
+        let m = mk( "div",
+                    "q-msg",
+                    {
+                        style: "font-family:"
+                                + this
+                                + ";"
+                    },
+                    txt + "<br><br>" );
         if ( add_button ){
             let b = get_button( "OK", function(){
                 document.body.removeChild( m );
@@ -60,6 +66,7 @@ const Q = ( function(){
         document.body.appendChild( m );
         return m;
     }
+    let msg = _msg.bind( "Ubuntu" );
     function load_script( url ){
         let e = mk( "script", false, {
             src:  url,
@@ -262,9 +269,9 @@ const Q = ( function(){
                             let m = r.replace( /\&/g, "&amp;" )
                                      .replace( /\</g, "&lt;" )
                                      .replace( /\>/g, "&gt;" );
-                            msg( m, true ); },
+                            msg.bind( "monospace" )( m, true ); },
                         (r)=>{
-                            msg( cmd[0]
+                            msg.bind( "monospace" )( cmd[0]
                                     + "  request to  "
                                     + cmd[1]
                                     + "  failed with status  "
