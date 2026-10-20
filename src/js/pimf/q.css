@@ -116,11 +116,10 @@
     font-family:        Ubuntu;
     font-size:          12pt;
     background-color:   var(--black);
-    color:              var(--orange-lite);
     padding:            1em;
     z-index:            2147483647;
     word-break:         break-all;
-    color:              var(--white);
+    color:              var(--gray-lite);
     overflow-y:         scroll;
 }
 .q-bar,
