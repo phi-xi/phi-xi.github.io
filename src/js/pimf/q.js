@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.16";
+        version  = "1.17";
 
 
     function request( url, method, headers, body=false ){
@@ -223,6 +223,7 @@ const Q = ( function(){
             summary.appendChild( bottons[ i ] );
         details.appendChild( summary );
         details.appendChild( box_cli );
+        box_cli.appendChild( input_cli );
         details.appendChild( box_post );
         details.appendChild( box_get );
         details.appendChild( box_header );
@@ -276,6 +277,7 @@ const Q = ( function(){
         details   = mk( "details",  "q-bar" ),
         bar_title = mk( "div",      "q-bar-title" ),
         box_cli   = mk( "div",      "q-box q-cli q-inline" ),
+        input_cli = mk( "input",    "q-box" ),
         box_get   = mk( "div",      "q-box q-inline" ),
         box_post  = mk( "div",      "q-box q-inline" ),
         box_header= mk( "div",      "q-box q-inline" ),
