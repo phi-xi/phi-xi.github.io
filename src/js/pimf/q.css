@@ -112,7 +112,7 @@
     top:                40vh;
     left:               25vw;
     width:              45vw;
-    height:             auto;
+    height:             50vh;
     font-family:        Ubuntu;
     font-size:          12pt;
     background-color:   var(--black);
@@ -121,6 +121,7 @@
     z-index:            2147483647;
     word-break:         break-all;
     color:              var(--white);
+    overflow-y:         scroll;
 }
 .q-bar,
 .q-btn,
@@ -134,15 +135,18 @@
     height:             2em;
     line-height:        2em;
 }
-.q-box::-webkit-scrollbar {
+.q-box::-webkit-scrollbar,
+.q-msg::-webkit-scrollbar {
     background-color:   var(--black);
     width:              10px;
 }
-.q-box::-webkit-scrollbar-track {
+.q-box::-webkit-scrollbar-track,
+.q-msg::-webkit-scrollbar-track {
     background-color:   var(--black);
     width:              10px;
 }
-.q-box::-webkit-scrollbar-thumb {
+.q-box::-webkit-scrollbar-thumb,
+.q-msg::-webkit-scrollbar-thumb {
     background-color:   var(--gray);
     width:              10px;
     border-radius:      5px;
