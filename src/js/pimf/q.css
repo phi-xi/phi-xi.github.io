@@ -105,7 +105,7 @@
     border:             solid 2px var(--green-lite);
 }
 .q-msg {
-    border:             solid 6px var(--orange-lite);
+    border:             solid 3px var(--orange);
 }
 .q-msg {
     position:           fixed;
