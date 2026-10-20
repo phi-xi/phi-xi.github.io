@@ -99,7 +99,7 @@
 }
 .q-bar,
 .q-box {
-    border:             solid 2px var(--green);
+    border:             solid 1px var(--gray);
 }
 .q-btn {
     border:             solid 2px var(--green-lite);
