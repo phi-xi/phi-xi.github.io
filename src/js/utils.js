@@ -74,10 +74,15 @@ const U = ( function(){
                 || document.getElementsByClassName( n )
                 || document.getElementsByTagName( n );
         },
-        mk: ( e="div", cn="" ) => {
-            let _e = document.createElement( e );
-            _e.className = cn;
-            return _e;
+        mk( ename, cname, attr={}, text="" ){
+            let e = document.createElement( ename );
+            if ( cname )      e.className = cname;
+            if ( text != "" ) e.innerHTML = text;
+            for ( let aname in attr ){
+                e.setAttribute( aname,
+                                attr[ aname ] );
+            }
+            return e;
         },
         request: ( url, method, headers, body=false ) => {
             return new Promise( async ( resolve, reject ) => {
