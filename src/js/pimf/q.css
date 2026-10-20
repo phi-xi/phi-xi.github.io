@@ -109,10 +109,10 @@
 }
 .q-msg {
     position:           fixed;
-    top:                40vh;
+    top:                25vh;
     left:               25vw;
     width:              45vw;
-    height:             50vh;
+    max-height:         50vh;
     font-family:        Ubuntu;
     font-size:          12pt;
     background-color:   var(--black);
