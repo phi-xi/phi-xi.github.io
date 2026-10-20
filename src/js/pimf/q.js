@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.24";
+        version  = "1.25";
 
 
     function request( url, method, headers, body=false ){
@@ -141,6 +141,12 @@ const Q = ( function(){
         details.style.opacity =
             this.checked ? opacity : 1;
     }
+    function _checkbox_monospace(){
+        let css = ".q-bar,.q-box,.q-btn,.q-input,.q-checkbox,.q-textarea,.q-msg{font-family:monospace;}",
+            style = Q.mk( "style", "", {}, css );
+        document.body.appendChild( style );
+        this.disabled = true;
+    }
     function _checkbox_interept(){
         if ( !this.checked ){
             Q.intercept.stop();
@@ -207,6 +213,7 @@ const Q = ( function(){
         document.body.appendChild( style );
         let checkboxes = [
             get_checkbox( "transparent", _checkbox_transparent ),
+            get_checkbox( "monospace",   _checkbox_monospace ),
             get_checkbox( "intercept",   _checkbox_interept ),
             get_checkbox( "lock",        _checkbox_lock ),
             get_checkbox( "select",      _checkbox_select ),
@@ -252,14 +259,13 @@ const Q = ( function(){
                     .then(
                         (r)=>{
                             input_cli.value = "";
-                            msg( r, true ); },
+                            msg( escape( r ), true ); },
                         (r)=>{
-                            msg( "ERROR: "
-                                    + cmd[0]
-                                    + " request to "
+                            msg( cmd[0]
+                                    + "  request to  "
                                     + cmd[1]
-                                    + " failed with status "
-                                    + r.split( ":" )[1], true );
+                                    + "  failed with status  "
+                                    + r.split( ":" )[1] );
                         } );
             }
         } );
