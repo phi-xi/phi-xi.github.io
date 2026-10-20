@@ -108,7 +108,7 @@
     border:             solid 6px var(--orange-lite);
 }
 .q-msg {
-    position:           absolute;
+    position:           fixed;
     top:                40vh;
     left:               25vw;
     width:              45vw;
