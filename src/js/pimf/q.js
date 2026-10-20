@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.21";
+        version  = "1.22";
 
 
     function request( url, method, headers, body=false ){
@@ -246,8 +246,9 @@ const Q = ( function(){
         input_cli.addEventListener( "keydown", (e)=>{
             if ( e.keyCode == 13 ){
                 const cmd = input_cli.value.split( " " );
-                request( cmd[1], cmd[0], {} )
+                request( cmd[1], cmd[0], JSON.parse(cmd[2]), cmd[3] )
                     .then( (r)=>{
+                        input_cli.value = "";
                         msg( r, true );
                     } );
             }
