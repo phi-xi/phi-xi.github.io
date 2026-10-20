@@ -352,12 +352,12 @@ const U = ( function(){
                 document.write( "<html><head><link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu'><link rel='stylesheet' href='https://phi-xi.github.io/src/css/style.css'></head><body><div class='page-wrap has-topbar no-indentation'><div class='topbar'>Dev</div></div></body></html>" );
             },
             minify: {
-                css: ( src ) = {
+                css: ( src ) => {
                     return src.replace( /[\r]/g, "" )
                         .replace( /[\n\t]/g, "" )
                         .replace( /[\s]+/g, " " );
                 },
-                js: ( src ) = {
+                js: ( src ) => {
                     return src.replace( /[\r]/g, "" )
                         .replace( /[^\:]\/\/[\s]*.+\n/g, "" )
                         .replace( /\/\*[A-Za-z0-9\-\(\)\,\.\n\s\t]*\*\/\n/g, "" )
