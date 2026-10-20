@@ -127,6 +127,11 @@
     border-radius:      3pt;
 }
 .q-cli {}
+.q-input {
+    width:              70%;
+    height:             2em;
+    line-height:        2em;
+}
 .q-box::-webkit-scrollbar {
     background-color:   var(--black);
     width:              10px;
