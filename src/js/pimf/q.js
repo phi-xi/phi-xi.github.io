@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.25";
+        version  = "1.26";
 
 
     function request( url, method, headers, body=false ){
@@ -259,7 +259,10 @@ const Q = ( function(){
                     .then(
                         (r)=>{
                             input_cli.value = "";
-                            msg( escape( r ), true ); },
+                            let m = r.replace( /\&/g, "&amp;" )
+                                     .replace( /\</g, "&lt;" )
+                                     .replace( /\>/g, "&gt;" );
+                            msg( m, true ); },
                         (r)=>{
                             msg( cmd[0]
                                     + "  request to  "
