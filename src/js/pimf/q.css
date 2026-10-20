@@ -113,13 +113,12 @@
     left:               25vw;
     width:              45vw;
     max-height:         50vh;
-    font-family:        Ubuntu;
     font-size:          12pt;
-    background-color:   var(--black);
+    background-color:   var(--gray-dark);
     padding:            1em;
     z-index:            2147483647;
     word-break:         break-all;
-    color:              var(--gray-lite);
+    color:              var(--white);
     overflow-y:         scroll;
 }
 .q-bar,
@@ -146,7 +145,7 @@
 }
 .q-box::-webkit-scrollbar-thumb,
 .q-msg::-webkit-scrollbar-thumb {
-    background-color:   var(--gray);
+    background-color:   var(--orange-dark);
     width:              10px;
     border-radius:      5px;
 }
