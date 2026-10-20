@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.23";
+        version  = "1.24";
 
 
     function request( url, method, headers, body=false ){
@@ -249,10 +249,18 @@ const Q = ( function(){
             if ( e.keyCode == 13 ){
                 const cmd = input_cli.value.split( " " );
                 request( cmd[1], cmd[0], JSON.parse(cmd[2]), cmd[3] )
-                    .then( (r)=>{
-                        input_cli.value = "";
-                        msg( r, true );
-                    } );
+                    .then(
+                        (r)=>{
+                            input_cli.value = "";
+                            msg( r, true ); },
+                        (r)=>{
+                            msg( "ERROR: "
+                                    + cmd[0]
+                                    + " request to "
+                                    + cmd[1]
+                                    + " failed with status "
+                                    + r.split( ":" )[1], true );
+                        } );
             }
         } );
     }
@@ -290,7 +298,8 @@ const Q = ( function(){
         bar_title = mk( "div",      "q-bar-title" ),
         box_cli   = mk( "div",      "q-box q-cli q-inline" ),
         input_cli = mk( "input",    "q-box q-input", {
-            placeholder: "Type command and execute with ENTER..."
+            placeholder: "Type HTTP command and execute with ENTER. Syntax: "
+                            + "<GET|POST> <url> <header_JSON> <body>"
         } ),
         box_get   = mk( "div",      "q-box q-inline" ),
         box_post  = mk( "div",      "q-box q-inline" ),
