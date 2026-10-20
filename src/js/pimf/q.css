@@ -119,6 +119,8 @@
     color:              var(--orange-lite);
     padding:            1em;
     z-index:            2147483647;
+    word-break:         break-all;
+    color:              var(--white);
 }
 .q-bar,
 .q-btn,
