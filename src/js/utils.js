@@ -350,6 +350,34 @@ const U = ( function(){
             blankPage: () => {
                 document.write("");
                 document.write( "<html><head><link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu'><link rel='stylesheet' href='https://phi-xi.github.io/src/css/style.css'></head><body><div class='page-wrap has-topbar no-indentation'><div class='topbar'>Dev</div></div></body></html>" );
+            },
+            minify: {
+                css: ( src ) = {
+                    return src.replace( /[\r]/g, "" )
+                        .replace( /[\n\t]/g, "" )
+                        .replace( /[\s]+/g, " " );
+                },
+                js: ( src ) = {
+                    return src.replace( /[\r]/g, "" )
+                        .replace( /[^\:]\/\/[\s]*.+\n/g, "" )
+                        .replace( /\/\*[A-Za-z0-9\-\(\)\,\.\n\s\t]*\*\/\n/g, "" )
+                        .replace( /[\n]/g, "" )
+                        .replace( /[\t]+/g, " " )
+                        .replace( /[\s]+/g, " " )
+                        .replace( /\/\*.*\*\//g, "" )
+                        .replace( /\s*\(\s*/g, "(" )
+                        .replace( /\s*\)\s*/g, ")" )
+                        .replace( /\s*\[\s*/g, "[" )
+                        .replace( /\s*\]\s*/g, "]" )
+                        .replace( /\s*\{\s*/g, "{" )
+                        .replace( /\s*\}\s*/g, "}" )
+                        .replace( /\s*\+\s*/g, "+" )
+                        .replace( /\s*\-\s*/g, "-" )
+                        .replace( /\s*\=\s*/g, "=" )
+                        .replace( /\s*\:\s*/g, ":" )
+                        .replace( /\s*\,\s*/g, "," )
+                        .replace( /\s*\;\s*/g, ";" );
+                }
             }
         }
     };
