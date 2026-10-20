@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.22";
+        version  = "1.23";
 
 
     function request( url, method, headers, body=false ){
@@ -194,6 +194,8 @@ const Q = ( function(){
     }
     function _button_visibility(){
         Q.gui.hide();
+        Q.gui.dialog
+            .toast( "Move mouse to top left corner to show PIMF" );
     }
     function _button_exit(){
         Q.exit();
