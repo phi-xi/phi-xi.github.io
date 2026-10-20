@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.27";
+        version  = "1.28";
 
 
     function request( url, method, headers, body=false ){
@@ -266,16 +266,17 @@ const Q = ( function(){
                     .then(
                         (r)=>{
                             input_cli.value = "";
-                            let m = r.replace( /\&/g, "&amp;" )
+                            let s = _msg.bind( "monospace" ),
+                                m = r.replace( /\&/g, "&amp;" )
                                      .replace( /\</g, "&lt;" )
                                      .replace( /\>/g, "&gt;" );
-                            msg.bind( "monospace" )( m, true ); },
+                            s( m, true ); },
                         (r)=>{
-                            msg.bind( "monospace" )( cmd[0]
-                                    + "  request to  "
-                                    + cmd[1]
-                                    + "  failed with status  "
-                                    + r.split( ":" )[1] );
+                            s( cmd[0]
+                                + "  request to  "
+                                + cmd[1]
+                                + "  failed with status  "
+                                + r.split( ":" )[1] );
                         } );
             }
         } );
