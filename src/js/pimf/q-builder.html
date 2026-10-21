@@ -4,7 +4,7 @@
         <script type="text/javascript" src="https://phi-xi.github.io/src/js/utils.js?1twui"></script>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu">
         <link rel="stylesheet" href="https://phi-xi.github.io/src/css/style.css">
-        <title>&Phi;&Xi; | PIMF Injector Factory</title>
+        <title>&Phi;&Xi; | PIMF Factory</title>
         <style>
             p {
                 text-align: left;
@@ -29,7 +29,7 @@
     <body>
         <div class="page-wrap has-topbar">
             <div class="topbar">
-                &Phi;&Xi; | PIMF Injector Factory
+                &Phi;&Xi; | PIMF Factory
             </div>
             <h3>Build config</h3>
             <p>
@@ -72,7 +72,7 @@
         }
         function insert_cfg( js ){
             let gui = input_gui.checked,
-                url = input_hook.value.trim( "/" );
+                url = input_hook.value.replace( /\/+$/g, "" );
             return js.replace(
                         /(gui\:null)/g,
                         "gui:" + gui.toString() )
