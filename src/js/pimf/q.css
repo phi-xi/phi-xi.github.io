@@ -133,6 +133,7 @@
     height:             2em;
     margin:             0;
     line-height:        2em;
+    border:             none;
 }
 .q-box::-webkit-scrollbar,
 .q-msg::-webkit-scrollbar {
