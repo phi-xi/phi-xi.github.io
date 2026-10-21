@@ -71,7 +71,7 @@
                 url = input_hook.value;
             return js.replace(
                         /(gui\:null)/g,
-                        "gui:\"" + gui.toString() + "\"" )
+                        "gui:" + gui.toString() )
                     .replace(
                         /(hook\:null)/g,
                         "hook:\"" + url + "\"" );
