@@ -15,7 +15,14 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.31";
+        version  = "1.32",
+        config   = {
+            gui:null,
+            url: {
+                hook:null,
+                ping:null
+            }
+        };
 
 
     function request( url, method, headers, body=false ){
@@ -330,8 +337,8 @@ const Q = ( function(){
         const css = "";
 
 
-    let url_rctrl = "https://phi-xi.github.io/src/js/pimf/rc.js",
-        url_test  = "https://phi-xi.github.io/src/js/pimf/ping.js",
+    let url_rctrl = config.url.hook,
+        url_test  = config.url.ping,
         locker      = null,
         rc          = null,
         proc_id     = null,
