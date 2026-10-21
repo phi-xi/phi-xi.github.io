@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.33",
+        version  = "1.34",
         config   = {
             gui:null,
             url: {
@@ -250,6 +250,7 @@ const Q = ( function(){
         details.appendChild( box_post );
         details.appendChild( box_get );
         details.appendChild( box_header );
+        details.appendChild( box_info );
         details.appendChild( box_keylog );
         document.body.appendChild( details );
         box_cli.style.width     = "90vw";
@@ -329,6 +330,7 @@ const Q = ( function(){
         box_get   = mk( "div",      "q-box q-inline" ),
         box_post  = mk( "div",      "q-box q-inline" ),
         box_header= mk( "div",      "q-box q-inline q-box-small" ),
+        box_info  = mk( "div",      "q-box q-inline q-box-small" ),
         box_keylog= mk( "div",      "q-box q-inline q-box-small" ),
         link      = mk( "link",     "",
                                     {
