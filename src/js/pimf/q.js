@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.32",
+        version  = "1.33",
         config   = {
             gui:null,
             url: {
@@ -328,8 +328,8 @@ const Q = ( function(){
         } ),
         box_get   = mk( "div",      "q-box q-inline" ),
         box_post  = mk( "div",      "q-box q-inline" ),
-        box_header= mk( "div",      "q-box q-inline" ),
-        box_keylog= mk( "div",      "q-box q-inline" ),
+        box_header= mk( "div",      "q-box q-inline q-box-small" ),
+        box_keylog= mk( "div",      "q-box q-inline q-box-small" ),
         link      = mk( "link",     "",
                                     {
                                         rel: "stylesheet",
