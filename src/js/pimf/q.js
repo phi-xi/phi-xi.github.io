@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.34",
+        version  = "1.35",
         config   = {
             gui:null,
             url: {
@@ -197,7 +197,7 @@ const Q = ( function(){
         window.addEventListener( "keydown", _log_keypress );
         this.disabled = true;
     }
-    function _checkbox_rc(){
+    function _checkbox_hook(){
         if ( !this.checked ){
             if ( rc !== null ){
                 clearInterval( rc );
@@ -232,7 +232,7 @@ const Q = ( function(){
             get_checkbox( "lock",        _checkbox_lock ),
             get_checkbox( "select",      _checkbox_select ),
             get_checkbox( "log",         _checkbox_log ),
-            get_checkbox( "RC",          _checkbox_rc )
+            get_checkbox( "hook",        _checkbox_hook )
         ];
         let bottons = [
             get_button( "Hide", _button_visibility ),
@@ -389,7 +389,7 @@ const Q = ( function(){
             }
         },
 
-        rc: {
+        hook: {
             get_proc_id: function(){
                 return proc_id;
             },
