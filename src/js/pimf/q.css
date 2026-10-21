@@ -29,6 +29,7 @@
 }
 .q-bar,
 .q-bar-title,
+.q-input,
 .q-textarea,
 .q-checkbox {
     background-color:   var(--black);
