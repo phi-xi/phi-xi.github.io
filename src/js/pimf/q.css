@@ -1,5 +1,5 @@
 :root {
-    --orange-lite: 	#ff6611;
+/*    --orange-lite: 	#ff6611;
     --orange: 		#cc3e11;
     --orange-dark: 	#7a250a;
     --green-lite: 	#1fee08;
@@ -11,7 +11,19 @@
     --black: 		#000000;
     --gray-lite: 	#555;
     --gray: 		#222;
-    --gray-dark: 	#171717;
+    --gray-dark: 	#171717;*/
+    --orange-lite:  #FF7722;
+    --orange:       #CC3E11;
+    --orange-dark:  #7A250A;
+    --green:        #03BB08;
+    --green-dark:   #027005;
+    --cyan:         #00EEEE;
+    --cyan-dark:    #00AAAA;
+    --gray-lite:    #086769;
+    --gray:         #03292A;
+    --gray-dark:    #020F0F;
+    --white:        #FFFFFF;
+    --black:        #000000;
 }
 .q-green {
     color:          var(-green);
