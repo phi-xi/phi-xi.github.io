@@ -1,15 +1,15 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
-        <script type="text/javascript" src="https://phi-xi.github.io/src/js/utils.js?159348"></script>
+        <script type="text/javascript" src="https://phi-xi.github.io/src/js/utils.js?1twui"></script>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu">
         <link rel="stylesheet" href="https://phi-xi.github.io/src/css/style.css">
-        <title>&Phi;&Xi; | PIMF Factory</title>
+        <title>&Phi;&Xi; | PIMF Injector Factory</title>
     </head>
     <body>
         <div class="page-wrap has-topbar">
-            <div class="topbar">
-                &Phi;&Xi; | PIMF Factory
+            <div class="topbar" style="font-size:1.5rem;">
+                &Phi;&Xi; | PIMF Injector Factory
             </div>
             <h3>Build config</h3>
             <div style="text-align:left;margin:1em;">
@@ -26,19 +26,35 @@
     <script>
 
         const
-            date_now    = new Date().getTime().toString(),
             url         = {
-                            bkmrk: "/src/js/pimf/q-bookmark.html",
-                            css: "/src/js/pimf/q.css?" + date_now,
-                            js:  "/src/js/pimf/q.js?" + date_now },
+                            bkmrk: "/pimf/q-bookmark.html",
+                            css: "/pimf/q.css",
+                            js:  "/pimf/q.js" },
             btn         = U.r( "btn" ),
-            textarea    = U.r( "textarea" );
+            textarea    = U.r( "textarea" ),
+            input_hook  = U.r( "url" ),
+            input_gui   = U.r( "gui" );
 
         function minify_css( src ){
             return U.dev.minify.css( src );
         }
         function minify_js( src ){
             return U.dev.minify.js( src );
+        }
+        function insert_css( js, css ){
+            return js.replace(
+                        /(const\scss\s*\=\s*\"\"\;)/g,
+                        "const css = \"" + css + "\";" );
+        }
+        function insert_cfg( js ){
+            let gui = input_gui.checked,
+                url = input_hook.value;
+            return js.replace(
+                        /(gui\:null)/g,
+                        "gui:\"" + gui.toString() + "\"" )
+                    .replace(
+                        /(hook\:null)/g,
+                        "hook:\"" + url + "\"" );
         }
         function copy(){
             navigator.clipboard.writeText( textarea.value )
@@ -71,12 +87,13 @@
             .then( (r)=>{
                 const css = minify_css( r );
                 U.request( url.js, "GET", {} )
-                    .then( (rr)=>{
-                        textarea.value = minify_js(
-                            rr.replace( /(const\scss\s*\=\s*\"\"\;)/g,
-                            "const css = \"" + css + "\";" ) );
+                    .then( (js)=>{
+                        let src = insert_css(
+                                    insert_cfg( js ),
+                                    css );
+                        textarea.value = minify_js( src );
                     } );
             } );
-        
+
     </script>
 </html>
