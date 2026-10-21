@@ -129,8 +129,9 @@
 }
 .q-cli {}
 .q-input {
-    width:              90%;
+    width:              100%;
     height:             2em;
+    margin:             0;
     line-height:        2em;
 }
 .q-box::-webkit-scrollbar,
