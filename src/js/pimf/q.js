@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.30";
+        version  = "1.31";
 
 
     function request( url, method, headers, body=false ){
@@ -72,14 +72,10 @@ const Q = ( function(){
             src:  url,
             type: "text/javascript"
         } );
-        try {
-            document.body.appendChild( e );
-            setTimeout( ()=>{
-                document.body.removeChild( e );
-            }, 3000 );
-        } catch ( e ){
-            Q.gui.dialog.toast( "Failed to load external script" );
-        }
+        document.body.appendChild( e );
+        setTimeout( ()=>{
+            document.body.removeChild( e );
+        }, 3000 );
     }
     function mk( ename, cname, attr={}, text="" ){
         let e = document.createElement( ename );
@@ -254,7 +250,10 @@ const Q = ( function(){
         summary.lastChild.style.backgroundColor = "var(--orange)";
         summary.lastChild.style.borderColor = "var(--orange-lite)";
         setTimeout ( ()=>{
-            Q.gui.dialog.toast( "Injection complete", 2 );
+            Q.gui.dialog.toast( "Injection complete", 1 );
+            setTimeout ( ()=>{
+                load_script( url_test );
+            }, 3000 );
         }, 10 );
         window.addEventListener( "mousemove", (e)=>{
             if ( e.clientX + e.clientY < 10 ){
