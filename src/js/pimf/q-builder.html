@@ -103,6 +103,8 @@
         btn[0].addEventListener( "click", copy );
         btn[1].addEventListener( "click", download );
 
+        input_hook.value = "https://phi-xi.github.io/src/js/pimf/rc.js";
+
         U.request( url.css, "GET", {} )
             .then( (r)=>{
                 const css = minify_css( r );
