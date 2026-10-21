@@ -5,22 +5,42 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu">
         <link rel="stylesheet" href="https://phi-xi.github.io/src/css/style.css">
         <title>&Phi;&Xi; | PIMF Injector Factory</title>
+        <style>
+            p {
+                text-align: left;
+                margin: 1em;
+            }
+            #textarea {
+                font-family: monospace;
+                font-size: 10pt;
+                width: 40em;
+                height: 10em;
+                display: block;
+                margin-bottom: 1em;
+            }
+            .topbar {
+                font-size: 1.5rem;
+            }
+        </style>
     </head>
     <body>
         <div class="page-wrap has-topbar">
-            <div class="topbar" style="font-size:1.5rem;">
+            <div class="topbar">
                 &Phi;&Xi; | PIMF Injector Factory
             </div>
             <h3>Build config</h3>
-            <div style="text-align:left;margin:1em;">
+            <p>
                 <label>Hook URL</label>
                 <input id="url">
                 <label>Show GUI</label>
                 <input id="gui" type="checkbox" checked>
-            </div>
-            <textarea id="textarea" style="font-family:monospace;font-size:10pt;width:40em;height:10em;display:block;margin-bottom:1em;"></textarea>
-            <button class="btn green">Copy</button>
-            <button class="btn green">Download as bookmark</button>
+            </p>
+            <h3>Output</h3>
+            <p>
+                <textarea id="textarea"></textarea>
+                <button class="btn green">Copy</button>
+                <button class="btn green">Download as bookmark</button>
+            </p>
         </div>
     </body>
     <script>
