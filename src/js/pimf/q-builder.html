@@ -1,1 +1,82 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+        <script type="text/javascript" src="https://phi-xi.github.io/src/js/utils.js?159348"></script>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu">
+        <link rel="stylesheet" href="https://phi-xi.github.io/src/css/style.css">
+        <title>&Phi;&Xi; | PIMF Factory</title>
+    </head>
+    <body>
+        <div class="page-wrap has-topbar">
+            <div class="topbar">
+                &Phi;&Xi; | PIMF Factory
+            </div>
+            <h3>Build config</h3>
+            <div style="text-align:left;margin:1em;">
+                <label>Hook URL</label>
+                <input id="url">
+                <label>Show GUI</label>
+                <input id="gui" type="checkbox" checked>
+            </div>
+            <textarea id="textarea" style="font-family:monospace;font-size:10pt;width:40em;height:10em;display:block;margin-bottom:1em;"></textarea>
+            <button class="btn green">Copy</button>
+            <button class="btn green">Download as bookmark</button>
+        </div>
+    </body>
+    <script>
 
+        const
+            date_now    = new Date().getTime().toString(),
+            url         = {
+                            bkmrk: "/src/js/pimf/q-bookmark.html",
+                            css: "/src/js/pimf/q.css?" + date_now,
+                            js:  "/src/js/pimf/q.js?" + date_now },
+            btn         = U.r( "btn" ),
+            textarea    = U.r( "textarea" );
+
+        function minify_css( src ){
+            return U.dev.minify.css( src );
+        }
+        function minify_js( src ){
+            return U.dev.minify.js( src );
+        }
+        function copy(){
+            navigator.clipboard.writeText( textarea.value )
+                .then( ()=>{
+                    U.ui.dialog.toast( "Copied to clipboard" );
+                } );
+        }
+        function download(){
+            U.request( url.bkmrk, "GET", {} )
+                .then( (r)=>{
+                    let src = textarea.value.replace( /\"/g, "&quot;" ),
+                        htm = r.replace( /HREF\=\"\"/g, "HREF=\"javascript:"
+                                + src
+                                + "\"" ),
+                        url = "data:text/html;base64," + btoa( htm ),
+                        ver = src.split( ",version=&quot;" )[1].slice(0,4),
+                        a   = U.mk( "a", "" );
+                    a.setAttribute( "href", url );
+                    a.setAttribute( "download", "pimf-"
+                        + ver
+                        + ".html" );
+                    a.click();
+                } );
+        }
+
+        btn[0].addEventListener( "click", copy );
+        btn[1].addEventListener( "click", download );
+
+        U.request( url.css, "GET", {} )
+            .then( (r)=>{
+                const css = minify_css( r );
+                U.request( url.js, "GET", {} )
+                    .then( (rr)=>{
+                        textarea.value = minify_js(
+                            rr.replace( /(const\scss\s*\=\s*\"\"\;)/g,
+                            "const css = \"" + css + "\";" ) );
+                    } );
+            } );
+        
+    </script>
+</html>
