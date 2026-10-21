@@ -72,7 +72,7 @@
         }
         function insert_cfg( js ){
             let gui = input_gui.checked,
-                url = trim( input_hook.value, "/" );
+                url = input_hook.value.trim( "/" );
             return js.replace(
                         /(gui\:null)/g,
                         "gui:" + gui.toString() )
