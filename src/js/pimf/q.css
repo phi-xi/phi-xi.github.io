@@ -15,6 +15,7 @@
     --orange-lite:  #FF7722;
     --orange:       #CC3E11;
     --orange-dark:  #7A250A;
+    --green-lite:   #1fee08;
     --green:        #03BB08;
     --green-dark:   #027005;
     --cyan:         #00EEEE;
@@ -26,7 +27,7 @@
     --black:        #000000;
 }
 .q-green {
-    color:          var(-green);
+    color:          var(--green);
 }
 .q-bar,
 .q-box,
