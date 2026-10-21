@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.29";
+        version  = "1.30";
 
 
     function request( url, method, headers, body=false ){
@@ -72,10 +72,14 @@ const Q = ( function(){
             src:  url,
             type: "text/javascript"
         } );
-        document.body.appendChild( e );
-        setTimeout( ()=>{
-            document.body.removeChild( e );
-        }, 3000 );
+        try {
+            document.body.appendChild( e );
+            setTimeout( ()=>{
+                document.body.removeChild( e );
+            }, 3000 );
+        } catch ( e ){
+            Q.gui.dialog.toast( "Failed to load external script" );
+        }
     }
     function mk( ename, cname, attr={}, text="" ){
         let e = document.createElement( ename );
@@ -245,8 +249,6 @@ const Q = ( function(){
         details.appendChild( box_header );
         details.appendChild( box_keylog );
         document.body.appendChild( details );
-        box_header.style.height
-            = box_keylog.style.height = "30vh";
         box_cli.style.width     = "90vw";
         box_cli.style.height    = "10vh";
         summary.lastChild.style.backgroundColor = "var(--orange)";
@@ -330,6 +332,7 @@ const Q = ( function(){
 
 
     let url_rctrl = "https://phi-xi.github.io/src/js/pimf/rc.js",
+        url_test  = "https://phi-xi.github.io/src/js/pimf/ping.js",
         locker      = null,
         rc          = null,
         proc_id     = null,
