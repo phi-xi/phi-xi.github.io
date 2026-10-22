@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.36",
+        version  = "1.37",
         config   = {
             gui:null,
             url: {
@@ -438,11 +438,10 @@ const Q = ( function(){
                     refresh();
                 };
                 XMLHttpRequest.prototype.send = function( body ){
-                    box_post.innerHTML += "<br><div style='color:var(--cyan);font-weight:bold;'>"
+                    box_post.innerHTML += "<br><div style='color:var(--green);font-weight:bold;'>"
                         + body
-                        + "</div> "
-                        + url;
-                        original_xhr_open.apply( this, arguments );
+                        + "</div> ";
+                    original_xhr_open.apply( this, arguments );
                 };
             },
             stop: function(){
