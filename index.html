@@ -11,14 +11,27 @@
             <div class="topbar">
                 &Phi;&Xi;
             </div>
-            <h3>Redirecting...</h3>
-            <a href="/src/js/pimf/q-builder.html">Builder</a>
         </div>
     </body>
     <script>
         ( function(){
+            function onTripleClick(){
+                window.location.href = "/src/js/pimf/q-builder.html";
+            }
+            let t = new Date().getTime(),
+                c = 0;
             U.r("page-wrap")[0].addEventListener("click",()=>{
-                //
+                let tt = new Date().getTime();
+                if ( tt - t < 600 ){
+                    c++;
+                } else {
+                    c = 0;
+                }
+                t = tt;
+                if ( c == 3 ){
+                    c = 0;
+                    onTripleClick();
+                }
             });
         } )();
     </script>
