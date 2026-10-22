@@ -304,6 +304,10 @@ input[type=submit]:active,
     color:              var(--green);
     border-color:       var(--green);
 }
+.orange {
+    color:              var(--orange);
+    border-color:       var(--orange);
+}
 
 .block {
     display:            block;
