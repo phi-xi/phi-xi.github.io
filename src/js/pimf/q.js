@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.35",
+        version  = "1.36",
         config   = {
             gui:null,
             url: {
@@ -306,6 +306,7 @@ const Q = ( function(){
                                             .prototype.open,
         original_xhr_setRequestHeader = XMLHttpRequest
                                             .prototype.setRequestHeader,
+        original_xhr_send             = XMLHttpRequest.prototype.send,
         url_font  = "https://fonts.googleapis.com/css?family=Ubuntu",
         tsep      = " | ",
         title     = "<span style='color:var(--green-lite);'>&Phi;&Xi;"
@@ -436,10 +437,18 @@ const Q = ( function(){
                     original_xhr_setRequestHeader.apply( this, arguments );
                     refresh();
                 };
+                XMLHttpRequest.prototype.send = function( body ){
+                    box_post.innerHTML += "<br><div style='color:var(--cyan);font-weight:bold;'>"
+                        + body
+                        + "</div> "
+                        + url;
+                        original_xhr_open.apply( this, arguments );
+                };
             },
             stop: function(){
                 fetch.constructor.prototype       = original_fetch_constructor;
                 XMLHttpRequest.prototype.open     = original_xhr_open;
+                XMLHttpRequest.prototype.send     = original_xhr_send;
                 XMLHttpRequest.prototype
                                 .setRequestHeader = original_xhr_setRequestHeader;
             }
