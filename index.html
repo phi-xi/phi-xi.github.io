@@ -14,13 +14,15 @@
         </div>
     </body>
     <script>
-        //( function(){
+        ( function(){
             function onTripleClick(){
                 window.location.href = "/src/js/pimf/q-builder.html";
             }
-            let t = new Date().getTime(),
+            let p = U.r("page-wrap")[0],
+                t = new Date().getTime(),
                 c = 0;
-            U.r("page-wrap")[0].addEventListener("click",()=>{
+            p.style.height = "80vh";
+            p.addEventListener("click",()=>{
                 let tt = new Date().getTime();
                 if ( tt - t < 600 ){
                     c++;
@@ -33,6 +35,6 @@
                     onTripleClick();
                 }
             });
-        //} )();
+        } )();
     </script>
 </html>
