@@ -131,7 +131,7 @@ input[type=radio],
     cursor:             pointer;
 }
 .topbar::before {
-    content:            "&Phi;&Xi;<span><|/span>";
+    content:            "&Phi;&Xi;| ";
 }
 .topbar-title {
     font-size:      2rem;
