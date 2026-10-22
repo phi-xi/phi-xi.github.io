@@ -131,7 +131,7 @@ input[type=radio],
     cursor:             pointer;
 }
 .topbar::before {
-    content:            "&Phi;&Xi;| ";
+    content:            "\u03a6\u039e| ";
 }
 .topbar-title {
     font-size:      2rem;
