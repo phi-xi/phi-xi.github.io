@@ -16,24 +16,6 @@
     --white: 		#efefef;
     --black: 		#000000;
 }
-/*:root {
-    --orange-lite:      #FF7722;
-    --orange:           #CC3E11;
-    --orange-dark:      #7A250A;
-
-    --green:            #03BB08;
-    --green-dark:       #027005;
-
-    --cyan:             #00EEEE;
-    --cyan-dark:        #00AAAA;
-
-    --gray-lite:        #086769;
-    --gray:             #03292A;
-    --gray-dark:        #020F0F;
-
-    --white:            #FFFFFF;
-    --black:            #000000;
-}*/
 body {
     background-color:   var(--black);
     color:              var(--cyan);
@@ -259,8 +241,11 @@ button {
     border:             solid 2px var(--orange);
     cursor:             pointer;
 }
-input[type=submit]:active,
-button:active {
+button:disabled {
+    background-color:   var(--gray-dark);
+    border-color:       var(--gray-lite);
+}
+input[type=submit]:active {
     background-color:   var(--gray-lite);
     color:              var(--cyan);
 }
@@ -321,6 +306,12 @@ button:active {
 .btn-orange {
     background-color:   var(--orange-dark);
     border-color:       var(--orange);
+}
+.btn-green:active {
+    border-color:       var(--green-lite);
+}
+.btn-orange:active {
+    border-color:       var(--orange-lite);
 }
 
 .green {
