@@ -27,6 +27,9 @@ body {
     margin-right:       0;
     user-select:        none;
 }
+button {
+    
+}
 h1 {
     color:              var(--orange);
     font-size:          1.75em;
@@ -187,6 +190,7 @@ input[type=radio],
 .topbar-title {
     font-size:          2rem;
 }
+button,
 .btn,
 .select-list-item,
 .topbar,
@@ -195,6 +199,7 @@ input[type=radio],
 .form {
     border-radius:      0.5rem;
 }
+button,
 .topbar,
 .tab-title,
 .form-label,
@@ -213,6 +218,7 @@ input[type=radio],
     color:              var(--green);
     cursor:             pointer;
 }
+button,
 .btn,
 .select-list-item {
     border:         solid 2px var(--green-dark);
@@ -229,7 +235,7 @@ input[type=radio],
 .tab-title:hover {
     border:         solid 2px var(--orange);
 }
-
+button,
 .btn {
     font-family:        Ubuntu;
     background-color:   var(--gray-dark);
@@ -242,10 +248,12 @@ input[type=radio],
     cursor:             pointer;
 }
 input[type=submit]:active,
+button:active,
 .btn:active {
     background-color:   var(--gray-lite);
     color:              var(--orange-dark);
 }
+button,
 .btn {
     border-width:       2px;
 }
@@ -299,22 +307,26 @@ input[type=submit]:active,
     padding:            0.25rem;
     border:             solid 1px var(--green-dark);
 }
+.btn-green {
+    color:              var(--green-dark);
+    border-color:       var(--green);
+}
+.btn-orange {
+    color:              var(--orange-dark);
+    border-color:       var(--orange);
+}
 
 .green {
     color:              var(--green);
-    border-color:       var(--green);
 }
 .green-lite {
     color:              var(--green-lite);
-    border-color:       var(--green-lite);
 }
 .orange {
     color:              var(--orange);
-    border-color:       var(--orange);
 }
 .orange-lite {
     color:              var(--orange-lite);
-    border-color:       var(--orange-lite);
 }
 
 .block {
