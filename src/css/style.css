@@ -56,6 +56,7 @@ input[type=button],
 input[type=checkbox],
 input[type=radio],
 input[type=submit] {
+    border:             solid 1px var(--gray-lite);
     color:              var(--orange);
     font-weight:        bold;
     cursor:             pointer;
@@ -74,6 +75,7 @@ textarea {
     font-size:          1em;
     background-color:   var(--gray);
     color:              var(--cyan);
+    border:             solid 1px var(--gray-lite);
     border-radius:      0.5em;
     padding:            0.2em;
 }
