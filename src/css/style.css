@@ -363,7 +363,7 @@ p::-webkit-scrollbar-track,
 details::-webkit-scrollbar-track,
 textarea::-webkit-scrollbar-track,
 ::-webkit-scrollbar-track {
-  background: 		var(--gray-lite);
+  background: 		var(--gray);
   border-radius: 	10px;
 }
 div::-webkit-scrollbar-thumb,
@@ -371,6 +371,6 @@ p::-webkit-scrollbar-thumb,
 details::-webkit-scrollbar-thumb,
 textarea::-webkit-scrollbar-thumb,
 ::-webkit-scrollbar-thumb {
-  background: 		var(--cyan-dark);
+  background: 		var(--gray-lite);
   border-radius: 	2px;
 }
