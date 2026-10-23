@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   width="47.730888mm"
+   height="42.701294mm"
+   viewBox="0 0 47.730888 42.701294"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1">
+    <rect
+       x="185.30925"
+       y="518.86591"
+       width="135.89345"
+       height="86.477654"
+       id="rect9-2" />
+  </defs>
+  <g
+     id="layer1"
+     transform="translate(-137.85738,-101.86677)">
+    <path
+       style="fill:none;stroke:#ff5511;stroke-width:3.73904;stroke-dasharray:none;stroke-opacity:1"
+       id="path1-5"
+       d="m 146.93349,144.22417 a 14.91375,28.756729 0 0 1 14.62097,-22.73548 14.91375,28.756729 0 0 1 14.56101,22.87807" />
+    <ellipse
+       style="fill:none;fill-opacity:1;stroke:#ff5511;stroke-width:2.67073;stroke-dasharray:none;stroke-opacity:1"
+       id="path2-3"
+       cx="161.5943"
+       cy="110.06219"
+       rx="5.8185935"
+       ry="6.8600478" />
+    <path
+       style="fill:none;stroke:#ff5511;stroke-width:3.73904;stroke-dasharray:none;stroke-opacity:1"
+       d="m 167.2448,123.84022 11.63718,1.87091 v 0 l 5.09129,-8.73096"
+       id="path8" />
+    <path
+       style="fill:none;stroke:#ff5511;stroke-width:3.73904;stroke-dasharray:none;stroke-opacity:1"
+       d="m 156.20083,123.33102 -11.63718,1.87095 v 0 l -5.09128,-8.73099"
+       id="path8-9" />
+    <text
+       xml:space="preserve"
+       transform="matrix(0.46340842,0,0,0.37891725,85.481439,-96.726144)"
+       id="text8-9"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:48px;font-family:'Tlwg Mono';-inkscape-font-specification:'Tlwg Mono';text-align:start;writing-mode:lr-tb;direction:ltr;white-space:pre;shape-inside:url(#rect9-2);display:inline;fill:#ff5511;fill-opacity:1;stroke:#ff5511;stroke-width:1.371;stroke-dasharray:none;stroke-opacity:1"><tspan
+         x="185.30859"
+         y="558.41069"
+         id="tspan1">?</tspan></text>
+  </g>
+</svg>
