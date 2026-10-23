@@ -210,7 +210,6 @@ input[type=radio],
     font-size:          2rem;
 }
 button,
-.btn,
 .select-list-item,
 .topbar,
 .tab-title,
@@ -223,7 +222,6 @@ button,
 .tab-title,
 .form-label,
 .select-list-item,
-.btn,
 .hlink {
     font-weight:        bold;
 }
@@ -238,11 +236,9 @@ button,
     cursor:             pointer;
 }
 button,
-.btn,
 .select-list-item {
     border:         solid 2px var(--green-dark);
 }
-.btn:active,
 .select-list-item-active {
     border:         solid 2px var(--green);
 }
@@ -254,27 +250,20 @@ button,
 .tab-title:hover {
     border:         solid 2px var(--orange);
 }
-button,
-.btn {
+button {
     font-family:        Ubuntu;
-    background-color:   var(--gray-dark);
-    color:              var(--orange);
+    color:              var(--white);
     font-size:          1rem;
     margin-top:         0.5em;
     min-width:          4em;
     height:             2em;
-    border:             solid 1px var(--orange);
+    border:             solid 2px var(--orange);
     cursor:             pointer;
 }
 input[type=submit]:active,
-button:active,
-.btn:active {
+button:active {
     background-color:   var(--gray-lite);
-    color:              var(--orange-dark);
-}
-button,
-.btn {
-    border-width:       2px;
+    color:              var(--cyan);
 }
 .shader {
     position:           absolute;
@@ -327,11 +316,11 @@ button,
     border:             solid 1px var(--green-dark);
 }
 .btn-green {
-    color:              var(--green-dark);
+    background-color:   var(--green-dark);
     border-color:       var(--green);
 }
 .btn-orange {
-    color:              var(--orange-dark);
+    background-color:   var(--orange-dark);
     border-color:       var(--orange);
 }
 
