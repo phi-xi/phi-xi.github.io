@@ -246,6 +246,9 @@ button:disabled {
     border-color:       var(--gray-lite);
     cursor:             not-allowed;
 }
+button:disabled:active {
+    border-color:       var(--gray-lite);
+}
 input[type=submit]:active {
     background-color:   var(--gray-lite);
     color:              var(--cyan);
