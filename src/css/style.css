@@ -304,9 +304,17 @@ input[type=submit]:active,
     color:              var(--green);
     border-color:       var(--green);
 }
+.green-lite {
+    color:              var(--green-lite);
+    border-color:       var(--green-lite);
+}
 .orange {
     color:              var(--orange);
     border-color:       var(--orange);
+}
+.orange-lite {
+    color:              var(--orange-lite);
+    border-color:       var(--orange-lite);
 }
 
 .block {
