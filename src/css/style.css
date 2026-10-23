@@ -27,9 +27,6 @@ body {
     margin-right:       0;
     user-select:        none;
 }
-button {
-    
-}
 h1 {
     color:              var(--orange);
     font-size:          1.75em;
