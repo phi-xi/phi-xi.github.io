@@ -1,0 +1,329 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+        <meta http-equiv="expires" content="0">
+        <meta http-equiv="pragma" content="no-cache">
+        <meta http-equiv="cache-control" content="no-cache">
+        <title>&Phi;&Xi; | Letter Generator</title>
+        <link rel="icon" type="image/x-icon" href="/icon-phixi.svg">
+        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Ubuntu">
+        <link rel="stylesheet" type="text/css" href="/style/style.css">
+        <script type="text/javascript" src="/script/utils.js"></script>
+        <style>
+            @media print {
+                body {
+                    font-size:          10pt;
+                    background-color:   #fff;
+                    color:              #000;
+                    padding:            0;
+                    margin:             10mm 16mm 0mm 20mm;
+                    line-height:        1.1rem;
+                }
+                .logo {
+                    width:              4rem;
+                    margin-bottom:      1rem;
+                }
+                .edit,
+                .edit-img {
+                    cursor:             pointer;
+                }
+                .sender-address {
+                    font-size:          10pt;
+                }
+                #logo {
+                    width:              4rem;
+                    margin-bottom:      1rem;
+                }
+                #signature {
+                    height:             3rem;
+                    margin:             0.5rem;
+                    margin-bottom:      0;
+                }
+                #footer-logo {
+                    position:           absolute;
+                    bottom:             7.5mm;
+                    left:               10mm;
+                    width:              7.5mm;
+                    vertical-align:     bottom;
+                }
+                #footer {
+                    position:           absolute;
+                    bottom:             0;
+                    left:               20mm;
+                    height:             10mm;
+                    font-size:          8pt;
+                }
+                #wrap {}
+            }
+            @media screen {
+                body {
+                    font-size:          12pt;
+                    background-color:   #fff;
+                    color:              #000;
+                    padding:            2rem;
+                    padding-top:        0.5rem;
+                    margin-top:         0;
+                    line-height:        1.1rem;
+                }
+                .edit,
+                .edit-img {
+                    cursor:             pointer;
+                }
+                .sender-address {
+                    font-size:          10pt;
+                }
+                #logo {
+                    width:              4rem;
+                    margin-bottom:      1rem;
+                }
+                #signature {
+                    height:             3rem;
+                    margin-top:         0.5rem;
+                }
+                #footer,
+                #footer-logo {
+                    display:            none;
+                }
+                #footer-logo {
+                    width:              1rem;
+                }
+                #wrap {
+                    max-width:          800px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="wrap">
+            <div class="right">
+                <div class="left inline" style="margin-right: 1rem;">
+                    <img id="logo" class="edit-img" src="icon-phixi-gray.svg">
+                </div>
+                <div class="left inline">
+                    <b><div class="edit">Max Mustermann</div></b>
+                    <div class="edit">Musterstraße 34</div>
+                    <div class="edit">23467 Musterstadt</div><div style="height: 0.5rem;"></div>
+                    <div class="inline" style="line-height:0.8em;">&#x1F582;</div> <div class="edit inline">max@mustermann.de</div><br>
+                    &#9743; <div class="edit inline">+49 89 474774</div>
+                </div>
+            </div>
+            <br><br><br>
+            <div class="left">
+                <div class="small">
+                    Absender:<br>
+                    <div id="sender">Max Mustermann, Musterstraße 34, 23467 Musterstadt</div>
+                    <hr>
+                    <br>
+                </div>
+                <div class="edit inline">Homer Jay Simpson</div><br>
+                <div class="edit inline">Evergreen Terrace 742</div><br>
+                <b><div class="edit inline">42634 Springfield</div></b>
+            </div>
+            <br><br><br>
+            <div class="right">
+                <div class="edit inline" id="date">29.01.2025</div>
+            </div><br>
+                <b><div class="edit inline">Betreff: ...</div></b>
+                <br><br><br>
+                <div class="edit inline">Sehr geehrte Damen und Herren,</div>
+                <br><br>
+                <div class="edit inline" id="body">Ipsum lorum bla bla blubb...</div>
+                <br><br><br>
+                <div class="edit" id="greet">Mit freundlichem Gruß,</div>
+                <img id="signature" class="edit-img inline" src="icon-phixi-gray.svg">
+                <div class="edit" id="signer">Max Mustermann</div>
+            </div>
+            <img id="footer-logo" class="edit-img inline" src="icon-phixi-gray-copyright.svg">
+            <div id="footer">
+                &#xA9; PhiXi, 2025 | LetterGenerator | Template:             </div>
+        </div>
+    </body>
+    <script>
+
+        class ImageSelector {
+            constructor( target_img ){
+                this.target = target_img;
+                this.file = null;
+                this.callback = function(){};
+                target_img.onclick = this.#open;
+            }
+            #open(){
+                const fs = document.createElement( "input" );
+                fs.setAttribute( "type", "file" );
+                fs.oninput = function(e){
+                    this.ctx.file = this.self.files[0];
+                    let r = new FileReader();
+                    r.onload = function(){
+                        this.src = r.result;
+                    }.bind( this.ctx );
+                    r.readAsDataURL( this.ctx.file );
+                }.bind( {
+                    self: fs,
+                    ctx: this } );
+                fs.click();
+            }
+        }
+
+        const
+            EDIT        = document.getElementsByClassName( "edit" ),
+            EDIT_IMG    = document.getElementsByClassName( "edit-img" ),
+            TEMPLATE    = JSON.parse( '{"template":"default","subject":"Betreff: ...","body":"Brieftext","greet":"Mit freundlichem Gru\u00df,","font":""}' ),
+            SENDER      = document.getElementById( "sender" ),
+            SIGNER      = document.getElementById( "signer" ),
+            FOOTER      = document.getElementById( "footer" );
+
+        let EDIT_MODE   = false;
+
+        function get_input_element( id, txt ){
+            let input = document.createElement( "input" );
+            if ( id == "date" ){
+                input.setAttribute( "type", "date" );
+            }
+            if ( id == "body" ){
+                input = document.createElement( "textarea" );
+                input.style.width = "80vw";
+                input.style.height = "30vh";
+            }
+            input.classList.add( "input" );
+            input.value = txt;
+            input.onkeydown = function( e ){
+                try {
+                    if ( e.code == "Enter" && !e.shiftKey ) enter_field.bind( this )();
+                } catch( e ){}
+            };
+            input.onblur = function( e ){
+                enter_field.bind( this )();
+            };
+            return input;
+        }
+        function format_date_DE( txt ){
+            if ( txt.indexOf( "-" ) > 0 ){
+                let splt = txt.split( "-" );
+                txt = splt[2] + "." + splt[1] + "." + splt[0];
+            }
+            return txt;
+        }
+        function edit_field( e ){
+            if ( this.getElementsByClassName( "input" ).length > 0 ) return;
+            e.stopPropagation();
+            const
+                txt = this.innerHTML,
+                input = get_input_element( this.id, txt );
+            EDIT_MODE = true;
+            this.innerHTML = "";
+            this.appendChild( input );
+            input.focus();
+        }
+        function enter_field(){
+            const
+                parent = this.parentElement,
+                first_3_edits = [ EDIT[0], EDIT[1], EDIT[2] ];
+            let txt = this.value;
+            if ( parent.id == "date" )              txt = format_date_DE( txt );
+            if ( first_3_edits.includes( parent ) ) copy_sender_address();
+            parent.innerHTML = txt;
+            EDIT_MODE = false;
+        }
+        function copy_sender_address(){
+            setTimeout( ()=>{
+                SENDER.innerHTML = EDIT[0].innerHTML
+                    + ", "
+                    + EDIT[1].innerHTML
+                    + ", "
+                    + EDIT[2].innerHTML;
+                SIGNER.innerHTML = EDIT[0].innerHTML;
+            }, 500 );
+        }
+        function setup_edit_fields(){
+            for ( let i=0; i < EDIT.length; i++ ){
+                const e = EDIT[ i ];
+                e.onclick = edit_field;
+            }
+            for ( let i=0; i < EDIT_IMG.length; i++ ){
+                new ImageSelector( EDIT_IMG[ i ] );
+            }
+        }
+        function init_template(){
+            EDIT[9].innerHTML = TEMPLATE.subject;
+            EDIT[11].innerHTML = TEMPLATE.body;
+            if ( TEMPLATE.greet != null ){
+                document.getElementById( "greet" ).innerHTML = TEMPLATE.greet;
+            }
+            if ( TEMPLATE.font != null ){
+                for ( let i=8; i < EDIT.length; i++ ){
+                    EDIT[ i ].style.fontFamily = TEMPLATE.font;
+                }
+            }
+            EDIT[8].innerHTML = "23.10.2026";
+        }
+        function save_config(){
+            const cfg = JSON.stringify( {
+                sender: {
+                    name:   EDIT[0].innerHTML,
+                    street: EDIT[1].innerHTML,
+                    city:   EDIT[2].innerHTML,
+                    mail:   EDIT[3].innerHTML,
+                    phone:  EDIT[4].innerHTML
+                },
+                recipient: {
+                    name:   EDIT[5].innerHTML,
+                    street: EDIT[6].innerHTML,
+                    city:   EDIT[7].innerHTML
+                },
+                greet:      EDIT[12].innerHTML
+            } );
+            document.cookie = "data=; expires=Wed, 6 Mar 2025 23:59:59 UTC; path=/";
+            document.cookie = "data="
+                + cfg
+                + "; expires=Wed, 31 Dec 2025 23:59:59 UTC; path=/";
+        }
+        function load_config(){
+            const c = document.cookie.split( ";" );
+            let cfg = {};
+            for ( let i=0; i < c.length; i++ ){
+                const p = c[ i ].split( "=" );
+                cfg[ p[0].trim() ] = p[1];
+            }
+            if ( typeof( cfg.data ) == "undefined" ) return;
+            const data = JSON.parse( cfg.data );
+            for ( let d in data.sender ){
+                if ( data.sender[ d ] == "" ) data.sender[ d ] = "__required__";
+            }
+            for ( let d in data.recipient ){
+                if ( data.recipient[ d ] == "" ) data.recipient[ d ] = "__required__";
+            }
+            if ( data.greet == "" ) data.greet = "__required__";
+            EDIT[0].innerHTML = data.sender.name;
+            EDIT[1].innerHTML = data.sender.street;
+            EDIT[2].innerHTML = data.sender.city;
+            EDIT[3].innerHTML = data.sender.mail;
+            EDIT[4].innerHTML = data.sender.phone;
+            EDIT[5].innerHTML = data.recipient.name;
+            EDIT[6].innerHTML = data.recipient.street;
+            EDIT[7].innerHTML = data.recipient.city;
+            EDIT[12].innerHTML = data.greet;
+            copy_sender_address();
+        }
+        function autosave(){
+            setInterval( ()=>{
+                if ( !EDIT_MODE ) save_config();
+            }, 5000 );
+        }
+        function submit_markdown(){
+            U.request( "/api/md-parser", "POST", (r)=>{
+                EDIT[11].innerHTML = r;
+            }, false, JSON.stringify( {
+                src: EDIT[11].innerHTML,
+                style_scheme: "letter",
+                style_sheet: "",
+                csrftkn: document.getElementsByTagName("meta")[0].content
+            } ) );
+        }
+
+        init_template();
+        setup_edit_fields();
+        //load_config();
+        //autosave();
+
+    </script>
+</html>
