@@ -372,5 +372,5 @@ details::-webkit-scrollbar-thumb,
 textarea::-webkit-scrollbar-thumb,
 ::-webkit-scrollbar-thumb {
     background: 		var(--gray-lite);
-    border-radius: 	    2px;
+    border-radius: 	    5px;
 }
