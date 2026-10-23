@@ -63,6 +63,13 @@ input[type=radio] {
     width:              2em;
     transform:          scale(1.75) translate(0.25em,0);
     accent-color:       var(--orange);
+    border-color:       var(--orange);
+    opacity:            0.5;
+}
+input[type=checkbox]:checked,
+input[type=radio]:checked {
+    opacity:            1;
+    border-color:       var(--green);
 }
 
 input,
