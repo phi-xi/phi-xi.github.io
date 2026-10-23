@@ -1,4 +1,23 @@
 :root {
+    --green-lite: 	#1fee08;
+    --green:        #039908;
+    --green-dark: 	#027005;
+    
+    --orange-lite: 	#ff6611;
+    --orange: 		#cc3e11;
+    --orange-dark: 	#7a250a;
+    
+    --cyan: 	    #00eeee;
+    --cyan-dark: 	#00aaaa;
+    
+    --gray-lite: 	#555;
+    --gray: 		#222;
+    --gray-dark: 	#171717;
+    --white: 		#efefef;
+    --black: 		#000000;
+}
+
+/*:root {
     --orange-lite:      #FF7722;
     --orange:           #CC3E11;
     --orange-dark:      #7A250A;
@@ -15,7 +34,7 @@
 
     --white:            #FFFFFF;
     --black:            #000000;
-}
+}*/
 body {
     background-color:   var(--black);
     color:              var(--cyan);
