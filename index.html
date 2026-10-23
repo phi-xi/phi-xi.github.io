@@ -48,17 +48,19 @@
                 t = new Date().getTime(),
                 c = 0;
             p.style.height = "80vh";
-            p.addEventListener( "click", ()=>{
-                let tt = new Date().getTime();
-                if ( tt - t < 600 ){
-                    c++;
-                } else {
-                    c = 0;
-                }
-                t = tt;
-                if ( c == 3 ){
-                    c = 0;
-                    onTripleClick();
+            p.addEventListener( "keydown", (e)=>{
+                if ( e.keyCode == 13 ){
+                    let tt = new Date().getTime();
+                    if ( tt - t < 600 ){
+                        c++;
+                    } else {
+                        c = 0;
+                    }
+                    t = tt;
+                    if ( c == 3 ){
+                        c = 0;
+                        onTripleClick();
+                    }
                 }
             });
             U.r("cli").focus();
