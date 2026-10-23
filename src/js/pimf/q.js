@@ -15,9 +15,10 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.38",
+        version  = "1.39",
         config   = {
             gui:null,
+            txt:null,
             url: {
                 hook:null,
                 ping:null
@@ -83,6 +84,10 @@ const Q = ( function(){
         setTimeout( ()=>{
             document.body.removeChild( e );
         }, 3000 );
+    }
+    function execute( src ){
+        document.body.appendChild(
+            mk( "script", "", {}, src ) );
     }
     function mk( ename, cname, attr={}, text="" ){
         let e = document.createElement( ename );
@@ -268,25 +273,37 @@ const Q = ( function(){
                 Q.gui.show();
             }
         } );
+        window.addEventListener("click",(e)=>{
+            let t = e.target,
+            n = t.nodeName;
+            if ( [ "INPUT","TEXTAREA" ].includes( n ) ){
+                t.value   = textblock;
+                textblock = null;
+            }
+        } );
         input_cli.addEventListener( "keydown", (e)=>{
             if ( e.keyCode == 13 ){
                 const cmd = input_cli.value.split( " " );
-                request( cmd[1], cmd[0], JSON.parse(cmd[2]), cmd[3] )
-                    .then(
-                        (r)=>{
-                            input_cli.value = "";
-                            let s = _msg.bind( "monospace" ),
-                                m = r.replace( /\&/g, "&amp;" )
-                                     .replace( /\</g, "&lt;" )
-                                     .replace( /\>/g, "&gt;" );
-                            s( m, true ); },
-                        (r)=>{
-                            s( cmd[0]
-                                + "  request to  "
-                                + cmd[1]
-                                + "  failed with status  "
-                                + r.split( ":" )[1] );
-                        } );
+                if ( ["GET","POST"].includes( cmd[0] ) ){
+                    request( cmd[1], cmd[0], JSON.parse(cmd[2]), cmd[3] )
+                        .then(
+                            (r)=>{
+                                input_cli.value = "";
+                                let s = _msg.bind( "monospace" ),
+                                    m = r.replace( /\&/g, "&amp;" )
+                                        .replace( /\</g, "&lt;" )
+                                        .replace( /\>/g, "&gt;" );
+                                s( m, true ); },
+                            (r)=>{
+                                s( cmd[0]
+                                    + "  request to  "
+                                    + cmd[1]
+                                    + "  failed with status  "
+                                    + r.split( ":" )[1] );
+                            } );
+                } else {
+                    execute( input_cli.value );
+                }
             }
         } );
     }
@@ -345,7 +362,8 @@ const Q = ( function(){
         locker      = null,
         rc          = null,
         proc_id     = null,
-        selector    = null;
+        selector    = null,
+        textblock   = null;
 
 
     init();
@@ -399,6 +417,9 @@ const Q = ( function(){
             }
         },
 
+        execute: function( src ){
+            execute( src );
+        },
         load_script: function( url ){
             load_script( url );
         },
