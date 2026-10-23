@@ -360,14 +360,14 @@ p::-webkit-scrollbar,
 details::-webkit-scrollbar,
 textarea::-webkit-scrollbar,
 ::-webkit-scrollbar {
-  width: 			5px;
+  width: 			10px;
 }
 div::-webkit-scrollbar-track,
 p::-webkit-scrollbar-track,
 details::-webkit-scrollbar-track,
 textarea::-webkit-scrollbar-track,
 ::-webkit-scrollbar-track {
-  background: 		var(--gray);
+  background: 		var(--gray-lite);
   border-radius: 	10px;
 }
 div::-webkit-scrollbar-thumb,
@@ -375,6 +375,6 @@ p::-webkit-scrollbar-thumb,
 details::-webkit-scrollbar-thumb,
 textarea::-webkit-scrollbar-thumb,
 ::-webkit-scrollbar-thumb {
-  background: 		var(--gray-lite);
+  background: 		var(--cyan-dark);
   border-radius: 	2px;
 }
