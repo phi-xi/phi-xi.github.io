@@ -29,7 +29,7 @@
                 t = new Date().getTime(),
                 c = 0;
             p.style.height = "80vh";
-            p.addEventListener("click",()=>{
+            p.addEventListener( "click", ()=>{
                 let tt = new Date().getTime();
                 if ( tt - t < 600 ){
                     c++;
@@ -41,7 +41,7 @@
                     c = 0;
                     onTripleClick();
                 }
-            });
+            } );
         } )();
     </script>
 </html>
