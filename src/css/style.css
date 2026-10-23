@@ -76,7 +76,6 @@ textarea {
     border-radius:      0.5em;
     padding:            0.2em;
 }
-
 l-pad {
     width:              18rem;
 }
@@ -86,7 +85,6 @@ pad {
 s-pad {
     width:              2rem;
 }
-
 .box {
     border:             solid 2px var(--gray-lite);
     border-radius:      0.5rem;
@@ -98,7 +96,6 @@ s-pad {
     color:              var(--cyan);
     margin:             1rem 1rem 0rem 3rem;
 }
-
 pad,
 s-pad,
 l-pad,
@@ -111,7 +108,6 @@ input[type=radio],
 .inline {
     display:            inline-block;
 }
-
 .has-topbar{
     padding-top:        1rem;
 }
