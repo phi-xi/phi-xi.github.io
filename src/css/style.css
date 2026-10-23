@@ -311,10 +311,10 @@ input[type=submit]:active {
     background-color:   var(--orange-dark);
     border-color:       var(--orange);
 }
-.btn-green:active {
+.btn-green:enabled:active {
     border-color:       var(--green-lite);
 }
-.btn-orange:active {
+.btn-orange:enabled:active {
     border-color:       var(--orange-lite);
 }
 
