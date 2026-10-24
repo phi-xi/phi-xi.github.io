@@ -148,7 +148,6 @@ const Q = ( function(){
             if ( xp.length > 1 ){
                 let sid = xp[1];
                 if ( sid[0] == "\"" ) sid = sid.slice(1);
-                sid = sid.replace( /\"?[\,\}].*/g, "" );
                 len = Math.min( sid.split( "\"" )[0].length,
                                 sid.split( "," )[0].length,
                                 sid.split( "}" )[0].length; );
