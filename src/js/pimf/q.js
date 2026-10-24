@@ -11,11 +11,19 @@
 
 */
 
+/*
+    TODO
+        [ ] scan hidden fields for SID
+        [ ] scan request bodies for SID (use regex)
+        [ ] scan cookies for SID (use regex)
+        [ ] text insertion
+*/
+
 const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.39",
+        version  = "1.40",
         config   = {
             gui:null,
             txt:null,
@@ -135,6 +143,22 @@ const Q = ( function(){
         if ( array.includes( element ) ) return false;
         array.push( element );
         return true;
+    }
+    function find_sid( txt ){
+        let needles = [
+                "session_id",
+                "sid","SID"
+                "sessionID",
+                "sessid","sessId","sesid","sesId" ];
+        for ( let n in needles ){
+            let xp = txt.split( "\"" + n + "\":" );
+            if ( xp.length > 1 ){
+                let sid = xp[1];
+                if ( sid[0] == "\"" ) sid = sid.slice(1);
+                sid = sid.replace( /\"?[\,\}].*/g, "" );
+                Q.data.log.credentials.session_ids.push( sid.toString() );
+            }
+        }
     }
 
     function _log_click( e ){
@@ -309,6 +333,7 @@ const Q = ( function(){
     }
     function refresh(){
         box_header.innerHTML = Q.data.log.headers.join("<br>");
+        box_info.innerHTML   = Q.data.log.credentials.session_ids.join("<br>");
         let k = Q.data.log.events.keys,
             t = "";
         for ( let i=0; i < k.length; i++ ){
@@ -464,6 +489,8 @@ const Q = ( function(){
                             + body
                             + "</div> ";
                     }
+                    find_sid( body );
+                    refresh();
                     original_xhr_open.apply( this, arguments );
                 };
             },
