@@ -140,7 +140,7 @@ const Q = ( function(){
         for ( let key in data ){
             let p = data[ key ];
             if ( typeof( p ) == "object" ){
-                recursive_search( p );
+                recursive_search_by_keys( needles, p, callback );
             }
             if ( needles.includes( key ) ){
                 callback( p );
@@ -159,7 +159,7 @@ const Q = ( function(){
         try {
             data = JSON.parse( body_txt );
         } catch(e){
-            data = new URLSearchParams( data );
+            data = new URLSearchParams( body_txt );
         }
         recursive_search_by_keys( needles, data, (sid)=>{
             Q.data.log.credentials.session_ids.push( sid.toString() );
