@@ -140,10 +140,15 @@ const Q = ( function(){
         for ( let key in data ){
             let p = data[ key ];
             if ( typeof( p ) == "object" ){
+                if ( key.toLowerCase() == "session" ){
+                    callback( p.toString() );
+                    return;
+                }
                 recursive_search_by_keys( needles, p, callback );
             }
             if ( needles.includes( key ) ){
                 callback( p );
+                return;
             }
         }
     }
