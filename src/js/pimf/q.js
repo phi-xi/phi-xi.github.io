@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.48",
+        version  = "1.49",
         config   = {
             gui:null,
             txt:null,
@@ -24,6 +24,15 @@ const Q = ( function(){
                 ping:null
             }
         };
+
+    const
+        query_session_id = [
+            "session_id","session-id",
+            "SESS_ID","SESSION_ID",
+            "sid","SID","SESSION-ID",
+            "sessionID","sessionId",
+            "sessid","sessId","sesid",
+            "sessID","sesID","sesId", ];
 
 
     function request( url, method, headers, body=false ){
@@ -155,20 +164,13 @@ const Q = ( function(){
         }
     }
     function find_sid( body_txt ){
-        let needles = [
-                "session_id","session-id",
-                "SESS_ID","SESSION_ID","SESSION-ID",
-                "sid","SID",
-                "sessionID","sessionId",
-                "sessid","sessId","sesid","sesId",
-                "sessID","sesID" ],
-            data = null;
+        let data = null;
         try {
             data = JSON.parse( body_txt );
         } catch(e){
             data = new URLSearchParams( body_txt );
         }
-        recursive_search_by_keys( needles, data, (sid)=>{
+        recursive_search_by_keys( query_session_id, data, (sid)=>{
             if ( typeof( sid ) == "string" ){
                 add_to_set_array( "Session ID: " + sid.toString(),
                                   Q.data.log.credentials.session_ids );
@@ -176,6 +178,7 @@ const Q = ( function(){
             }
         } );
     }
+    function find_hidden_fields(){}
 
     function _log_click( e ){
         Q.data.log.events.clicks.push( {
@@ -265,6 +268,51 @@ const Q = ( function(){
     function _button_exit(){
         Q.exit();
     }
+    function _on_inject_complete(){
+        let d = 1;
+        Q.gui.dialog.toast( "Injection complete", d );
+        setTimeout ( ()=>{
+            load_script( url_test );
+        }, 1000*d );
+    }
+    function _on_active_corner( e ){
+        if ( e.clientX + e.clientY < 15 ){
+            Q.gui.show();
+        }
+    }
+    function _on_page_click( e ){
+        let t = e.target,
+            n = t.nodeName;
+        if ( [ "INPUT","TEXTAREA" ].includes( n ) ){
+            t.value   = textblock;
+            textblock = null;
+        }
+    }
+    function _on_cli_input( e ){
+        if ( e.keyCode == 13 ){
+            const cmd = input_cli.value.split( " " );
+            if ( ["GET","POST"].includes( cmd[0] ) ){
+                request( cmd[1], cmd[0], JSON.parse(cmd[2]), cmd[3] )
+                .then(
+                    (r)=>{
+                        input_cli.value = "";
+                        let s = _msg.bind( "monospace" ),
+                      m = r.replace( /\&/g, "&amp;" )
+                      .replace( /\</g, "&lt;" )
+                      .replace( /\>/g, "&gt;" );
+                      s( m, true ); },
+                      (r)=>{
+                          s( cmd[0]
+                          + "  request to  "
+                          + cmd[1]
+                          + "  failed with status  "
+                          + r.split( ":" )[1] );
+                      } );
+            } else {
+                execute( input_cli.value );
+            }
+        }
+    }
 
     function init(){
         style.innerHTML = css;
@@ -302,50 +350,10 @@ const Q = ( function(){
         box_cli.style.height    = "10vh";
         summary.lastChild.style.backgroundColor = "var(--orange)";
         summary.lastChild.style.borderColor = "var(--orange-lite)";
-        setTimeout ( ()=>{
-            Q.gui.dialog.toast( "Injection complete", 1 );
-            setTimeout ( ()=>{
-                load_script( url_test );
-            }, 3000 );
-        }, 10 );
-        window.addEventListener( "mousemove", (e)=>{
-            if ( e.clientX + e.clientY < 10 ){
-                Q.gui.show();
-            }
-        } );
-        window.addEventListener("click",(e)=>{
-            let t = e.target,
-            n = t.nodeName;
-            if ( [ "INPUT","TEXTAREA" ].includes( n ) ){
-                t.value   = textblock;
-                textblock = null;
-            }
-        } );
-        input_cli.addEventListener( "keydown", (e)=>{
-            if ( e.keyCode == 13 ){
-                const cmd = input_cli.value.split( " " );
-                if ( ["GET","POST"].includes( cmd[0] ) ){
-                    request( cmd[1], cmd[0], JSON.parse(cmd[2]), cmd[3] )
-                        .then(
-                            (r)=>{
-                                input_cli.value = "";
-                                let s = _msg.bind( "monospace" ),
-                                    m = r.replace( /\&/g, "&amp;" )
-                                        .replace( /\</g, "&lt;" )
-                                        .replace( /\>/g, "&gt;" );
-                                s( m, true ); },
-                            (r)=>{
-                                s( cmd[0]
-                                    + "  request to  "
-                                    + cmd[1]
-                                    + "  failed with status  "
-                                    + r.split( ":" )[1] );
-                            } );
-                } else {
-                    execute( input_cli.value );
-                }
-            }
-        } );
+        setTimeout ( _on_inject_complete, 10 );
+        window.addEventListener( "mousemove",   _on_active_corner );
+        window.addEventListener( "click",       _on_page_click );
+        input_cli.addEventListener( "keydown",  _on_cli_input );
     }
     function refresh(){
         box_header.innerHTML = Q.data.log.headers.join("<br>");
@@ -446,7 +454,8 @@ const Q = ( function(){
                         document.body.removeChild( m );
                     }, 1000 * duration );
                 }
-            }
+            },
+            warn: function( txt ){}
         },
 
         hook: {
@@ -505,7 +514,7 @@ const Q = ( function(){
                 };
                 XMLHttpRequest.prototype.send = function( body ){
                     if ( body != null ){
-                        box_post.innerHTML += "<br><div style='color:var(--green);font-weight:bold;'>"
+                        box_post.innerHTML += "<br><div style='color:var(--white);'>"
                             + body
                             + "</div> ";
                     }
