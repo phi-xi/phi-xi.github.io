@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.57",
+        version  = "1.58",
         config   = {
             gui:null,
             txt:null,
@@ -195,7 +195,7 @@ const Q = ( function(){
 <DL><p>\n
 <DT><H3 ADD_DATE="1761338694" LAST_MODIFIED="1792293228" PERSONAL_TOOLBAR_FOLDER="true">Bookmarks bar</H3>\n
 <DL><p>\n
-<DT><A HREF="" ADD_DATE="1792255101">PIMF</A>\n
+<DT><A HREF="" ADD_DATE="1792255101">Text insert</A>\n
 </DL><p>\n
 </DL><p>`;
         const t = unix_time_now().toString(),
@@ -312,7 +312,7 @@ const Q = ( function(){
                         bm = make_bookmark( "javascript:(function(){document.getElementById(&quot;"
                                                 + id
                                                 + "&quot;).value=&quot;"
-                                                + v.replace( /\'/g, "\\&quot;" )
+                                                + v.replace( /\'/g, "\\\\&quot;" )
                                                 + "&quot;;})();" ),
                         url = "data:text/html;base64,"
                                 + btoa( bm );
