@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.58",
+        version  = "1.59",
         config   = {
             gui:null,
             txt:null,
@@ -312,7 +312,7 @@ const Q = ( function(){
                         bm = make_bookmark( "javascript:(function(){document.getElementById(&quot;"
                                                 + id
                                                 + "&quot;).value=&quot;"
-                                                + v.replace( /\'/g, "\\\\&quot;" )
+                                                + v
                                                 + "&quot;;})();" ),
                         url = "data:text/html;base64,"
                                 + btoa( bm );
