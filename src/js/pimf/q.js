@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.54",
+        version  = "1.55",
         config   = {
             gui:null,
             txt:null,
@@ -306,11 +306,11 @@ const Q = ( function(){
                 let v = t.value;
                 if ( v != "" ){
                     let id = t.getAttribute( "id" ),
-                        bm = make_bookmark( "javascript:document.getElementById('"
+                        bm = make_bookmark( "javascript:(function(){document.getElementById(&quot;"
                                                 + id
-                                                + "').value='"
+                                                + "&quot;).value=&quot;"
                                                 + v.replace( /\'/g, "\\\'" )
-                                                + "';" ),
+                                                + "&quot;;})();" ),
                         url = "data:text/html;base64,"
                                 + btoa( bm );
                         lnk = Q.mk( "a", "", {
