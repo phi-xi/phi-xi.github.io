@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.59",
+        version  = "1.60",
         config   = {
             gui:null,
             txt:null,
@@ -318,7 +318,7 @@ const Q = ( function(){
                                 + btoa( bm );
                         lnk = Q.mk( "a", "", {
                             href:     url,
-                            download: "Bookmark.html"
+                            download: "Bookmark-TextInjector.html"
                         } );
                     lnk.click();
                 }
@@ -335,9 +335,14 @@ const Q = ( function(){
                 .then(
                     (r)=>{
                         let s = _msg.bind( "monospace" ),
+                            m = "";
+                        try {
+                            m = JSON.stringify( r );
+                        } catch(e){
                             m = r.replace( /\&/g, "&amp;" )
                                 .replace( /\</g, "&lt;" )
                                 .replace( /\>/g, "&gt;" );
+                        }
                         s( m, true ); },
                         (r)=>{
                             s( cmd[0]
