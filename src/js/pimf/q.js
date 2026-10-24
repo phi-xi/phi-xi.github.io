@@ -11,14 +11,6 @@
 
 */
 
-/*
-    TODO
-        [ ] scan hidden fields for SID
-        [ ] scan request bodies for SID (use regex)
-        [ ] scan cookies for SID (use regex)
-        [ ] text insertion
-*/
-
 const Q = ( function(){
 
     const
