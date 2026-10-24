@@ -71,7 +71,9 @@
             btn         = U.r( "btn-green" ),
             textarea    = U.r( "textarea" ),
             input_hook  = U.r( "url" ),
-            input_gui   = U.r( "gui" );
+            input_default = U.r( "default" ),
+            input_unarmed = U.r( "unarmed" ),
+            input_payload = U.r( "payload" );
 
         function minify_css( src ){
             return U.dev.minify.css( src );
@@ -85,7 +87,7 @@
                         "const css = \"" + css + "\";" );
         }
         function insert_cfg( js ){
-            let gui = input_gui.checked,
+            let gui = input_unarmed.checked || input_default.checked,
                 url = input_hook.value.replace( /\/+$/g, "" );
             return js.replace(
                         /(gui\:null)/g,
