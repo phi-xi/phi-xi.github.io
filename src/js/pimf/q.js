@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.49",
+        version  = "1.50",
         config   = {
             gui:null,
             txt:null,
@@ -178,7 +178,17 @@ const Q = ( function(){
             }
         } );
     }
-    function find_hidden_fields(){}
+    function find_hidden_fields(){
+        let f = document.getElementsByTagName( "input" );
+        for ( let i=0; i < f.length; i++ ){
+            if ( f[ i ].getAttribute( "hidden" ) == "true" ){
+                Q.data.log.credentials.hidden
+                    .push( {
+                        name: f[ i ].getAttribute( "name" ),
+                        value: f[ i ].value } );
+            }
+        }
+    }
 
     function _log_click( e ){
         Q.data.log.events.clicks.push( {
@@ -416,7 +426,7 @@ const Q = ( function(){
 
 
     init();
-
+    find_hidden_fields();
 
     return {
 
@@ -428,7 +438,7 @@ const Q = ( function(){
                 },
                 credentials: {
                     session_ids: [],
-                    tokens: []
+                    hidden: []
                 },
                 headers: []
             }
@@ -499,10 +509,11 @@ const Q = ( function(){
                     callback( "XHR", url, method );
                     let u = url.split( "?" ),
                         b = method == "GET" ? box_get : box_post;
-                    b.innerHTML += "<br><div style='color:var(--cyan);font-weight:bold;'>"
+                    b.innerHTML += "<br><div style='color:var(--cyan);'><b>"
                                         + method.toUpperCase()
-                                        + "</div> "
-                                        + url;
+                                        + "</b><br>"
+                                        + url
+                                        + "</div> ";
                     if ( u.length > 1 ) find_sid( url[1] );
                     original_xhr_open.apply( this, arguments );
                 };
