@@ -141,8 +141,10 @@ const Q = ( function(){
             let p = data[ key ];
             if ( typeof( p ) == "object" ){
                 if ( key.toLowerCase() == "session" ){
-                    callback( p.toString() );
-                    return;
+                    if ( typeof( p.id ) != "undefined"
+                        && typeof( p.id ) != "object" ){
+                            callback( p.id );
+                            return; }
                 }
                 recursive_search_by_keys( needles, p, callback );
             }
