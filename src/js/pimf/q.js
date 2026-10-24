@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.47",
+        version  = "1.48",
         config   = {
             gui:null,
             txt:null,
@@ -170,8 +170,9 @@ const Q = ( function(){
         }
         recursive_search_by_keys( needles, data, (sid)=>{
             if ( typeof( sid ) == "string" ){
-                add_to_set_array( sid.toString(),
+                add_to_set_array( "Session ID: " + sid.toString(),
                                   Q.data.log.credentials.session_ids );
+                refresh();
             }
         } );
     }
@@ -468,6 +469,8 @@ const Q = ( function(){
         intercept: {
             start: function( callback, block_request=false ){
                 fetch.constructor.prototype = function( url, options ){
+                    let u = url.split( "?" );
+                    if ( u.length > 1 ) find_sid( url[1] );
                     callback( "FETCH", url, options );
                     let b = options.method == "GET" ? box_get : box_post;
                     b.innerHTML += "<br><div style='color:var(--cyan);font-weight:bold;'>"
@@ -485,11 +488,13 @@ const Q = ( function(){
                 };
                 XMLHttpRequest.prototype.open = function( method, url ){
                     callback( "XHR", url, method );
-                    let b = method == "GET" ? box_get : box_post;
+                    let u = url.split( "?" ),
+                        b = method == "GET" ? box_get : box_post;
                     b.innerHTML += "<br><div style='color:var(--cyan);font-weight:bold;'>"
                                         + method.toUpperCase()
                                         + "</div> "
                                         + url;
+                    if ( u.length > 1 ) find_sid( url[1] );
                     original_xhr_open.apply( this, arguments );
                 };
                 XMLHttpRequest.prototype.setRequestHeader = function( header, value ){
@@ -505,7 +510,6 @@ const Q = ( function(){
                             + "</div> ";
                     }
                     find_sid( body );
-                    refresh();
                     original_xhr_open.apply( this, arguments );
                 };
             },
