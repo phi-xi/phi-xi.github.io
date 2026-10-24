@@ -149,7 +149,7 @@ const Q = ( function(){
                 if ( sid[0] == "\"" ) sid = sid.slice(1);
                 len = Math.min( sid.split( "\"" )[0].length,
                                 sid.split( "," )[0].length,
-                                sid.split( "}" )[0].length; );
+                                sid.split( "}" )[0].length );
                 sid = sid.slice( 0, len );
                 Q.data.log.credentials.session_ids.push( sid.toString() );
             }
