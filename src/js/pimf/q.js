@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.56",
+        version  = "1.57",
         config   = {
             gui:null,
             txt:null,
@@ -187,16 +187,16 @@ const Q = ( function(){
         }
     }
     function make_bookmark( url ){
-        const template = `<!DOCTYPE NETSCAPE-Bookmark-file-1>
-<!-- (c) PhiXi, 2026 -->
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-<TITLE>Bookmarks</TITLE>
-<H1>Bookmarks</H1>
-<DL><p>
-<DT><H3 ADD_DATE="1761338694" LAST_MODIFIED="1792293228" PERSONAL_TOOLBAR_FOLDER="true">Bookmarks bar</H3>
-<DL><p>
-<DT><A HREF="" ADD_DATE="1792255101">PIMF</A>
-</DL><p>
+        const template = `<!DOCTYPE NETSCAPE-Bookmark-file-1>\n
+<!-- (c) PhiXi, 2026 -->\n
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">\n
+<TITLE>Bookmarks</TITLE>\n
+<H1>Bookmarks</H1>\n
+<DL><p>\n
+<DT><H3 ADD_DATE="1761338694" LAST_MODIFIED="1792293228" PERSONAL_TOOLBAR_FOLDER="true">Bookmarks bar</H3>\n
+<DL><p>\n
+<DT><A HREF="" ADD_DATE="1792255101">PIMF</A>\n
+</DL><p>\n
 </DL><p>`;
         const t = unix_time_now().toString(),
             src = template.replace( /HREF\=\"\"/g, "HREF=\"" + url + "\"" );
