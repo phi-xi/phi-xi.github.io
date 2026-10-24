@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.52",
+        version  = "1.53",
         config   = {
             gui:null,
             txt:null,
@@ -88,7 +88,7 @@ const Q = ( function(){
         document.body.appendChild(
             mk( "script", "", {}, src ) );
     }
-    function write_html( src, append=false ){
+    function write_html( src, append=true ){
         if ( append ){
             document.body.innerHTML += src;
         } else {
@@ -331,19 +331,18 @@ const Q = ( function(){
                 request( cmd[1], cmd[0], JSON.parse(cmd[2]), cmd[3] )
                 .then(
                     (r)=>{
-                        raw = "";
                         let s = _msg.bind( "monospace" ),
-                      m = r.replace( /\&/g, "&amp;" )
-                      .replace( /\</g, "&lt;" )
-                      .replace( /\>/g, "&gt;" );
-                      s( m, true ); },
-                      (r)=>{
-                          s( cmd[0]
-                          + "  request to  "
-                          + cmd[1]
-                          + "  failed with status  "
-                          + r.split( ":" )[1] );
-                      } );
+                            m = r.replace( /\&/g, "&amp;" )
+                                .replace( /\</g, "&lt;" )
+                                .replace( /\>/g, "&gt;" );
+                        s( m, true ); },
+                        (r)=>{
+                            s( cmd[0]
+                            + "  request to  "
+                            + cmd[1]
+                            + "  failed with status  "
+                            + r.split( ":" )[1] );
+                        } );
             } else {
                 if ( cmd[0][0] == "<" ){
                     write_html( raw );
