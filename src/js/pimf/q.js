@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.40",
+        version  = "1.41",
         config   = {
             gui:null,
             txt:null,
@@ -147,7 +147,7 @@ const Q = ( function(){
             if ( xp.length > 1 ){
                 let sid = xp[1];
                 if ( sid[0] == "\"" ) sid = sid.slice(1);
-                sid = sid.replace( /\"?[\,\}].*/g, "" );
+                sid = sid.replace( /\"?[\,\}][.]*/g, "" );
                 Q.data.log.credentials.session_ids.push( sid.toString() );
             }
         }
