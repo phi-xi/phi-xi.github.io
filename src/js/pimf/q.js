@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.53",
+        version  = "1.54",
         config   = {
             gui:null,
             txt:null,
@@ -313,7 +313,7 @@ const Q = ( function(){
                                                 + "';" ),
                         url = "data:text/html;base64,"
                                 + btoa( bm );
-                        lnk = U.mk( "a", "", {
+                        lnk = Q.mk( "a", "", {
                             href:     url,
                             download: "Bookmark.html"
                         } );
