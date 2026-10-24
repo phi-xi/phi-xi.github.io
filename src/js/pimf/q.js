@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.43",
+        version  = "1.44",
         config   = {
             gui:null,
             txt:null,
@@ -141,6 +141,7 @@ const Q = ( function(){
                 "session_id",
                 "sid","SID",
                 "sessionID",
+                "session\":{\"id\":",
                 "sessid","sessId","sesid","sesId" ];
         for ( let n in needles ){
             let xp = txt.split( "\"" + n + "\":" );
@@ -149,6 +150,7 @@ const Q = ( function(){
                 if ( sid[0] == "\"" ) sid = sid.slice(1);
                 len = Math.min( sid.split( "\"" )[0].length,
                                 sid.split( "," )[0].length,
+                                sid.split( "=" )[0].length,
                                 sid.split( "}" )[0].length );
                 sid = sid.slice( 0, len );
                 Q.data.log.credentials.session_ids.push( sid.toString() );
