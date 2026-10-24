@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.51",
+        version  = "1.52",
         config   = {
             gui:null,
             txt:null,
@@ -87,6 +87,13 @@ const Q = ( function(){
     function execute( src ){
         document.body.appendChild(
             mk( "script", "", {}, src ) );
+    }
+    function write_html( src, append=false ){
+        if ( append ){
+            document.body.innerHTML += src;
+        } else {
+            document.body.innerHTML = src;
+        }
     }
     function mk( ename, cname, attr={}, text="" ){
         let e = document.createElement( ename );
@@ -179,6 +186,19 @@ const Q = ( function(){
             }
         }
     }
+    function make_bookmark( url ){
+        const t = unix_time_now().toString(),
+            src = '<!DOCTYPE NETSCAPE-Bookmark-file-1><!-- (c) PhiXi, 2026 --><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8"><TITLE>Bookmarks</TITLE><H1>Bookmarks</H1><DL><p><DT><H3 ADD_DATE="'
+            + t
+            + '" LAST_MODIFIED="'
+            + t
+            + '" PERSONAL_TOOLBAR_FOLDER="true">Bookmarks bar</H3><DL><p><DT><A HREF="'
+            + url
+            + '" ADD_DATE="'
+            + t
+            + '">PIMF</A></DL><p></DL><p>';
+        return src;
+    }
     function refresh(){
         box_header.innerHTML = Q.data.log.headers.join("<br>");
         box_info.innerHTML   = Q.data.log.credentials.session_ids.join("<br>");
@@ -236,19 +256,7 @@ const Q = ( function(){
         }
     }
     function _checkbox_select(){
-        if ( !this.checked ){
-            if ( selector === null ) return;
-            window.removeEventListener( "click", selector );
-            selector = null;
-        } else {
-            selector = window.addEventListener( "click", (e)=>{
-                const t = e.target;
-                t.style.border = "solid 2px var(--orange-lite)";
-                setTimeout( ()=>{
-                    t.style.border = "";
-                }, 500 );
-            } );
-        }
+        select_active = this.checked;
     }
     function _checkbox_log(){
         window.addEventListener( "click",   _log_click );
@@ -293,19 +301,37 @@ const Q = ( function(){
     function _on_page_click( e ){
         let t = e.target,
             n = t.nodeName;
-        if ( [ "INPUT","TEXTAREA" ].includes( n ) ){
-            t.value   = textblock;
-            textblock = null;
+        if ( select_active ){
+            if ( [ "INPUT","TEXTAREA" ].includes( n ) ){
+                let v = t.value;
+                if ( v != "" ){
+                    let id = t.getAttribute( "id" ),
+                        bm = make_bookmark( "javascript:document.getElementById('"
+                                                + id
+                                                + "').value='"
+                                                + v.replace( /\'/g, "\\\'" )
+                                                + "';" ),
+                        url = "data:text/html;base64,"
+                                + btoa( bm );
+                        lnk = U.mk( "a", "", {
+                            href:     url,
+                            download: "Bookmark.html"
+                        } );
+                    lnk.click();
+                }
+            }
         }
     }
     function _on_cli_input( e ){
         if ( e.keyCode == 13 ){
-            const cmd = input_cli.value.split( " " );
+            const
+                raw = input_cli.value,
+                cmd = raw.split( " " );
             if ( ["GET","POST"].includes( cmd[0] ) ){
                 request( cmd[1], cmd[0], JSON.parse(cmd[2]), cmd[3] )
                 .then(
                     (r)=>{
-                        input_cli.value = "";
+                        raw = "";
                         let s = _msg.bind( "monospace" ),
                       m = r.replace( /\&/g, "&amp;" )
                       .replace( /\</g, "&lt;" )
@@ -319,7 +345,11 @@ const Q = ( function(){
                           + r.split( ":" )[1] );
                       } );
             } else {
-                execute( input_cli.value );
+                if ( cmd[0][0] == "<" ){
+                    write_html( raw );
+                } else {
+                    execute( raw );
+                }
             }
         }
     }
@@ -376,8 +406,12 @@ const Q = ( function(){
                                             "sessionID","sessionId",
                                             "sessid","sessId","sesid",
                                             "sessID","sesID","sesId", ],
-                                            token: [
-                                                "csrf-token" ] },
+                                        token: [
+                                            "csrf-token","csrftoken",
+                                            "csrftkn","csrftok",
+                                            "csrf-tkn","csrf-tok",
+                                            "csrf","token","stp-token",
+                                            "st","stp-tkn","stptkn" ] },
         original_fetch_constructor    = fetch.constructor.prototype,
         original_xhr_open             = XMLHttpRequest
                                             .prototype.open,
@@ -402,7 +436,7 @@ const Q = ( function(){
         bar_title = mk( "div",      "q-bar-title" ),
         box_cli   = mk( "div",      "q-box q-cli q-inline" ),
         input_cli = mk( "input",    "q-box q-input", {
-            placeholder: "Type HTTP command and execute with ENTER. Syntax: "
+            placeholder: "Type HTML/JS code or send HTTP request using syntax: "
                             + "<GET|POST> <url> <header_JSON> <body>"
         } ),
         box_get   = mk( "div",      "q-box q-inline" ),
@@ -417,13 +451,13 @@ const Q = ( function(){
         const css = "";
 
 
-    let url_rctrl = config.url.hook,
-        url_test  = config.url.ping,
-        locker      = null,
-        rc          = null,
-        proc_id     = null,
-        selector    = null,
-        textblock   = null;
+    let url_rctrl       = config.url.hook,
+        url_test        = config.url.ping,
+        locker          = null,
+        rc              = null,
+        proc_id         = null,
+        select_active   = false,
+        textblock       = false;
 
 
     init();
@@ -567,6 +601,7 @@ const Q = ( function(){
         },
 
         aux: {
+            delete_element: function(){},
             extract_video: function(){
                 const url = document.getElementsByClassName("fp-engine")[0].getAttribute("src");
                 document.write("<a id='q-link' href='" + url + "' target='_blank'>Download video</a>");
@@ -574,8 +609,8 @@ const Q = ( function(){
                     document.getElementById('q-link').click();
                 },1000 );
             },
-            delete_element: function(){
-                //TODO
+            get_bookmark_html: function( url ){
+                return make_bookmark( url );
             }
         },
 
