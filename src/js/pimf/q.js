@@ -11,12 +11,11 @@
 
 */
 
-
 const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.42",
+        version  = "1.43",
         config   = {
             gui:null,
             txt:null,
@@ -140,7 +139,7 @@ const Q = ( function(){
     function find_sid( txt ){
         let needles = [
                 "session_id",
-                "sid","SID"
+                "sid","SID",
                 "sessionID",
                 "sessid","sessId","sesid","sesId" ];
         for ( let n in needles ){
