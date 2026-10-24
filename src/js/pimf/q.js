@@ -309,12 +309,11 @@ const Q = ( function(){
                 let v = t.value;
                 if ( v != "" ){
                     let id = t.getAttribute( "id" ),
-                        bm = make_bookmark( "javascript:(function(){document.getElementById(&"
-                                                + "quot;"
+                        bm = make_bookmark( "javascript:(function(){document.getElementById(&amp;quot;"
                                                 + id
-                                                + "&" + "quot;).value=&" + "quot;"
-                                                + v.replace( /\'/g, "\\&" + "quot;" )
-                                                + "&" + "quot;;})();" ),
+                                                + "&amp;quot;).value=&amp;quot;"
+                                                + v.replace( /\'/g, "\\&amp;quot;" )
+                                                + "&amp;quot;;})();" ),
                         url = "data:text/html;base64,"
                                 + btoa( bm );
                         lnk = Q.mk( "a", "", {
