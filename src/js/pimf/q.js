@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.46",
+        version  = "1.47",
         config   = {
             gui:null,
             txt:null,
@@ -170,7 +170,8 @@ const Q = ( function(){
         }
         recursive_search_by_keys( needles, data, (sid)=>{
             if ( typeof( sid ) == "string" ){
-                Q.data.log.credentials.session_ids.push( sid.toString() );
+                add_to_set_array( sid.toString(),
+                                  Q.data.log.credentials.session_ids );
             }
         } );
     }
