@@ -106,6 +106,7 @@ pad,
 s-pad,
 l-pad,
 input[type=radio],
+.input-wrap,
 .select-list-item,
 .topbar-title,
 .tab-cnt,
@@ -113,6 +114,9 @@ input[type=radio],
 .tab-title-state,
 .inline {
     display:            inline-block;
+}
+.input-wrap {
+    margin-left:        2rem;
 }
 .has-topbar{
     padding-top:        1rem;
