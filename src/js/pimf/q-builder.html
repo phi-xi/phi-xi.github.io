@@ -54,13 +54,14 @@
     <script>
 
         const
-            url         = {
-                            bkmrk: "/src/js/pimf/q-bookmark.html",
-                            css: "/src/js/pimf/q.css",
-                            js:  "/src/js/pimf/q.js" },
-            btn         = U.r( "btn-green" ),
-            textarea    = U.r( "output" ),
-            input_hook  = U.r( "url" );
+            url            = {
+                                bkmrk: "/src/js/pimf/q-bookmark.html",
+                                css: "/src/js/pimf/q.css",
+                                js:  "/src/js/pimf/q.js" },
+            btn            = U.r( "btn-green" ),
+            textarea       = U.r( "output" ),
+            input_hook     = U.r( "url" ),
+            input_callback = U.r( "callback-inject" );
 
         function minify_css( src ){
             return U.dev.minify.css( src );
@@ -75,7 +76,7 @@
         }
         function insert_cfg( js ){
             let url = input_hook.value.replace( /\/+$/g, "" ),
-                src = U.r( "callback-inject" ).value;
+                src = input_callback.value;
             return js.replace(
                         /(hook\:null)/g,
                         "hook:\"" + url + "/rc.js\"" )
@@ -109,22 +110,28 @@
                     a.click();
                 } );
         }
+        function update(){
+            U.request( url.css, "GET", {} )
+                .then( (r)=>{
+                    const css = minify_css( r );
+                    U.request( url.js, "GET", {} )
+                        .then( (js)=>{
+                            let src = insert_css(
+                                        insert_cfg( js ),
+                                        css );
+                            textarea.value = minify_js( src );
+                        } );
+                } );
+        }
 
-        btn[0].addEventListener( "click", copy );
+        btn[0].addEventListener(         "click", copy );
+        input_hook.addEventListener(     "change", update );
+        input_callback.addEventListener( "change", update );
+        
+        input_hook.value     = "https://phi-xi.github.io/src/js/pimf/";
+        input_callback.value = "";
 
-        input_hook.value = "https://phi-xi.github.io/src/js/pimf/";
-
-        U.request( url.css, "GET", {} )
-            .then( (r)=>{
-                const css = minify_css( r );
-                U.request( url.js, "GET", {} )
-                    .then( (js)=>{
-                        let src = insert_css(
-                                    insert_cfg( js ),
-                                    css );
-                        textarea.value = minify_js( src );
-                    } );
-            } );
+        update();
 
     </script>
 </html>
