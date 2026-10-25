@@ -23,7 +23,7 @@ const Q = ( function(){
                 hook:null,
                 ping:null
             },
-            on_inject: function(){}
+            on_inject:function(){}
         };
 
     function request( url, method, headers, body=false ){
