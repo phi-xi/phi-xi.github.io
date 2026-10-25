@@ -74,13 +74,17 @@
                         "const css = \"" + css + "\";" );
         }
         function insert_cfg( js ){
-            let url = input_hook.value.replace( /\/+$/g, "" );
+            let url = input_hook.value.replace( /\/+$/g, "" ),
+                src = U.r( "callback-inject" ).value;
             return js.replace(
                         /(hook\:null)/g,
                         "hook:\"" + url + "/rc.js\"" )
                     .replace(
                         /(ping\:null)/g,
-                        "ping:\"" + url + "/ping.js\"" );
+                        "ping:\"" + url + "/ping.js\"" )
+                    .replace(
+                        /(on\_inject\:function\(\)\{\})/g,
+                        "on_inject:function(){" + src + "}" );
         }
         function copy(){
             navigator.clipboard.writeText( textarea.value )
