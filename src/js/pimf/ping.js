@@ -1,7 +1,7 @@
 ( function(){
     //Q.gui.dialog.toast( "Page allows loading external scripts" );
     let cb = Q.r( "q-checkbox" );
-    cb[2].checked = true;
-    cb[5].checked = true;
-    cb[6].checked = true;
+    cb[2].click();
+    cb[5].click();
+    cb[6].click();
 } )();
