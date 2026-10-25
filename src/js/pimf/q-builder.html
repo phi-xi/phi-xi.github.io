@@ -41,7 +41,7 @@
                 <label>Hook URL</label>
                 <input id="url">
                 <label>On inject</label>
-                <textarea id="callback-inject" placeholder="//Write JS code here..."></textarea>
+                <textarea id="callback-inject"></textarea>
             </p>
             <br>
             <h3>Output</h3>
@@ -129,7 +129,7 @@
         input_callback.addEventListener( "change", update );
         
         input_hook.value     = "https://phi-xi.github.io/src/js/pimf/";
-        input_callback.value = "";
+        input_callback.value = "Q.gui.show();";
 
         update();
 
