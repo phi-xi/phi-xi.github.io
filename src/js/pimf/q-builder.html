@@ -88,7 +88,7 @@
         function download(){
             U.request( url.bkmrk, "GET", {} )
                 .then( (r)=>{
-                    let src = textarea.value.replace( /\"/g, "&quot;" ),
+                    let src = textarea.value,    //.replace( /\"/g, "&quot;" ),
                         htm = r.replace( /HREF\=\"\"/g, "HREF=\"javascript:"
                                 + src
                                 + "\"" ),
