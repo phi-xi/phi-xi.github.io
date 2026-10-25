@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.62",
+        version  = "1.63",
         config   = {
             gui:null,
             txt:null,
@@ -377,6 +377,7 @@ const Q = ( function(){
             get_button( "Exit", _button_exit )
         ];
         details.style.opacity = 1;
+        details.style.display = "none";
         summary.innerHTML = title;
         for ( let i=0; i < checkboxes.length; i++ )
             summary.appendChild( checkboxes[ i ] );
