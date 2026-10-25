@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.61",
+        version  = "1.62",
         config   = {
             gui:null,
             txt:null,
@@ -290,11 +290,8 @@ const Q = ( function(){
         Q.exit();
     }
     function _on_inject_complete(){
-        let d = 1;
-        Q.gui.dialog.toast( "Injection complete", d );
-        setTimeout ( ()=>{
-            load_script( url_test );
-        }, 1000*d );
+        on_inject();
+        load_script( url_ping );
     }
     function _on_active_corner( e ){
         if ( e.clientX + e.clientY < 15 ){
@@ -360,6 +357,8 @@ const Q = ( function(){
             }
         }
     }
+
+    function on_inject(){}
 
     function init(){
         style.innerHTML = css;
@@ -459,7 +458,7 @@ const Q = ( function(){
 
 
     let url_rctrl       = config.url.hook,
-        url_test        = config.url.ping,
+        url_ping        = config.url.ping,
         locker          = null,
         rc              = null,
         proc_id         = null,
