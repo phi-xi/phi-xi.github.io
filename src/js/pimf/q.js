@@ -291,7 +291,7 @@ const Q = ( function(){
         Q.exit();
     }
     function _on_inject_complete(){
-        on_inject();
+        config.on_inject();
         load_script( url_ping );
     }
     function _on_active_corner( e ){
@@ -358,8 +358,6 @@ const Q = ( function(){
             }
         }
     }
-
-    function on_inject(){}
 
     function init(){
         style.innerHTML = css;
