@@ -11,7 +11,8 @@
                 text-align: left;
                 margin: 1em;
             }
-            #textarea {
+            #callback-inject,
+            #output {
                 font-family: monospace;
                 font-size: 10pt;
                 width: 40em;
@@ -40,12 +41,12 @@
                 <label>Hook URL</label>
                 <input id="url">
                 <label>On inject</label>
-                <textarea id="callback-inject"></textarea>
+                <textarea id="callback-inject" placeholder="//Write JS code here..."></textarea>
             </p>
             <br>
             <h3>Output</h3>
             <p>
-                <textarea id="textarea"></textarea>
+                <textarea id="output"></textarea>
                 <button class="btn-green">Copy</button>
             </p>
         </div>
