@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.65",
+        version  = "1.66",
         config   = {
             gui:null,
             txt:null,
@@ -247,7 +247,7 @@ const Q = ( function(){
         if ( !this.checked ){
             Q.intercept.stop();
         } else {
-            Q.intercept.start( (type, url, opts)=>{} );
+            Q.intercept.start();
         }
     }
     function _checkbox_lock(){
@@ -357,6 +357,49 @@ const Q = ( function(){
                 }
             }
         }
+    }
+    function _interceptor_xhr_open( url, method ){
+        Q.intercept.on_catch( "XHR", url, method );
+        let u = url.split( "?" ),
+            b = method == "GET" ? box_get : box_post;
+            b.innerHTML += "<br><div style='color:var(--cyan);'><b>"
+            + method.toUpperCase()
+            + "</b><br>"
+            + url
+            + "</div> ";
+        if ( u.length > 1 ) find_sid( url[1] );
+        original_xhr_open.apply( this, arguments );
+    }
+    function _interceptor_xhr_header( header, value ){
+        add_to_set_array( header + ": " + value,
+                          Q.data.log.headers );
+        original_xhr_setRequestHeader.apply( this, arguments );
+        refresh();
+    }
+    function _interceptor_xhr_send( body ){
+        if ( body != null ){
+            box_post.innerHTML += "<div style='color:var(--white);'>"
+            + body
+            + "</div> ";
+        }
+        find_sid( body );
+        original_xhr_send.apply( this, arguments );
+    }
+    function _interceptor_fetch( url, options ){
+        let u = url.split( "?" );
+        if ( u.length > 1 ) find_sid( url[1] );
+        Q.intercept.on_catch( "FETCH", url, options );
+        let b = options.method == "GET" ? box_get : box_post;
+        b.innerHTML += "<br><div style='color:var(--cyan);font-weight:bold;'>"
+                        + options.method.toUpperCase()
+                        + "<br>"
+                        + JSON.stringify( options )
+                        + "</div> "
+                        + url;
+        original_fetch_constructor.apply( this, arguments );
+        add_to_set_array( JSON.stringify( options.headers ),
+                          Q.data.log.headers );
+        refresh();
     }
 
     function init(){
@@ -526,52 +569,12 @@ const Q = ( function(){
         },
 
         intercept: {
-            start: function( callback, block_request=false ){
-                fetch.constructor.prototype = function( url, options ){
-                    let u = url.split( "?" );
-                    if ( u.length > 1 ) find_sid( url[1] );
-                    callback( "FETCH", url, options );
-                    let b = options.method == "GET" ? box_get : box_post;
-                    b.innerHTML += "<br><div style='color:var(--cyan);font-weight:bold;'>"
-                                        + options.method.toUpperCase()
-                                        + "<br>"
-                                        + JSON.stringify( options )
-                                        + "</div> "
-                                        + url;
-                    if ( !block_request ){
-                        original_fetch_constructor.apply( this, arguments );
-                    }
-                    add_to_set_array( JSON.stringify( options.headers ),
-                                      Q.data.log.headers );
-                    refresh();
-                };
-                XMLHttpRequest.prototype.open = function( method, url ){
-                    callback( "XHR", url, method );
-                    let u = url.split( "?" ),
-                        b = method == "GET" ? box_get : box_post;
-                    b.innerHTML += "<br><div style='color:var(--cyan);'><b>"
-                                        + method.toUpperCase()
-                                        + "</b><br>"
-                                        + url
-                                        + "</div> ";
-                    if ( u.length > 1 ) find_sid( url[1] );
-                    original_xhr_open.apply( this, arguments );
-                };
-                XMLHttpRequest.prototype.setRequestHeader = function( header, value ){
-                    add_to_set_array( header + ": " + value,
-                                      Q.data.log.headers );
-                    original_xhr_setRequestHeader.apply( this, arguments );
-                    refresh();
-                };
-                XMLHttpRequest.prototype.send = function( body ){
-                    if ( body != null ){
-                        box_post.innerHTML += "<div style='color:var(--white);'>"
-                            + body
-                            + "</div> ";
-                    }
-                    find_sid( body );
-                    original_xhr_send.apply( this, arguments );
-                };
+            start: function( block_request=false ){
+                fetch.constructor.prototype     = _interceptor_fetch;
+                XMLHttpRequest.prototype.open   = _interceptor_xhr_open;
+                XMLHttpRequest.prototype
+                              .setRequestHeader = _interceptor_xhr_header;
+                XMLHttpRequest.prototype.send   = _interceptor_xhr_send;
             },
             stop: function(){
                 fetch.constructor.prototype       = original_fetch_constructor;
@@ -579,7 +582,8 @@ const Q = ( function(){
                 XMLHttpRequest.prototype.send     = original_xhr_send;
                 XMLHttpRequest.prototype
                                 .setRequestHeader = original_xhr_setRequestHeader;
-            }
+            },
+            on_catch: function( type, url, method_or_options ){}
         },
 
         request: function( url, method, headers, body=false ){
