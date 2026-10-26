@@ -169,8 +169,7 @@ const Q = ( function(){
             data = new URLSearchParams( body_txt );
         }
         recursive_search_by_keys( query.session_id, data, (sid)=>{
-            if ( typeof( sid ) == "string"
-                && sid == sid.replace( /[^A-Za-z0-9]/g, "" ) ){
+            if ( typeof( sid ) == "string" ){
                     add_to_set_array( "Session ID: " + sid.toString(),
                                   Q.data.log.credentials.session_ids );
                     refresh();
