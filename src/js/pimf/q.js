@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.67",
+        version  = "1.68",
         config   = {
             gui:null,
             txt:null,
@@ -372,7 +372,7 @@ const Q = ( function(){
             }
         }
     }
-    function _interceptor_xhr_open( url, method ){
+    function _interceptor_xhr_open( method, url ){
         Q.intercept.on_catch( "XHR", url, method );
         let u = url.split( "?" ),
             b = method == "GET" ? box_get : box_post;
