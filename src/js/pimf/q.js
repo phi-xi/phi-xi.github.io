@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.66",
+        version  = "1.67",
         config   = {
             gui:null,
             txt:null,
@@ -213,6 +213,20 @@ const Q = ( function(){
         }
         box_keylog.innerHTML = t;
     }
+    function intercept_start(){
+        fetch.constructor.prototype     = _interceptor_fetch;
+        XMLHttpRequest.prototype.open   = _interceptor_xhr_open;
+        XMLHttpRequest.prototype
+                      .setRequestHeader = _interceptor_xhr_header;
+        XMLHttpRequest.prototype.send   = _interceptor_xhr_send;
+    }
+    function intercept_stop(){
+        fetch.constructor.prototype       = original_fetch_constructor;
+        XMLHttpRequest.prototype.open     = original_xhr_open;
+        XMLHttpRequest.prototype.send     = original_xhr_send;
+        XMLHttpRequest.prototype
+        .setRequestHeader = original_xhr_setRequestHeader;
+    }
 
     function _log_click( e ){
         Q.data.log.events.clicks.push( {
@@ -362,7 +376,7 @@ const Q = ( function(){
         Q.intercept.on_catch( "XHR", url, method );
         let u = url.split( "?" ),
             b = method == "GET" ? box_get : box_post;
-            b.innerHTML += "<br><div style='color:var(--cyan);'><b>"
+        b.innerHTML += "<br><div style='color:var(--cyan);'><b>"
             + method.toUpperCase()
             + "</b><br>"
             + url
@@ -379,8 +393,8 @@ const Q = ( function(){
     function _interceptor_xhr_send( body ){
         if ( body != null ){
             box_post.innerHTML += "<div style='color:var(--white);'>"
-            + body
-            + "</div> ";
+                                    + body
+                                    + "</div> ";
         }
         find_sid( body );
         original_xhr_send.apply( this, arguments );
@@ -497,8 +511,7 @@ const Q = ( function(){
                                     {
                                         rel: "stylesheet",
                                         href: url_font } );
-        const css = "";
-
+    const css = "";
 
     let url_rctrl       = config.url.hook,
         url_ping        = config.url.ping,
@@ -569,20 +582,8 @@ const Q = ( function(){
         },
 
         intercept: {
-            start: function( block_request=false ){
-                fetch.constructor.prototype     = _interceptor_fetch;
-                XMLHttpRequest.prototype.open   = _interceptor_xhr_open;
-                XMLHttpRequest.prototype
-                              .setRequestHeader = _interceptor_xhr_header;
-                XMLHttpRequest.prototype.send   = _interceptor_xhr_send;
-            },
-            stop: function(){
-                fetch.constructor.prototype       = original_fetch_constructor;
-                XMLHttpRequest.prototype.open     = original_xhr_open;
-                XMLHttpRequest.prototype.send     = original_xhr_send;
-                XMLHttpRequest.prototype
-                                .setRequestHeader = original_xhr_setRequestHeader;
-            },
+            start: intercept_start,
+            stop: intercept_stop,
             on_catch: function( type, url, method_or_options ){}
         },
 
