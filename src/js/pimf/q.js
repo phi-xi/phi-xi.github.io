@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.68",
+        version  = "1.69",
         config   = {
             gui:null,
             txt:null,
@@ -169,10 +169,11 @@ const Q = ( function(){
             data = new URLSearchParams( body_txt );
         }
         recursive_search_by_keys( query.session_id, data, (sid)=>{
-            if ( typeof( sid ) == "string" ){
-                add_to_set_array( "Session ID: " + sid.toString(),
+            if ( typeof( sid ) == "string"
+                && sid == sid.replace( /[^A-Za-z0-9]/g, "" ) ){
+                    add_to_set_array( "Session ID: " + sid.toString(),
                                   Q.data.log.credentials.session_ids );
-                refresh();
+                    refresh();
             }
         } );
     }
@@ -467,6 +468,7 @@ const Q = ( function(){
                                             "SESS_ID","SESSION_ID",
                                             "sid","SID","SESSION-ID",
                                             "sessionID","sessionId",
+                                            "sess-id","ses-id",
                                             "sessid","sessId","sesid",
                                             "sessID","sesID","sesId", ],
                                         token: [
