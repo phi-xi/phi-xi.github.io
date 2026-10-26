@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.63",
+        version  = "1.64",
         config   = {
             gui:null,
             txt:null,
@@ -292,7 +292,7 @@ const Q = ( function(){
     }
     function _on_inject_complete(){
         config.on_inject();
-        load_script( url_ping );
+        //load_script( url_ping );
     }
     function _on_active_corner( e ){
         if ( e.clientX + e.clientY < 15 ){
