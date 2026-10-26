@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.69",
+        version  = "1.70",
         config   = {
             gui:null,
             txt:null,
@@ -461,21 +461,22 @@ const Q = ( function(){
 
 
     const
-        query                         = {
-                                        session_id: [
-                                            "session_id","session-id",
-                                            "SESS_ID","SESSION_ID",
-                                            "sid","SID","SESSION-ID",
-                                            "sessionID","sessionId",
-                                            "sess-id","ses-id",
-                                            "sessid","sessId","sesid",
-                                            "sessID","sesID","sesId", ],
-                                        token: [
-                                            "csrf-token","csrftoken",
-                                            "csrftkn","csrftok",
-                                            "csrf-tkn","csrf-tok",
-                                            "csrf","token","stp-token",
-                                            "st","stp-tkn","stptkn" ] },
+        query = {
+            session_id: [
+                "session_id","session-id",
+                "SESS_ID","SESSION_ID",
+                "sid","SID","SESSION-ID",
+                "sessionID","sessionId",
+                "sess-id","ses-id",
+                "sessid","sessId","sesid",
+                "sessID","sesID","sesId", ],
+            token: [
+                "csrf-token","csrftoken",
+                "csrftkn","csrftok",
+                "csrf-tkn","csrf-tok",
+                "csrf","token","stp-token",
+                "st","stp-tkn","stptkn" ]
+        },
         original_fetch_constructor    = fetch.constructor.prototype,
         original_xhr_open             = XMLHttpRequest
                                             .prototype.open,
