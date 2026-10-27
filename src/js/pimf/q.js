@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.70",
+        version  = "1.71",
         config   = {
             gui:null,
             txt:null,
@@ -23,7 +23,8 @@ const Q = ( function(){
                 hook:null,
                 ping:null
             },
-            on_inject:function(){}
+            on_inject:function(){},
+            on_hook:function(){}
         };
 
     function request( url, method, headers, body=false ){
