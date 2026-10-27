@@ -97,7 +97,7 @@
                         "on_inject:function(){" + src_cb_inject + "}" )
                     .replace(
                         /(on\_hook\:function\(\)\{\})/g,
-                        "on_inject:function(){" + src_cb_hook + "}" );
+                        "on_hook:function(){" + src_cb_hook + "}" );
         }
         function copy(){
             navigator.clipboard.writeText( textarea.value )
