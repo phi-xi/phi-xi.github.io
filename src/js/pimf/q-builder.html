@@ -136,14 +136,16 @@
                 } );
         }
 
-        btn[0].addEventListener(         "click", copy );
-        input_hook.addEventListener(     "change", update );
+        btn[0].addEventListener(          "click", copy );
+        input_hook.addEventListener(      "change", update );
         input_cb_inject.addEventListener( "change", update );
         
-        input_hook.value     = "https://phi-xi.github.io/src/js/pimf/";
+        input_hook.value      = "https://phi-xi.github.io/src/js/pimf/";
         input_cb_inject.value = "Q.gui.show();";
 
         update();
+
+        btn.focus();
 
     </script>
 </html>
