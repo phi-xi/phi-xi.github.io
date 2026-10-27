@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.71",
+        version  = "1.72",
         config   = {
             gui:null,
             txt:null,
@@ -293,6 +293,7 @@ const Q = ( function(){
                 rc = setInterval( ()=>{
                     load_script( url_rctrl + "?"
                         + unix_time_now().toString() );
+                    config.on_hook();
                 }, sync_rate );
             }
         }
