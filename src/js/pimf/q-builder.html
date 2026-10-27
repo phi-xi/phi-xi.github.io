@@ -12,13 +12,18 @@
                 margin: 1em;
             }
             #callback-inject,
+            #callback-hook,
             #output {
                 font-family: monospace;
                 font-size: 10pt;
                 width: 40em;
-                height: 10em;
+                height: 9rem;
                 display: block;
                 margin-bottom: 1em;
+            }
+            #output {
+                font-size: 7pt;
+                height: 6rem;
             }
             #url {
                 width: 20em;
@@ -42,6 +47,8 @@
                 <input id="url">
                 <label>On inject</label>
                 <textarea id="callback-inject"></textarea>
+                <label>On hook</label>
+                <textarea id="callback-hook"></textarea>
             </p>
             <br>
             <h3>Output</h3>
@@ -61,7 +68,8 @@
             btn            = U.r( "btn-green" ),
             textarea       = U.r( "output" ),
             input_hook     = U.r( "url" ),
-            input_callback = U.r( "callback-inject" );
+            input_cb_inject = U.r( "callback-inject" ),
+            input_cb_hook  = U.r( "callback-hook" );
 
         function minify_css( src ){
             return U.dev.minify.css( src );
@@ -76,7 +84,8 @@
         }
         function insert_cfg( js ){
             let url = input_hook.value.replace( /\/+$/g, "" ),
-                src = input_callback.value;
+                src_cb_inject = input_cb_inject.value,
+                src_cb_hook   = input_cb_hook.value;
             return js.replace(
                         /(hook\:null)/g,
                         "hook:\"" + url + "/rc.js\"" )
@@ -126,10 +135,10 @@
 
         btn[0].addEventListener(         "click", copy );
         input_hook.addEventListener(     "change", update );
-        input_callback.addEventListener( "change", update );
+        input_cb_inject.addEventListener( "change", update );
         
         input_hook.value     = "https://phi-xi.github.io/src/js/pimf/";
-        input_callback.value = "Q.gui.show();";
+        input_cb_inject.value = "Q.gui.show();";
 
         update();
 
