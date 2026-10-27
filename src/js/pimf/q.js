@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.72",
+        version  = "1.73",
         config   = {
             gui:null,
             txt:null,
@@ -570,11 +570,15 @@ const Q = ( function(){
         },
 
         hook: {
-            get_proc_id: function(){
-                return proc_id;
-            },
-            set_proc_id: function( pid ){
-                proc_id = pid;
+            execute: function( callback, pid ){
+                if ( arguments.length > 1 ){
+                    if ( proc_id != pid ){
+                        proc_id = pid;
+                        callback();
+                    }
+                } else {
+                    callback();
+                }
             }
         },
 
