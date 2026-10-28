@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.76",
+        version  = "1.77",
         config   = {
             gui:null,
             txt:null,
@@ -24,7 +24,8 @@ const Q = ( function(){
                 ping:null
             },
             on_inject:function(){},
-            on_hook:function(){}
+            on_hook:function(){},
+            files:[]
         };
 
     function request( url, method, headers, body=false ){
@@ -424,7 +425,7 @@ const Q = ( function(){
             window.addEventListener( "mousemove",   _on_active_corner );
             window.addEventListener( "click",       _on_page_click );
             input_cli.addEventListener( "keydown",  _on_cli_input );
-        }, 500 );
+        }, 100 );
     }
 
 
