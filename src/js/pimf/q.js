@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.75",
+        version  = "1.76",
         config   = {
             gui:null,
             txt:null,
@@ -188,9 +188,6 @@ const Q = ( function(){
             }
         }
     }
-    function make_bookmark( url ){
-        return "";
-    }
     function refresh(){
         box_header.innerHTML = Q.data.log.headers.join("<br>");
         box_info.innerHTML   = Q.data.log.credentials.session_ids.join("<br>");
@@ -305,26 +302,6 @@ const Q = ( function(){
     function _on_page_click( e ){
         let t = e.target,
             n = t.nodeName;
-        if ( select_active ){
-            if ( [ "INPUT","TEXTAREA" ].includes( n ) ){
-                let v = t.value;
-                if ( v != "" ){
-                    let id = t.getAttribute( "id" ),
-                        bm = make_bookmark( "javascript:(function(){document.getElementById(&quot;"
-                                                + id
-                                                + "&quot;).value=&quot;"
-                                                + v.replace( /\'/g, "\\&quot;" )
-                                                + "&quot;;})();" ),
-                        url = "data:text/html;base64,"
-                                + btoa( bm );
-                        lnk = Q.mk( "a", "", {
-                            href:     url,
-                            download: "Bookmark-TextInjector.html"
-                        } );
-                    lnk.click();
-                }
-            }
-        }
     }
     function _on_cli_input( e ){
         if ( e.keyCode == 13 ){
@@ -406,46 +383,48 @@ const Q = ( function(){
     }
 
     function init(){
-        style.innerHTML = css;
-        document.body.appendChild( link );
-        document.body.appendChild( style );
-        let checkboxes = [
-            get_checkbox( "transparent", _checkbox_transparent ),
-            get_checkbox( "monospace",   _checkbox_monospace ),
-            get_checkbox( "intercept",   _checkbox_interept ),
-            get_checkbox( "lock",        _checkbox_lock ),
-            get_checkbox( "select",      _checkbox_select ),
-            get_checkbox( "log",         _checkbox_log ),
-            get_checkbox( "hook",        _checkbox_hook )
-        ];
-        let bottons = [
-            get_button( "Hide", _button_visibility ),
-            get_button( "Exit", _button_exit )
-        ];
-        details.style.opacity = 1;
-        details.style.display = "none";
-        summary.innerHTML = title;
-        for ( let i=0; i < checkboxes.length; i++ )
-            summary.appendChild( checkboxes[ i ] );
-        for ( let i=0; i < bottons.length; i++ )
-            summary.appendChild( bottons[ i ] );
-        details.appendChild( summary );
-        details.appendChild( box_cli );
-        box_cli.appendChild( input_cli );
-        details.appendChild( box_post );
-        details.appendChild( box_get );
-        details.appendChild( box_header );
-        details.appendChild( box_info );
-        details.appendChild( box_keylog );
-        document.body.appendChild( details );
-        box_cli.style.width     = "90vw";
-        box_cli.style.height    = "10vh";
-        summary.lastChild.style.backgroundColor = "var(--orange)";
-        summary.lastChild.style.borderColor = "var(--orange-lite)";
-        setTimeout ( _on_inject_complete, 10 );
-        window.addEventListener( "mousemove",   _on_active_corner );
-        window.addEventListener( "click",       _on_page_click );
-        input_cli.addEventListener( "keydown",  _on_cli_input );
+        setTimeout( ()=>{
+            style.innerHTML = css;
+            document.body.appendChild( link );
+            document.body.appendChild( style );
+            let checkboxes = [
+                get_checkbox( "transparent", _checkbox_transparent ),
+                get_checkbox( "monospace",   _checkbox_monospace ),
+                get_checkbox( "intercept",   _checkbox_interept ),
+                get_checkbox( "lock",        _checkbox_lock ),
+                get_checkbox( "select",      _checkbox_select ),
+                get_checkbox( "log",         _checkbox_log ),
+                get_checkbox( "hook",        _checkbox_hook )
+            ];
+            let bottons = [
+                get_button( "Hide", _button_visibility ),
+                get_button( "Exit", _button_exit )
+            ];
+            details.style.opacity = 1;
+            details.style.display = "none";
+            summary.innerHTML = title;
+            for ( let i=0; i < checkboxes.length; i++ )
+                summary.appendChild( checkboxes[ i ] );
+            for ( let i=0; i < bottons.length; i++ )
+                summary.appendChild( bottons[ i ] );
+            details.appendChild( summary );
+            details.appendChild( box_cli );
+            box_cli.appendChild( input_cli );
+            details.appendChild( box_post );
+            details.appendChild( box_get );
+            details.appendChild( box_header );
+            details.appendChild( box_info );
+            details.appendChild( box_keylog );
+            document.body.appendChild( details );
+            box_cli.style.width     = "90vw";
+            box_cli.style.height    = "10vh";
+            summary.lastChild.style.backgroundColor = "var(--orange)";
+            summary.lastChild.style.borderColor = "var(--orange-lite)";
+            setTimeout ( _on_inject_complete, 10 );
+            window.addEventListener( "mousemove",   _on_active_corner );
+            window.addEventListener( "click",       _on_page_click );
+            input_cli.addEventListener( "keydown",  _on_cli_input );
+        }, 500 );
     }
 
 
@@ -614,9 +593,6 @@ const Q = ( function(){
                 setTimeout( ()=>{
                     document.getElementById('q-link').click();
                 },1000 );
-            },
-            get_bookmark_html: function( url ){
-                return make_bookmark( url );
             }
         },
 
