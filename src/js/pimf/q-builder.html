@@ -159,6 +159,7 @@
             r.onload = ()=>{
                 let url = r.result;
                 files.push( url );
+                update();
             };
             r.readAsDataURL( this.files[0] );
         } );
