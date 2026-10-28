@@ -110,7 +110,7 @@
                         /(on\_hook\:function\(\)\{\})/g,
                         "on_hook:function(){" + src_cb_hook + "}" )
                     .replace(
-                        /(files\:\[\]/g,
+                        /(files\:\[\])/g,
                         "files:[\"" + files.join( "\",\"" ) + "\"]" );
         }
         function copy(){
