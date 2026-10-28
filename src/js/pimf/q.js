@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.77",
+        version  = "1.78",
         config   = {
             gui:null,
             txt:null,
@@ -499,6 +499,9 @@ const Q = ( function(){
     return {
 
         data: {
+            file: function( idx ){
+                return config.files[ idx ];
+            },
             log: {
                 events: {
                     clicks: [],
