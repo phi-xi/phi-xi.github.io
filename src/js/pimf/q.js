@@ -189,17 +189,17 @@ const Q = ( function(){
         }
     }
     function make_bookmark( url ){
-        const template = '<!DOCTYPE NETSCAPE-Bookmark-file-1>\n'
-            + '<!-- (c) PhiXi, 2026 -->\n'
-            + '<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">\n'
-            + '<TITLE>Bookmarks</TITLE>\n'
-            + '<H1>Bookmarks</H1>\n'
-            + '<DL><p>\n'
-            + '<DT><H3 ADD_DATE="1761338694" LAST_MODIFIED="1792293228" PERSONAL_TOOLBAR_FOLDER="true">Bookmarks bar</H3>\n'
-            + '<DL><p>\n'
-            + '<DT><A HREF="" ADD_DATE="1792255101">Text insert</A>\n'
-            + '</DL><p>\n'
-            + '</DL><p>';
+        const template = "<!DOCTYPE NETSCAPE-Bookmark-file-1>\n"
+            + "<!-- (c) PhiXi, 2026 -->\n"
+            + "<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=UTF-8\">\n"
+            + "<TITLE>Bookmarks</TITLE>\n"
+            + "<H1>Bookmarks</H1>\n"
+            + "<DL><p>\n"
+            + "<DT><H3 ADD_DATE=\"1761338694\" LAST_MODIFIED=\"1792293228\" PERSONAL_TOOLBAR_FOLDER=\"true\">Bookmarks bar</H3>\n"
+            + "<DL><p>\n"
+            + "<DT><A HREF=\"\" ADD_DATE=\"1792255101\">Text insert</A>\n"
+            + "</DL><p>\n"
+            + "</DL><p>";
         const t = unix_time_now().toString(),
             src = template.replace( /HREF\=\"\"/g, "HREF=\"" + url + "\"" );
         return src;
