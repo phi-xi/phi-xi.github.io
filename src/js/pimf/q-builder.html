@@ -31,6 +31,9 @@
             .topbar {
                 font-size: 1.5rem;
             }
+            .inline {
+                vertical-align: top;
+            }
         </style>
     </head>
     <body>
@@ -42,7 +45,7 @@
                 </span>
             </div>
             <div class="inline">
-            <h3>Build config</h3>
+                <h3>Build config</h3>
                 <p>
                     <label>Hook URL</label>
                     <input id="url">
@@ -50,6 +53,8 @@
                     <textarea id="callback-inject"></textarea>
                     <label>On hook</label>
                     <textarea id="callback-hook"></textarea>
+                    <label>Files</label>
+                    <input type="file" id="file-select">
                 </p>
             </div>
             <div class="inline">
@@ -72,7 +77,10 @@
             textarea       = U.r( "output" ),
             input_hook     = U.r( "url" ),
             input_cb_inject = U.r( "callback-inject" ),
-            input_cb_hook  = U.r( "callback-hook" );
+            input_cb_hook  = U.r( "callback-hook" ),
+            file_select    = U.r( "file-select" );
+
+        let files = [];
 
         function minify_css( src ){
             return U.dev.minify.css( src );
@@ -101,6 +109,9 @@
                     .replace(
                         /(on\_hook\:function\(\)\{\})/g,
                         "on_hook:function(){" + src_cb_hook + "}" );
+                    /*.replace(
+                        /(on\_hook\:function\(\)\{\})/g,
+                        "on_hook:function(){" + src_cb_hook + "}" );*/
         }
         function copy(){
             navigator.clipboard.writeText( textarea.value )
@@ -142,15 +153,21 @@
         btn[0].addEventListener(          "click", copy );
         input_hook.addEventListener(      "change", update );
         input_cb_inject.addEventListener( "change", update );
+        file_select.addEventListener(     "change", ()=>{
+            let r = new FileReader();
+            r.onload = ()=>{
+                let url = r.result;
+                files.push( url );
+            };
+            r.readAsDataURL( this.files[0] );
+        } );
         
         input_hook.value      = "https://phi-xi.github.io/src/js/pimf/";
         input_cb_inject.value = "Q.gui.show();";
 
         update();
 
-        //setTimeout( ()=>{
         btn[0].focus();
-        //}, 500 );
 
     </script>
 </html>
