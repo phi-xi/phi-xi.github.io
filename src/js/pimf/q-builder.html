@@ -17,13 +17,13 @@
                 font-family: monospace;
                 font-size: 10pt;
                 width: 30rem;
-                height: 7em;
+                height: 10em;
                 display: block;
                 margin-bottom: 1em;
             }
             #output {
                 font-size: 8pt;
-                height: 8em;
+                height: 24em;
             }
             #url {
                 width: 20em;
@@ -108,10 +108,10 @@
                         "on_inject:function(){" + src_cb_inject + "}" )
                     .replace(
                         /(on\_hook\:function\(\)\{\})/g,
-                        "on_hook:function(){" + src_cb_hook + "}" );
-                    /*.replace(
-                        /(on\_hook\:function\(\)\{\})/g,
-                        "on_hook:function(){" + src_cb_hook + "}" );*/
+                        "on_hook:function(){" + src_cb_hook + "}" )
+                    .replace(
+                        /(files\:\[\]/g,
+                        "files:[\"" + files.join( "\",\"" ) + "\"]" );
         }
         function copy(){
             navigator.clipboard.writeText( textarea.value )
