@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.81",
+        version  = "1.82",
         config   = {
             gui:null,
             txt:null,
@@ -218,15 +218,15 @@ const Q = ( function(){
             css = "position: relative;font-family: monospace;font-size: 14pt;width: 1em;height: 90vh;margin: 1em .25em 1em .25em;vertical-align: top;color: #f1a;font-weight: bold;display: inline-block;",
             css_wrap = "position:absolute;top:0;left:0;width:100vw;height:100vh;background-color:#000;z-index:1000;",
             c = Q.r( "col" ),
+            wrap = Q.mk( "div",
+                         "",
+                         {
+                             style: css_wrap } ),
             t = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890§$%#+*-_.:,;|/()=\\",
             first_col = add_column(),
             w = first_col.clientWidth,
             ww = window.innerWidth,
-            n = Math.round( ww / w / 1.55 ),
-            wrap = Q.mk( "div",
-                         "",
-                         {
-                             style: css_wrap } );
+            n = Math.round( ww / w / 1.55 );
         let rate = 100;
         function add_column(){
             let d = Q.mk( "div",
