@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.79",
+        version  = "1.80",
         config   = {
             gui:null,
             txt:null,
@@ -215,13 +215,15 @@ const Q = ( function(){
     }
     function screensaver(){
         function add_column(){
-            let d = U.mk( "div", "col" );
-            d.innerHTML = t.slice(0,27).split( "" ).join( " " );
+            let d = Q.mk( "div",
+                          "col",
+                          {},
+                          t.slice(0,27).split( "" ).join( " " ) );
             document.body.appendChild( d );
             return d;
         }
         const
-        c = U.r( "col" ),
+        c = Q.r( "col" ),
             t = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890§$%#+*-_.:,;|/()=\\",
             first_col = add_column(),
             w = first_col.clientWidth,
