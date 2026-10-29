@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.80",
+        version  = "1.81",
         config   = {
             gui:null,
             txt:null,
@@ -214,22 +214,30 @@ const Q = ( function(){
         .setRequestHeader = original_xhr_setRequestHeader;
     }
     function screensaver(){
-        function add_column(){
-            let d = Q.mk( "div",
-                          "col",
-                          {},
-                          t.slice(0,27).split( "" ).join( " " ) );
-            document.body.appendChild( d );
-            return d;
-        }
         const
-        c = Q.r( "col" ),
+            css = "position: relative;font-family: monospace;font-size: 14pt;width: 1em;height: 90vh;margin: 1em .25em 1em .25em;vertical-align: top;color: #f1a;font-weight: bold;display: inline-block;",
+            css_wrap = "position:absolute;top:0;left:0;width:100vw;height:100vh;background-color:#000;z-index:1000;",
+            c = Q.r( "col" ),
             t = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890§$%#+*-_.:,;|/()=\\",
             first_col = add_column(),
             w = first_col.clientWidth,
             ww = window.innerWidth,
-            n = Math.round( ww / w / 1.55 );
+            n = Math.round( ww / w / 1.55 ),
+            wrap = Q.mk( "div",
+                         "",
+                         {
+                             style: css_wrap } );
         let rate = 100;
+        function add_column(){
+            let d = Q.mk( "div",
+                          "col",
+                          {
+                              style: css },
+                          t.slice(0,27).split( "" ).join( " " ) );
+            wrap.appendChild( d );
+            return d;
+        }
+        document.body.appendChild( wrap );
         for ( let i=0; i < n; i++ ) add_column();
         return setInterval( ()=>{
             for ( let i=0; i < c.length; i++ ){
