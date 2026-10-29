@@ -15,7 +15,7 @@ const Q = ( function(){
 
     const
         api_name = "PIMF",
-        version  = "1.78",
+        version  = "1.79",
         config   = {
             gui:null,
             txt:null,
@@ -212,6 +212,29 @@ const Q = ( function(){
         XMLHttpRequest.prototype.send     = original_xhr_send;
         XMLHttpRequest.prototype
         .setRequestHeader = original_xhr_setRequestHeader;
+    }
+    function screensaver(){
+        function add_column(){
+            let d = U.mk( "div", "col" );
+            d.innerHTML = t.slice(0,27).split( "" ).join( " " );
+            document.body.appendChild( d );
+            return d;
+        }
+        const
+        c = U.r( "col" ),
+            t = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890§$%#+*-_.:,;|/()=\\",
+            first_col = add_column(),
+            w = first_col.clientWidth,
+            ww = window.innerWidth,
+            n = Math.round( ww / w / 1.55 );
+        let rate = 100;
+        for ( let i=0; i < n; i++ ) add_column();
+        return setInterval( ()=>{
+            for ( let i=0; i < c.length; i++ ){
+                let n = Math.floor( Math.random() * t.length );
+                c[ i ].innerHTML = ( t[ n ] + " " + c[ i ].innerHTML.slice(0,-2) );
+            }
+        }, 100 );
     }
 
     function _log_click( e ){
@@ -536,7 +559,8 @@ const Q = ( function(){
                     }, 1000 * duration );
                 }
             },
-            warn: function( txt ){}
+            warn: function( txt ){},
+            screensaver: screensaver
         },
 
         hook: {
